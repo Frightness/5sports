@@ -1219,9 +1219,26 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
 .modal-tab-body form .form-group .form-control::placeholder, .no-form .form-control::placeholder{
   color: var(--grey-neutral);
 }
-.modal-tab-body form .form-group .form-control:focus, .no-form .form-control:focus, .form-select-group .form-select:focus {
+.modal-tab-body form .form-group .form-control:focus, .no-form .form-control:focus, .form-select-group .form-select:focus,
+.popup-modal .form-group .form-control:focus {
   border-color: var(--purple) !important;
-  --tw-ring-color: var(--purple) !important;  
+  outline: none !important;
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05) !important;
+}
+
+.admin-page .new-modal-content :is(input, select, textarea, button):focus,
+.admin-page .new-modal-content :is(input, select, textarea, button):focus-visible,
+.admin-page form :is(input, select, textarea, button):focus,
+.admin-page form :is(input, select, textarea, button):focus-visible,
+.admin-page .no-form :is(input, select, textarea):focus,
+.admin-page .no-form :is(input, select, textarea):focus-visible {
+  outline: none !important;
+}
+
+.admin-page .ql-editor:focus,
+.admin-page .ql-toolbar:focus,
+.admin-page .ql-toolbar *:focus {
+  outline: none !important;
 }
 
 .cash_change {
@@ -1337,6 +1354,32 @@ input:disabled, select:disabled {
 
 #confirm_popup .new-modal-content {
   overflow: visible;
+  max-height: none;
+}
+
+#confirm_popup > div.relative {
+  overflow: visible;
+}
+
+#confirm_popup .form-group:has(.toggle_div) {
+  z-index: 4;
+}
+
+#confirm_popup .new-modal-footer {
+  position: relative;
+  z-index: 2;
+}
+
+#confirm_popup .confirm-popup-dd-btn {
+  border: none !important;
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+}
+
+#confirm_popup .confirm-popup-dd-btn:focus,
+#confirm_popup .confirm-popup-dd-btn:focus-visible {
+  outline: none;
+  border: none !important;
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05), 0 0 0 2px var(--purple);
 }
 
 #confirm_popup .confirm-popup-dd-item {

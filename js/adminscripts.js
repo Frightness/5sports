@@ -22117,6 +22117,26 @@ function create_charts(el) {
 
 	const $scope = el ? $(el) : $('#report_chart').find('.rep_chart');
 
+	const _reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	const lineDrawReveal = {
+		id: 'lineDrawReveal',
+		beforeDatasetsDraw(chart) {
+			if (chart._lineDrawProgress == null || chart._lineDrawProgress >= 1) return;
+			var ctx = chart.ctx;
+			var ca = chart.chartArea;
+			var revealW = (ca.right - ca.left) * chart._lineDrawProgress;
+			ctx.save();
+			ctx.beginPath();
+			ctx.rect(ca.left, 0, revealW, chart.height);
+			ctx.clip();
+		},
+		afterDatasetsDraw(chart) {
+			if (chart._lineDrawProgress == null || chart._lineDrawProgress >= 1) return;
+			chart.ctx.restore();
+		}
+	};
+
 	$scope.each(function () {
 		let raw = $(this).find('.chart_data').text().trim();
 		if (!raw) {
@@ -22256,9 +22276,14 @@ function create_charts(el) {
 				$(this).addClass('xl_chart');
 			}
 
-			// lineShadow draws stroke on line datasets only; attaching it to pie/doughnut breaks first paint.
 			if (data.shadow && data.type === 'line') {
 				data.plugins = [...(data.plugins || []), lineShadow];
+			}
+
+			var isLineReveal = data.type === 'line' && !_reduceMotion;
+			if (isLineReveal) {
+				data.plugins = [...(data.plugins || []), lineDrawReveal];
+				data.options.animation = { duration: 0 };
 			}
 
 			const canvas = $(this).find('.chart_canvas').get(0);
@@ -22270,7 +22295,34 @@ function create_charts(el) {
 				existingChart.destroy();
 			}
 			const ctx = canvas.getContext('2d');
-			new Chart(ctx, data);
+			var chartInst = new Chart(ctx, data);
+
+			if (isLineReveal) {
+				chartInst._lineDrawProgress = 0;
+				chartInst.draw();
+				var LINE_DRAW_MS = 1400;
+				var lineT0 = 0;
+				(function stepDraw(now) {
+					if (!chartInst.ctx) return;
+					if (!lineT0) {
+						var op = parseFloat(getComputedStyle(canvas).opacity);
+						if (op < 0.5) {
+							requestAnimationFrame(stepDraw);
+							return;
+						}
+						lineT0 = now;
+					}
+					var p = Math.min((now - lineT0) / LINE_DRAW_MS, 1);
+					chartInst._lineDrawProgress = 1 - Math.pow(1 - p, 3);
+					chartInst.draw();
+					if (p < 1) {
+						requestAnimationFrame(stepDraw);
+					} else {
+						chartInst._lineDrawProgress = null;
+						chartInst.draw();
+					}
+				})(performance.now());
+			}
 		} catch (e) {
 			console.error('Chart render failed', e);
 		}
@@ -28371,7 +28423,7 @@ function open_modal(el, modal_alt='') {
 
     $(mc_).addClass("modal-open");
     $('body').addClass("overflow-hidden");
-    animate_modal_intro(mc_, $(el).is('.add-link.modal_o_class'));
+    animate_modal_intro(mc_);
 }
 
 function close_modal() {
