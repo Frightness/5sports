@@ -1,0 +1,81 @@
+<html lang="en"><head><meta http-equiv="origin-trial" content="3NNj0GXVktLOmVKwWUDendk4Vq2qgMVDBDX+Sni48ATJl9JBj+zF+9W2HGB3pvt6qowOihTbQgTeBm9SKbdTwYAAABfeyJvcmlnaW4iOiJodHRwczovL3JlY2FwdGNoYS5uZXQ6NDQzIiwiZmVhdHVyZSI6IlRwY2QiLCJleHBpcnkiOjE3MzUzNDM5OTksImlzVGhpcmRQYXJ0eSI6dHJ1ZX0="><meta http-equiv="origin-trial" content="A6iYDRdcg1LVww9DNZEU+JUx2g1IJxSxk4P6F+LimR0ElFa38FydBqtz/AmsKdGr11ZooRgDPCInHJfGzwtR+A4AAACXeyJvcmlnaW4iOiJodHRwczovL3d3dy5yZWNhcHRjaGEubmV0OjQ0MyIsImZlYXR1cmUiOiJEaXNhYmxlVGhpcmRQYXJ0eVN0b3JhZ2VQYXJ0aXRpb25pbmczIiwiZXhwaXJ5IjoxNzU3OTgwODAwLCJpc1N1YmRvbWFpbiI6dHJ1ZSwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ==">
+  <title>Intrac Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, shrink-to-fit=no">
+  <!-- FAVICONS -->
+  <link rel="icon" href="images/favicon/favicon.ico">
+  <!-- CSS -->        
+  <link rel="stylesheet" href="css/tailwind_admin.css" type="text/css">
+  <link rel="stylesheet" href="css/admin.css" type="text/css">
+  <style type="text/css">
+      .customer-body {   --brand: #ef5a2a;   --brand-hover: #ef5a2a; }
+.email-body .shell_container {border: none}
+.email-body button {background: #ef5a2a;}
+
+.green-box .section-box-inner {
+background-color: #fcd381; 
+border-color: #fab428;
+}
+
+.section-box.blocked:not(.green-box)[data-intrac_class_id]:not([data-intrac_class_id=&#34;0&#34;]) .section-box-inner {
+background-color: var(--green-200); 
+border-color: var(--green);
+}
+
+.section-box.blocked:not(.green-box)[data-intrac_level_type=&#34;6&#34;]:not([data-intrac_class_id=&#34;0&#34;]) .section-box-inner {
+background-color: var(--blue-200); 
+border-color: var(--blue);
+}
+
+.section-box.select[data-intrac_level_type=&#34;6&#34;] .section-box-inner {
+background-color: var(--blue-200); 
+border-color: var(--blue);
+}
+
+.unpaid-box .section-box-inner{
+background-color: var(--yellow-200);
+border-color: var(--yellow);
+}
+
+.customer-body #bg_carousel_1{
+  filter: brightness(0.6);
+}
+.customer-body #bg_carousel_mobile_1{
+  filter: brightness(0.6);
+}     
+  </style>    
+</head>
+<body class="flex h-[100vh] justify-center items-center">
+  <div class="login">
+      <img src="https://intrac-files.intrac.com.au/5s/logo.png" class="client-logo">
+      <h1 class="leading-[150%] text-[2.3rem]">Welcome back</h1>
+      <form id="form-signin" role="form" method="post" action="/authenticateclient" autocomplete="off" class="flex flex-col gap-4 w-full">
+          <div>
+              <label for="username" class="block mb-2 text-main">Username</label>
+              <input type="text" id="username" name="username" class="custom-field placeholder:text-grey-neutral h-[44px]" placeholder="Enter your username" value="" autocomplete="off">                
+          </div>
+          <div>
+              <label for="password" class="block mb-2 text-main">Password</label>
+              <input type="password" id="password" name="password" class="custom-field placeholder:text-grey-neutral h-[44px]" placeholder="Enter your password" value="" autocomplete="off">    
+          </div>
+          <input type="hidden" id="recaptcha_response" name="recaptcha_response" value="">
+          <button name="form-signin-btn" type="button" id="form-signin-btn" class="primary-btn mt-2" onclick="window.location.href='index.html'">Login</button>
+      </form>
+      <div id="error" class="red text-center">
+          
+
+          
+      </div>        
+  </div>
+  <div class="noshow">
+      <div id="recaptcha_key">6LcwqSgpAAAAAFJfCyUpiA1SqPpFpdusVsJjVs8L</div>    
+  </div>
+
+  <!-- SCRIPTS -->
+  <script type="text/javascript" async="" charset="utf-8" src="https://www.gstatic.com/recaptcha/releases/79clEdOi5xQbrrpL2L8kGmK3/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-8ttzcqn1x3spzHELLkLBHjQJV6/TydNHFuVP0+hKYrIsPW/qumOm8LQWdez/Qzbi"></script><script type="text/javascript" src="js/jquery.min.js"></script>
+  
+  <script type="text/javascript" src="https://www.recaptcha.net/recaptcha/enterprise.js?render=6LcwqSgpAAAAAFJfCyUpiA1SqPpFpdusVsJjVs8L"></script>
+  
+  <script type="text/javascript" src="js/loginscripts.js"></script>
+
+<div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe title="reCAPTCHA" width="256" height="60" role="presentation" name="a-cdmhy01fi2fx" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.recaptcha.net/recaptcha/enterprise/anchor?ar=1&amp;k=6LcwqSgpAAAAAFJfCyUpiA1SqPpFpdusVsJjVs8L&amp;co=aHR0cHM6Ly81c3BvcnRzLmJlZHJvY2stdGVzdC5pbnRyYWMuY29tLmF1OjQ0Mw..&amp;hl=en&amp;v=79clEdOi5xQbrrpL2L8kGmK3&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=jrn99vbvd1y9"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div></body></html>

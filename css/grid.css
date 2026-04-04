@@ -1,0 +1,706 @@
+:root {
+  --box_height: 80px;
+  --section_box_height: 70px;
+  --error-100: #fee2e2;
+  --error-200: #f36a6a;
+  --warning-100: #fef9c3;
+  --warning-200: #ca8a04;  
+}
+
+.show-box {
+  display: flex;
+}
+
+.form-label label {
+  cursor: pointer;
+}
+
+.has_right_icon {
+  max-width: calc(100% - 20px);;
+}
+
+.time-shadow-wrapper {
+  height: var(--box_height);
+}
+
+.time-shadow-wrapper-title {
+  box-shadow: none;
+}
+
+#lessons .time-shadow-wrapper-title {
+  height: 3rem;
+}
+
+.section-box h3, .section-box p {
+  font-size: .85rem;
+}
+
+.scroll-container-flex {
+  overflow-y: auto;
+  display: flex;
+  flex-grow: 1; /*to occupy 100% of available/balance space */
+  max-height: calc(75vh); /* for scrolling-y to work*/
+}
+
+.hover\:shadow-sm:hover {
+  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+#spaces tr:has(.past-box), #lessons tr:has(.past-box) {
+  display: none;  
+}
+
+.section-box:hover .section-box-inner.noshow {
+  display: block;
+  background-color: var(--purple-100); 
+  border-color: var(--purple-dark);
+}
+
+.customer-page .section-box:hover .section-box-inner.noshow {
+  background-color: var(--brand);
+  border-color: var(--brand);
+  color: var(--color1);
+}
+
+.admin-page .section-box:hover .section-box-inner.noshow .right_icon {
+  width: 16px;
+  height: 16px;
+  background-image: url('../images/icons/b_plus.svg');
+}
+
+.admin-page .green-box.tr_box .right_icon, .admin-page .right_icon.paid {
+  width: 16px;
+  height: 16px;
+  background-image: url('../images/icons/b_tick.svg');
+}
+
+.admin-page .unpaid-box.tr_box .right_icon, .admin-page .right_icon.unpaid { /*will always be along with green-box*/
+  width: 16px;
+  height: 16px;
+  background-image: url('../images/icons/b_alert.svg');
+}
+
+.admin-page .right_icon.paid, .admin-page .right_icon.unpaid {
+  background-repeat: no-repeat;
+  background-color: inherit;
+}
+
+.admin-page .green-box[data-intrac_schedule_comment*="closed"] .right_icon {
+  background-image: none;
+}
+
+.empty-box {
+  box-shadow: none;
+}
+
+.empty-box .section-box-inner {
+  display: none;
+}
+
+.green-box .section-box-inner {
+  background-color: var(--green-200); 
+  border-color: var(--green);
+}
+
+.customer-page .green-box .section-box-inner {
+  background-color: var(--brand); 
+  border-color: var(--brand);
+  color: var(--color1);
+}
+
+.customer-page .green-box .section-box-inner .sub_text {
+  color: var(--color1);
+}
+
+.hold-box .section-box-inner {
+  background-color: var(--gray-100);
+  border-color: var(--gray);
+}
+
+.termbooking-box .section-box-inner { /*will always be along with green-box*/
+  background-color: var(--coral-100); 
+  border-color: var(--coral);
+}
+
+.permbooking-box .section-box-inner { /*will always be along with green-box*/
+  background-color: var(--blue-200); 
+  border-color: var(--blue);
+}
+
+.reserved-box .section-box-inner { /*will always be along with green-box*/
+  background-color: var(--gray-200); 
+  border-color: var(--gray);
+}
+
+.green-box[data-intrac_schedule_comment*="closed"] .section-box-inner { /*will always be along with green-box*/
+  background-color: var(--gray-200); 
+  border-color: var(--gray);
+}
+
+.section-box.gray-box .section-box-inner {
+  background-color: var(--gray-200); 
+  border-color: var(--gray);
+}
+
+.ro-box:not(.green-box) .section-box-inner {
+  background-color: var(--gray-200); 
+  border-color: var(--gray);
+}
+
+.section-box.blocked:not(.green-box) .section-box-inner { /*priority for green-box*/
+  background-color: var(--gray-light); 
+  border-color: var(--gray);
+}
+
+.section-box.blocked:not(.green-box)[data-intrac_class_id]:not([data-intrac_class_id="0"]) .section-box-inner {
+  background-color: var(--yellow-100); 
+  border-color: var(--yellow);
+}
+
+.green-box,
+.gray-box,
+.empty-box,
+.ro-box {
+  cursor: none;
+  pointer-events: none;
+}
+
+.booked-box .section-box-inner {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.section-box.blocked:not(.hold-box),
+.section-box.active {
+  cursor: inherit;
+  pointer-events: none;
+}
+
+.unpaid-box .section-box-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: white;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.g_box {
+  margin: 0;
+}
+
+.l_box {
+  margin-left: 0.25rem;
+}
+
+.r_box {
+  margin-right: 0.25rem;
+}
+
+.l_box .section-box-inner {
+  border-left-width: 2px;  
+}
+
+.g_box:not(.l_box) {
+  /*shift to left to cover the gap and table lines, add 1px for border clip*/
+  margin-left: -11px;
+}
+
+.g_box:not(.l_box) .section-box-inner.shadow-sm {
+  clip-path: inset(0 0 0 1px); /* hide 1px from left to remove left part of shadow-sm */
+}
+
+.g_box:not(.b_box) {
+  /*shift to bottom to cover the gap and table lines*/
+  height: calc(var(--section_box_height) + 20px) !important;
+  margin-bottom: -20px;
+}
+
+/*split rounded-md into separate parts*/
+.l_box.t_box .section-box-inner {
+  border-top-left-radius: 0.375rem;
+}
+
+.l_box.b_box .section-box-inner {
+  border-bottom-left-radius: 0.375rem;
+}
+
+.r_box.t_box .section-box-inner {
+  border-top-right-radius: 0.375rem;
+}
+
+.r_box.b_box .section-box-inner {
+  border-bottom-right-radius: 0.375rem;
+}
+
+.m-0 {
+  margin: 0 !important;
+}
+
+.grid_actions_menu {
+  inset: 0px 0px auto auto;
+  top: 30%;
+  right: 0px;
+}
+
+.is_detailed .grid_actions_menu {
+  top: 7%;
+}
+
+tr:last-child:not(:only-child) .grid_actions_menu {
+  top: auto;
+  bottom: 100%;
+}
+
+.btm_text_l {
+  max-width: calc(100% - 45px);
+}
+
+.info-box {
+  width: 58px;
+}
+
+.info-box-gradient {
+  pointer-events: none;
+  position: absolute;
+  bottom: 0px;
+  z-index: 11;
+  height: 30px;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff);
+}
+
+.users-list-schedule-card {
+  gap: 0rem;
+}
+
+/*class & roster grid*/
+.admin-page #classes .is_weekly, .admin-page #rosters .is_weekly {
+  --box_height: 90px;
+  --section_box_height: 80px;  
+}
+
+.admin-page #classes .is_detailed {
+  --box_height: 430px;
+  --section_box_height: 420px;
+}
+
+.admin-page #classes .is_detailed .section_shell {
+  width: 320px;
+  border-radius: 0.375rem;
+  --tw-shadow: 0 5px 12px 0 rgba(89,81,217,0.05);
+  --tw-shadow-colored: 0 5px 12px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.admin-page #classes .is_detailed .section-box {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.admin-page #classes .is_detailed .section-box-inner {
+  width: 100%;
+}
+
+.admin-page #classes .is_detailed .main_text {
+  margin-top: 5px;
+}
+
+.section-box.select {
+  cursor: default;
+}
+
+.section-box.select .three-dots-btn {
+  cursor: pointer;
+}
+
+.section-box.select .section-box-inner {
+  background-color: var(--green-100); 
+  border-color: var(--green);
+}
+
+.section-box.select[data-intrac_level_type="0"] .section-box-inner {
+  background-color: var(--yellow-100); 
+  border-color: var(--yellow);
+}
+
+.section-box.select[data-intrac_level_type="6"] .section-box-inner {
+  background-color: var(--purple-100); 
+  border-color: var(--purple-dark);
+}
+
+.section-box.select.space-bg .section-box-inner {
+  background-color: var(--blue-100); 
+  border-color: var(--blue);
+}
+
+.section-box.select.roster-bg .section-box-inner {
+  background-color: var(--coral-100); 
+  border-color: var(--coral);
+}
+
+/*class & roster grid - end*/
+
+/*Errors, Warnings*/
+.notification-box {
+  background-color: var(--error-100);
+}
+
+.notification-box .error_color {
+  color: var(--error-200);
+}
+
+.notification-box.amber {
+  background-color: var(--warning-100);
+}
+
+.notification-box.amber .error_color {
+  color: var(--warning-200);
+}
+
+.notification-box.green {
+  background-color: var(--green-100);
+}
+
+.notification-box.green .error_color {
+  color: var(--green);
+}
+/*Errors, Warnings - end*/
+
+.table-wrapper:has(.unavail) {
+  background-color: inherit;
+}
+
+/*Booking modals*/
+.date-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.customer-page .date-box {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date-box.noshow {
+  display: none;
+}
+
+.date-box .booking-details-list-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 268px;
+  flex-shrink: 0;
+  line-height: 1.25rem;
+  color: var(--gray);  
+}
+
+.customer-page .date-box .booking-details-list-label {
+  min-width: 90px;
+  width: auto;
+  gap: 0.5rem;
+}
+
+.customer-page .date-box .container {
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.offcanvse .spaces_list, .offcanvse .users_list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem; 
+}
+
+.offcanvse .spaces_list li a.disable, .offcanvse .users_list li a.disable {
+  background-color: var(--gray-dense);
+}
+
+.offcanvse .spaces_list li.checked a, .offcanvse .users_list li.checked a {
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+    background-color: var(--purple) !important;
+}
+
+.customer-page .offcanvse .spaces_list li.checked a, .customer-page .offcanvse .users_list li.checked a {
+    background-color: var(--brand) !important;
+}
+
+.offcanvse .spaces_list li a, .offcanvse .users_list li a {
+  cursor: pointer;
+  white-space: nowrap;
+  width: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.offcanvse .select-boxes select {
+  min-width: 120px;
+}
+
+.offcanvse .select-boxes {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.promo-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  gap: 0.375rem;
+}
+
+.buser_space {
+  display: flex;
+  height: 1.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border-radius: 30px;
+  margin-left: 0.5rem;
+  background-color: var(--natural-white);
+  white-space: nowrap;
+}
+
+.buser_space_ul {
+  pointer-events: none;
+}
+
+.buser_space_ul li,
+.buser_space_ul img {
+  pointer-events: auto;
+}
+
+/*Booking modals - end*/
+
+/*common elements*/
+#side_errors {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* purple pretty radio button */
+.pretty-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+
+.pretty-radio.noshow {
+  display: none;
+}
+
+/* hide the native input but make it non-blocking */
+.pretty-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* the custom circle */
+.radio-custom {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid var(--purple);
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.customer-page .radio-custom {
+  border: 1px solid var(--brand);
+}
+
+/* inner dot */
+.radio-custom::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--purple);
+  transform: scale(0);
+  transition: transform 0.15s ease;
+}
+
+.customer-page .radio-custom::after {
+  background: var(--brand);
+}
+
+/* show dot when checked */
+.pretty-radio input[type="radio"]:checked + .radio-custom::after {
+    transform: scale(1);
+}
+
+.cregister_schedule_past.noshow, .cregister_schedule_future.noshow {
+  display: none !important;
+}
+
+/*common elements - end*/
+
+
+@media (min-width: 640px) {
+  .date-box {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .customer-page .date-box .booking-details-list-label {
+    min-width: 178px;
+  }
+}
+
+@media (min-width: 1024px) {  
+
+  /*mini grid*/
+  .mini_grid .courts-many {
+    width: auto;
+    min-width: 225px;
+  }
+  .mini_grid .cell-many {
+    width: auto;
+    min-width: 225px;
+  }
+  .mini_grid .class-many {
+    width: auto;
+    min-width: 260px;
+  }
+
+  #spaces.mini_grid, #lessons.mini_grid  {
+    --box_height: 10px;
+    --section_box_height: 10px;
+  }
+
+  #classes.mini_grid, #rosters.mini_grid {
+    --box_height: 30px;
+    --section_box_height: 30px;
+  }
+
+  #classes.mini_grid .is_weekly, #rosters.mini_grid .is_weekly {
+    --box_height: 40px;
+    --section_box_height: 40px;  
+  }
+
+  .mini_grid .time-column-many {
+    width: 60px;
+  } 
+
+  .mini_grid .courts-many, .mini_grid .cell-many {
+    min-width: 50px;
+  }
+
+  .mini_grid .class-many {
+    min-width: 85px;
+  } 
+
+  .mini_grid .hover\:shadow-sm {
+    align-items: center;
+  }
+
+  .mini_grid .section-box {
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+  }
+
+  .mini_grid .section-box-inner {
+    padding-top: 1px;
+    padding-bottom: 0px;
+  }
+
+  .mini_grid th {
+    font-size: 0.75rem;
+  }
+
+  .mini_grid .time-shadow-wrapper {
+    font-size: 0.65rem;
+  }
+
+  .mini_grid .section-box h3, .mini_grid .section-box p, .mini_grid .btm_text_l, .mini_grid .btm_text_r {
+    font-size: 0.6rem;
+  }
+
+  #spaces.mini_grid .section-box p, #lessons.mini_grid .section-box p {
+    display: none;
+  }
+
+  .mini_grid .time-shadow-wrapper.mini_nonhr {
+    color: #fff;
+    font-size: 1px;
+  }
+
+  .mini_grid .g_box:not(.b_box) {
+    /*shift to bottom to cover the gap and table lines*/
+    height: calc(var(--section_box_height) + 5px) !important;
+    margin-bottom: -5px;
+  }
+
+  .mini_grid tr td {
+    border-width: 0px;
+    border-right-width: 1px;
+  }
+
+  .mini_grid tr td:not(:has(.mini_nonhr)) {
+    border-top-width: 1px;
+  }
+
+  .mini_grid .right_icon {
+    display: none;
+  }
+
+  .mini_grid .has_right_icon {
+    max-width: calc(100%);
+  }
+
+  .mini_grid h3 {
+    line-height: 1 !important;
+  }
+
+  .mini_grid .three-dots-btn {
+    top: 2px;
+    padding-right: 2px;
+  }
+
+  .mini_grid .class-many {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  .mini_grid .class-many .mini-gap {
+    gap: 5px;
+  }
+
+  .mini_grid .class-many .text-\[12px\] {
+    font-size: 10px;
+  }
+
+  .mini_grid .mini-items-top {
+    align-items: inherit;
+  }
+  /*mini grid - end*/
+}
