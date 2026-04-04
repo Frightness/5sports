@@ -2521,3 +2521,216 @@ body.dashboard-intro-running #dashboard .chart_canvas:not(.dash-anim-row) {
     transform: none !important;
   }
 }
+
+body.login-page {
+  --login-primary-rgb: 100, 91, 239;
+}
+
+@keyframes login-card-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes login-logo-wrap-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes login-logo-spring-scale {
+  0% {
+    transform: scale(0.92);
+    animation-timing-function: cubic-bezier(0.33, 0.89, 0.45, 1);
+  }
+  52% {
+    transform: scale(1.04);
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes login-title-wrap-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes login-title-spring-scale {
+  0% {
+    transform: scale(0.95);
+    animation-timing-function: cubic-bezier(0.33, 0.89, 0.45, 1);
+  }
+  48% {
+    transform: scale(1.02);
+    animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes login-field-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes login-btn-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+body.login-page .login-card-shell {
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.06);
+  transform-origin: 50% 50%;
+  opacity: 0;
+  transform: translate3d(0, 20px, 0) scale(0.92);
+  will-change: transform, opacity;
+}
+
+body.login-page.login-intro-play .login-card-shell {
+  animation: login-card-in 300ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+body.login-page .login-anim-logo-wrap {
+  opacity: 0;
+  transform: translate3d(0, -10px, 0);
+  filter: blur(4px);
+  will-change: transform, opacity, filter;
+}
+
+body.login-page.login-intro-play .login-anim-logo-wrap {
+  animation: login-logo-wrap-in 260ms ease-out forwards;
+  animation-delay: 200ms;
+}
+
+body.login-page .login-anim-logo-spring {
+  display: block;
+  transform: scale(0.92);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+body.login-page.login-intro-play .login-anim-logo-spring {
+  animation: login-logo-spring-scale 480ms forwards;
+  animation-delay: 200ms;
+}
+
+body.login-page .login-anim-title {
+  opacity: 0;
+  transform: translate3d(0, -8px, 0);
+  will-change: transform, opacity;
+}
+
+body.login-page.login-intro-play .login-anim-title {
+  animation: login-title-wrap-in 260ms ease-out forwards;
+  animation-delay: 268ms;
+}
+
+body.login-page .login-anim-title-inner {
+  display: block;
+  transform: scale(0.95);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+body.login-page.login-intro-play .login-anim-title-inner {
+  animation: login-title-spring-scale 370ms forwards;
+  animation-delay: 268ms;
+}
+
+body.login-page .login-anim-field {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  will-change: transform, opacity;
+}
+
+body.login-page.login-intro-play .login-anim-field {
+  animation: login-field-in 300ms ease-out forwards;
+  animation-delay: 400ms;
+}
+
+body.login-page.login-intro-play .login-anim-field--2 {
+  animation-delay: 500ms;
+}
+
+body.login-page .login-anim-btn {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0) scale(0.98);
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  transition: transform 120ms ease-out;
+}
+
+body.login-page.login-intro-play .login-anim-btn {
+  animation: login-btn-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: 800ms;
+}
+
+body.login-page.login-intro-play .login-anim-btn:hover {
+  transform: scale(1.02);
+}
+
+body.login-page .custom-field {
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+body.login-page .custom-field:focus {
+  border-color: var(--purple) !important;
+  outline: none !important;
+  box-shadow:
+    0 1px 2px 0 rgba(16, 24, 40, 0.05),
+    0 0 0 3px rgba(var(--login-primary-rgb), 0.15) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.login-page .login-card-shell,
+  body.login-page .login-anim-logo-wrap,
+  body.login-page .login-anim-logo-spring,
+  body.login-page .login-anim-title,
+  body.login-page .login-anim-title-inner,
+  body.login-page .login-anim-field,
+  body.login-page .login-anim-btn {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  body.login-page .login-anim-btn:hover {
+    transform: none;
+  }
+}

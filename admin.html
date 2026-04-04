@@ -45,21 +45,23 @@ border-color: var(--yellow);
 }     
   </style>    
 </head>
-<body class="flex h-[100vh] justify-center items-center">
-  <div class="login">
-      <img src="https://intrac-files.intrac.com.au/5s/logo.png" class="client-logo">
-      <h1 class="leading-[150%] text-[2.3rem]">Welcome back</h1>
+<body class="login-page flex h-[100vh] justify-center items-center bg-[#f8f9fb]">
+  <div class="login login-card-shell">
+      <div class="login-anim-logo-wrap">
+          <img src="https://intrac-files.intrac.com.au/5s/logo.png" alt="" class="client-logo login-anim-logo-spring">
+      </div>
+      <h1 class="login-anim-title leading-[150%] text-[2.3rem]"><span class="login-anim-title-inner">Welcome back</span></h1>
       <form id="form-signin" role="form" method="post" action="/authenticateclient" autocomplete="off" class="flex flex-col gap-4 w-full">
-          <div>
+          <div class="login-anim-field">
               <label for="username" class="block mb-2 text-main">Username</label>
               <input type="text" id="username" name="username" class="custom-field placeholder:text-grey-neutral h-[44px]" placeholder="Enter your username" value="" autocomplete="off">                
           </div>
-          <div>
+          <div class="login-anim-field login-anim-field--2">
               <label for="password" class="block mb-2 text-main">Password</label>
               <input type="password" id="password" name="password" class="custom-field placeholder:text-grey-neutral h-[44px]" placeholder="Enter your password" value="" autocomplete="off">    
           </div>
           <input type="hidden" id="recaptcha_response" name="recaptcha_response" value="">
-          <button name="form-signin-btn" type="button" id="form-signin-btn" class="primary-btn mt-2" onclick="window.location.href='index.html'">Login</button>
+          <button name="form-signin-btn" type="button" id="form-signin-btn" class="primary-btn login-anim-btn mt-2" onclick="window.location.href='index.html'">Sign in</button>
       </form>
       <div id="error" class="red text-center">
           
