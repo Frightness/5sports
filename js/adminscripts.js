@@ -7,6 +7,7 @@ let mc3 = '#display_modal3';
 const USE_CLASS_SCHEDULE_MOCKS = true;
 const USE_SPACE_BOOKINGS_MOCKS = true;
 const USE_EVENTS_MOCKS = true;
+const USE_ROSTER_MOCKS = true;
 
 let rosterGridXhr = null;
 let rosterGridRequestId = 0;
@@ -240,6 +241,71 @@ function get_mock_class_grid_payload() {
 			{ space_id: 1, space_name: 'Court 8' },
 			{ space_id: 2, space_name: 'Court 9/10' },
 			{ space_id: 3, space_name: 'Court 1' }
+		]
+	}];
+	return { data: gridData, data_schedule: dataSchedule };
+}
+
+function get_mock_roster_grid_payload() {
+	let scheduleId = 70001;
+	let classId = 60001;
+	const loc = parseInt($('#location_id').val(), 10) || 772;
+	const mainDate = $('#main_date').val() || dayjs().format('YYYY-MM-DD');
+	const staff = [
+		{ uid: '18308', uname: 'Sarah Brocks' },
+		{ uid: '18401', uname: 'Mike Jonson' },
+		{ uid: '18402', uname: 'Alex Turner' },
+		{ uid: '18403', uname: 'Emily Chen' }
+	];
+	const row = function (timeStart, timeEnd, className, space, regs, cap, user) {
+		const o = {
+			user_ids: user.uid,
+			usernames: user.uname,
+			class_id: classId++,
+			class_name: className,
+			schedule_id: scheduleId++,
+			location_id: loc,
+			schedule_start: mainDate + ' ' + timeStart,
+			schedule_finish: mainDate + ' ' + timeEnd,
+			space_names: space,
+			regs: regs,
+			absents: 0,
+			capacity: cap,
+			level_id: 1,
+			level_name: 'Comp',
+			level_type: 1,
+			image_data: ''
+		};
+		return o;
+	};
+	const dataSchedule = [
+		row('08:00:00', '09:00:00', 'Morning Drills', 'Court 1', 8, 12, staff[0]),
+		row('09:00:00', '10:30:00', 'Junior Training', 'Court 2', 15, 20, staff[0]),
+		row('11:00:00', '12:30:00', 'Adult Fitness', 'Court 1', 6, 10, staff[0]),
+		row('08:00:00', '10:00:00', 'Strength & Cond.', 'Field A', 10, 15, staff[1]),
+		row('10:30:00', '12:00:00', 'Team Tactics', 'Court 3', 12, 16, staff[1]),
+		row('13:00:00', '14:30:00', 'Recovery Session', 'Court 1', 4, 8, staff[1]),
+		row('08:00:00', '09:30:00', 'Kids Academy', 'Court 4', 18, 20, staff[2]),
+		row('10:00:00', '11:30:00', 'Skills Clinic', 'Court 2', 9, 12, staff[2]),
+		row('12:00:00', '13:00:00', 'Private Lesson', 'Court 1', 1, 1, staff[2]),
+		row('14:00:00', '15:30:00', 'Youth League Prep', 'Field B', 14, 16, staff[2]),
+		row('09:00:00', '10:30:00', 'Goalkeeper Training', 'Field A', 5, 6, staff[3]),
+		row('11:00:00', '12:30:00', 'Match Simulation', 'Field B', 20, 22, staff[3]),
+		row('14:00:00', '16:00:00', 'Elite Squad', 'Court 3', 10, 12, staff[3])
+	];
+	const gridData = [{
+		location_id: loc,
+		grid_view: 'daily',
+		sow: mainDate,
+		eow: mainDate,
+		show_space_filter: false,
+		spaces: [
+			{ space_id: 1, space_name: 'Court 1' },
+			{ space_id: 2, space_name: 'Court 2' },
+			{ space_id: 3, space_name: 'Court 3' },
+			{ space_id: 4, space_name: 'Court 4' },
+			{ space_id: 10, space_name: 'Field A' },
+			{ space_id: 11, space_name: 'Field B' }
 		]
 	}];
 	return { data: gridData, data_schedule: dataSchedule };
@@ -568,6 +634,16 @@ function get_roster_grid(spinner=true) {
 
 	    if (isID(location_id) && isvalidDate(date)) {
 	        if (spinner) {$('#loader-wrapper').show();}
+
+	        if (USE_ROSTER_MOCKS) {
+	        	const mock = get_mock_roster_grid_payload();
+	        	$('#loader-wrapper').hide();
+	        	if (mock.data.length && mock.data_schedule.length) {
+	        		build_class_grid(mock.data, mock.data_schedule, true, true);
+	        	}
+	        	resolve();
+	        	return;
+	        }
 
 	        let data = {location_id: location_id, date: date};
 
