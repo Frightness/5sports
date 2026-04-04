@@ -20,6 +20,15 @@
 }());
 
 $(function () {
+	var INTRAC_HEADER_INTRO_SS_KEY = 'intrac_has_animated_header';
+
+	$('#form-signin-btn').on('click', function () {
+		try {
+			sessionStorage.removeItem(INTRAC_HEADER_INTRO_SS_KEY);
+		} catch (e) {}
+		window.location.href = 'app.html';
+	});
+
 	$('#form-signin').submit(async function (e) {
 		e.preventDefault();
 
