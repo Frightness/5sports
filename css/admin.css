@@ -416,6 +416,11 @@ tr.class_row{
     color: rgb(255 255 255 / var(--tw-text-opacity, 1)) !important;
   }
 
+  .nav-list-pill-wrap:not(:has(.nav-pill-bg.is-visible)) #nav_list .nav-link-row.active .nav-btn,
+  .nav-list-pill-wrap:not(:has(.nav-pill-bg.is-visible)) #nav_list .nav-link-row.active .nav-btn:hover {
+    color: var(--gray) !important;
+  }
+
   #nav_list .nav-link-row:not(.active) .nav-btn:hover {
     background-color: var(--purple) !important;
     --tw-text-opacity: 1 !important;
