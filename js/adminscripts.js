@@ -192,6 +192,21 @@ function get_grid(spinner=true) {
 	});     
 }
 
+function get_mock_class_grid_view_string() {
+	if ($('.gview_detailed').hasClass('active')) {
+		return 'daily_compressed_detailed';
+	}
+	var weeklyOn = $('.gview_weekly').hasClass('active');
+	var dailyOn = $('.gview_daily').hasClass('active');
+	if (!weeklyOn && !dailyOn) {
+		return 'weekly_full';
+	}
+	if (weeklyOn) {
+		return $('.gview_compressed').hasClass('active') ? 'weekly_compressed' : 'weekly_full';
+	}
+	return $('.gview_compressed').hasClass('active') ? 'daily_compressed' : 'daily';
+}
+
 function get_mock_class_grid_payload() {
 	let scheduleId = 90001;
 	let classId = 80001;
@@ -233,7 +248,7 @@ function get_mock_class_grid_payload() {
 	];
 	const gridData = [{
 		location_id: loc,
-		grid_view: 'weekly_full',
+		grid_view: get_mock_class_grid_view_string(),
 		sow: '2026-03-23',
 		eow: '2026-03-28',
 		show_space_filter: true,
@@ -16977,6 +16992,13 @@ function toggle_switch_grid() {
 		switch_grid = $('.gview_compressed').hasClass('active') ? 'weekly_compressed' : 'weekly';
 	} else {
 		switch_grid = $('.gview_compressed').hasClass('active') ? 'daily_compressed' : 'daily';
+	}
+
+	if (USE_CLASS_SCHEDULE_MOCKS) {
+		$('#loader-wrapper').hide();
+		$('#classes').html('');
+		get_class_grid();
+		return;
 	}
 
 	$('#loader-wrapper').show();

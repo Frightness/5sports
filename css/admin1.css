@@ -456,41 +456,6 @@ tr.class_row{
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
-.rounded-panel > .gview-pill-bg {
-  display: block;
-  position: absolute;
-  z-index: 0;
-  border-radius: 32px;
-  background-color: var(--purple);
-  pointer-events: none;
-  --tw-shadow: 0 5px 12px 0 rgba(0, 0, 0, 0.25);
-  --tw-shadow-colored: 0 5px 12px 0 var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  opacity: 0;
-  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1), top 0.35s cubic-bezier(0.4, 0, 0.2, 1), height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
-}
-
-.rounded-panel > .gview-pill-bg.is-visible {
-  opacity: 1;
-}
-
-.rounded-panel:has(> .gview-pill-bg.is-visible) > li {
-  position: relative;
-  z-index: 1;
-}
-
-.rounded-panel:has(> .gview-pill-bg.is-visible) > li > a.active {
-  background-color: transparent !important;
-  box-shadow: none !important;
-  --tw-shadow: none !important;
-}
-
-@media (max-width: 1023px) {
-  .rounded-panel > .gview-pill-bg {
-    display: none !important;
-  }
-}
-
 .dropdown li {
   background-color: transparent;
   padding-top: 0.5rem;
