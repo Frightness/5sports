@@ -8,6 +8,7 @@ const USE_CLASS_SCHEDULE_MOCKS = true;
 const USE_SPACE_BOOKINGS_MOCKS = true;
 const USE_EVENTS_MOCKS = true;
 const USE_ROSTER_MOCKS = true;
+const USE_CUSTOMERS_MOCKS = true;
 
 let rosterGridXhr = null;
 let rosterGridRequestId = 0;
@@ -45,6 +46,18 @@ async function get_api(api, silent=false) {
 	    if (api == 'getClasss' && USE_EVENTS_MOCKS) {
 	    	getClasssResults({ data: get_mock_events_classes_data() });
 	    	requestAnimationFrame(run_events_intro_animation);
+	    	resolve();
+	    	return;
+	    }
+
+	    if (api == 'getCustomers' && USE_CUSTOMERS_MOCKS) {
+	    	$('#loader-wrapper').hide();
+	    	$('#main_customers_table').removeClass('noshow');
+	    	try {
+	    		getCustomersResults({ data: get_mock_customers_data() }, 'full');
+	    	} finally {
+	    		$('#main_customers_table').addClass('noshow');
+	    	}
 	    	resolve();
 	    	return;
 	    }
@@ -415,6 +428,32 @@ function get_mock_space_grid_payload() {
 		})
 	];
 	return { data: gridData, data_schedule: dataSchedule };
+}
+
+function get_mock_customers_data() {
+	let id = 500001;
+	const row = function (first, last, dobYmd, email, phone) {
+		return {
+			customer_id: id++,
+			parent_id: 0,
+			first_name: first,
+			last_name: last,
+			dob: dobYmd,
+			email: email || '',
+			phone: phone || '',
+			details: {}
+		};
+	};
+	return [
+		row('', '', '2003-08-12', 'b.l@gmail.com', ''),
+		row('Chris', 'Mokdessi', '1980-12-17', 'chrismokdessi@betterlifeptstudio.com.au', '0421570719'),
+		row('000', 'cxd', '1970-01-25', 'NOBKGSzoran@naumovski.com.au', '0400000000'),
+		row('5sports', '5sports', '1950-01-01', 'sfsad@vsd.com', '0000000000'),
+		row('A', 'Lazaridis', '2015-08-24', '', ''),
+		row('A', 'O\'BRIEN', '2004-04-05', 'amanda.jonesobrien1@tafensw.edu.au', '0417999999'),
+		row('A', 'OBrien', '2000-01-01', 'amanda.jonesobrien@tafensw.edu.au', '0448101664'),
+		row('AA', 'NEEDdetails', '1950-01-01', 'nufin@5sports.net', '0400000000')
+	];
 }
 
 function get_mock_events_classes_data() {
@@ -8033,11 +8072,20 @@ function saveRollover() {
 
 function getCustomersResults(res,refresh='full') {
 
-    let data = res.data;
+    let data = res && res.data;
+    if (!Array.isArray(data)) {
+        data = [];
+    }
 
     let r = '#main_customers_table';
 
     if (refresh == 'full') {
+
+        let $tbl = $(r+' .customers_table');
+        if ($tbl.length && $.fn.DataTable.isDataTable($tbl[0])) {
+            $tbl.DataTable().destroy(true);
+        }
+        $(r).html($('#master_cust_search').html());
 
         let exportOptions = {
                 decodeEntities: true,
@@ -8080,13 +8128,17 @@ function getCustomersResults(res,refresh='full') {
     //now process data
     for (let i = 0; i < data.length; i++) {
 
+        if (!data[i].details) {
+            data[i].details = {};
+        }
+
         let row_obj = [];
         row_obj.push(data[i].customer_id);
-        row_obj.push(data[i].first_name+(data[i].medical && !data[i].medical_reused ? ' *':''));
-        row_obj.push(data[i].last_name);
+        row_obj.push((data[i].first_name || '')+(data[i].medical && !data[i].medical_reused ? ' *':''));
+        row_obj.push(data[i].last_name || '');
         row_obj.push(data[i].dob ? dayjs(data[i].dob).format('DD-MM-YYYY') : data[i].dob);
-        row_obj.push(data[i].email);
-        row_obj.push(data[i].phone.replace(/\s+/g, ''));
+        row_obj.push(data[i].email || '');
+        row_obj.push((data[i].phone || '').replace(/\s+/g, ''));
 
         //push parent name into details
         if ($('.child_items').length && data[i].parent_id > 0) {
@@ -8107,7 +8159,7 @@ function getCustomersResults(res,refresh='full') {
 
         let details = '<div class="noshow">\
             				<span class="customer_id">'+data[i].customer_id+'</span>\
-            				<span class="parent_id">'+data[i].parent_id+'</span>\
+            				<span class="parent_id">'+(data[i].parent_id || 0)+'</span>\
                         </div>';
 
         //clean display names for some details
@@ -8237,6 +8289,16 @@ function refresh_customers(initial='') {
 }
 
 function clone_customers() {
+    if (USE_CUSTOMERS_MOCKS && !is_datatable_on('main')) {
+        $('#loader-wrapper').hide();
+        destroy_datatable('main');
+        $('#main_customers_table').removeClass('noshow');
+        try {
+            getCustomersResults({ data: get_mock_customers_data() }, 'full');
+        } finally {
+            $('#main_customers_table').addClass('noshow');
+        }
+    }
     if (is_datatable_on('main')) {
     	//destroy any mc2 datatables first before removing html
     	destroy_datatable();
@@ -8272,7 +8334,10 @@ function clone_customers() {
 
         $(mc2+' .customers_table').css('width', ''); //clear inline style width=0, which will happen if we land on other tabs by default
     } else {
-    	$('#loader-wrapper').show(); //show spinner (customers not loaded)
+    	$('#loader-wrapper').hide();
+    	if (!USE_CUSTOMERS_MOCKS) {
+    		$('#loader-wrapper').show();
+    	}
     }
 }
 
@@ -30406,6 +30471,9 @@ $(async function() {
 
     //customer events
 	$(document).on('click','.modal_o_customers', function(e){
+		if (USE_CUSTOMERS_MOCKS) {
+			$('#loader-wrapper').hide();
+		}
 		$(mc2).html($('#master_customer_view').html());
         open_modal2($(this));
         clone_customers();
