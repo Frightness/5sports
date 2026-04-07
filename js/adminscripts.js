@@ -27762,12 +27762,13 @@ function run_events_intro_animation() {
 	var $container = $('#classes_list');
 	if (!$container.length || !$container.children().length) return;
 
-	var SECTION_STAGGER = 40;
-	var HEADER_COL_STAGGER = 60;
-	var ROW_STAGGER = 55;
-	var CELL_STAGGER = 40;
+	var SECTION_STAGGER = 70;
+	var HEADER_COL_STAGGER = 90;
+	var ROW_STAGGER = 120;
+	var CELL_STAGGER = 55;
 	var SECTION_GAP = 60;
-	var FADE_DUR = 300;
+	var FADE_DUR = 700;
+	var EASE = 'cubic-bezier(0.22, 1.2, 0.36, 1)';
 
 	var items = [];
 	var globalDelay = 0;
@@ -27778,20 +27779,21 @@ function run_events_intro_animation() {
 			globalDelay += SECTION_STAGGER;
 		} else if ($(this).hasClass('classes-table')) {
 			var $tbl = $(this);
-			$tbl.find('thead th').each(function (colIdx) {
+			var $headCells = $tbl.find('thead th');
+			$headCells.each(function (colIdx) {
 				items.push({ el: this, delay: globalDelay + colIdx * HEADER_COL_STAGGER });
 			});
-			var thCount = $tbl.find('thead th').length;
-			globalDelay += Math.min(thCount, 3) * HEADER_COL_STAGGER;
+			globalDelay += Math.max(1, $headCells.length) * HEADER_COL_STAGGER;
 
-			$tbl.find('tbody tr').each(function (rowIdx) {
+			$tbl.find('tbody tr.class_row').each(function (rowIdx) {
 				var rowBase = globalDelay + rowIdx * ROW_STAGGER;
 				$(this).children('td').each(function (colIdx) {
 					items.push({ el: this, delay: rowBase + colIdx * CELL_STAGGER });
 				});
 			});
 			var rowCount = $tbl.find('tbody tr').length;
-			globalDelay += rowCount * ROW_STAGGER + SECTION_GAP;
+			var cellCount = $tbl.find('tbody tr.class_row').first().children('td').length || 1;
+			globalDelay += rowCount * ROW_STAGGER + cellCount * CELL_STAGGER + SECTION_GAP;
 		}
 	});
 
@@ -27799,14 +27801,23 @@ function run_events_intro_animation() {
 
 	items.forEach(function (item) {
 		item.el.style.opacity = '0';
+		item.el.style.transform = 'translateY(18px) scale(0.93)';
 		item.el.style.transition = 'none';
 	});
 
 	void document.body.offsetWidth;
 
 	items.forEach(function (item) {
-		item.el.style.transition = 'opacity ' + FADE_DUR + 'ms ease-out ' + item.delay + 'ms';
-		item.el.style.opacity = '1';
+		setTimeout(function () {
+			item.el.style.transition = 'none';
+			item.el.style.opacity = '0.15';
+			item.el.style.transform = 'translateY(18px) scale(0.93)';
+			requestAnimationFrame(function () {
+				item.el.style.transition = 'opacity ' + FADE_DUR + 'ms ' + EASE + ', transform ' + FADE_DUR + 'ms ' + EASE;
+				item.el.style.opacity = '1';
+				item.el.style.transform = 'translateY(0) scale(1)';
+			});
+		}, item.delay);
 	});
 
 	var maxDelay = 0;
@@ -27818,6 +27829,7 @@ function run_events_intro_animation() {
 		items.forEach(function (item) {
 			item.el.style.transition = '';
 			item.el.style.opacity = '';
+			item.el.style.transform = '';
 		});
 	}, maxDelay + FADE_DUR + 100);
 }

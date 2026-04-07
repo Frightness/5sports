@@ -614,6 +614,21 @@ tr.class_row{
 .classes-table {
   margin-bottom: 20px;
 }
+#classes_main .classes-table {
+  background-color: transparent;
+}
+#classes_main .classes-table .table,
+#classes_main .classes-table .table thead,
+#classes_main .classes-table .table tbody,
+#classes_main .classes-table .table tr {
+  background-color: transparent;
+}
+#classes_main .classes-table .table thead tr th {
+  background-color: #fff;
+}
+#classes_main .classes-table .table tbody tr.class_row td {
+  background-color: #fff;
+}
 
 .classes-box .table thead tr th.th-lg {
   width: 418px;
