@@ -405,6 +405,138 @@ function build_grid(data, data_schedule, admin=false) {
 						runSpaceGridPostIntro();
 						return;
 					}
+					if (mode === 'space') {
+						var EVT_STAGGER_SP = 83;
+						var EVT_DUR_SP = 420;
+						var CARD_SPRING_MS_SP = Math.round(EVT_DUR_SP * 1.48);
+						var springKfsSp = [
+							{ opacity: 0, transform: 'scale(0.78)' },
+							{ opacity: 1, transform: 'scale(1.09)', offset: 0.38 },
+							{ opacity: 1, transform: 'scale(0.94)', offset: 0.58 },
+							{ opacity: 1, transform: 'scale(1.03)', offset: 0.78 },
+							{ opacity: 1, transform: 'scale(1)', offset: 1 }
+						];
+						var useWAAPIsp = typeof Element.prototype.animate === 'function';
+						function spaceCardDiagonalSum(el) {
+							var $td = $(el).closest('td');
+							var ri = $td.parent().index();
+							var ci = Math.max(0, $td.index() - 1);
+							return ri + ci;
+						}
+						var groupsSp = {};
+						$evts.each(function () {
+							var sid = this.dataset.intrac_schedule_id;
+							if (!sid) {
+								sid = 'slot_' + this.id;
+							}
+							if (!groupsSp[sid]) {
+								groupsSp[sid] = [];
+							}
+							groupsSp[sid].push(this);
+						});
+						var keysSp = Object.keys(groupsSp).sort(function (a, b) {
+							var minA = Infinity;
+							var minB = Infinity;
+							groupsSp[a].forEach(function (el) {
+								var s = spaceCardDiagonalSum(el);
+								if (s < minA) minA = s;
+							});
+							groupsSp[b].forEach(function (el) {
+								var s = spaceCardDiagonalSum(el);
+								if (s < minB) minB = s;
+							});
+							if (minA !== minB) {
+								return minA - minB;
+							}
+							var na = parseInt(a, 10);
+							var nb = parseInt(b, 10);
+							if (!isNaN(na) && !isNaN(nb)) {
+								return na - nb;
+							}
+							return String(a).localeCompare(String(b));
+						});
+						var finishSpaceCardSprings = function () {
+							$evts.each(function () {
+								var el = this;
+								el.getAnimations().forEach(function (a) {
+									a.cancel();
+								});
+								el.classList.remove('grid-schedule-card-spring');
+								el.style.transition = '';
+								el.style.opacity = '';
+								el.style.transform = '';
+								el.style.willChange = '';
+							});
+							runSpaceGridPostIntro();
+						};
+						$evts.each(function () {
+							var el = this;
+							el.style.transition = 'none';
+							el.style.opacity = '0';
+							el.style.transform = 'scale(0.78)';
+						});
+						var evtMaxSp = 0;
+						var promisesSp = [];
+						var waapiCountSp = 0;
+						if (useWAAPIsp) {
+							keysSp.forEach(function (key) {
+								var els = groupsSp[key];
+								var minSum = Infinity;
+								els.forEach(function (el) {
+									var s = spaceCardDiagonalSum(el);
+									if (s < minSum) minSum = s;
+								});
+								var groupDelay = minSum * EVT_STAGGER_SP;
+								els.forEach(function (el) {
+									waapiCountSp++;
+									var anim = el.animate(springKfsSp, {
+										duration: CARD_SPRING_MS_SP,
+										delay: groupDelay,
+										easing: 'ease-out',
+										fill: 'forwards'
+									});
+									if (anim && anim.finished) {
+										promisesSp.push(anim.finished.catch(function () {}));
+									}
+									if (groupDelay + CARD_SPRING_MS_SP > evtMaxSp) {
+										evtMaxSp = groupDelay + CARD_SPRING_MS_SP;
+									}
+								});
+							});
+							var tailMsSp = evtMaxSp + 75;
+							var settledSp = false;
+							var settleSp = function () {
+								if (settledSp) return;
+								settledSp = true;
+								clearTimeout(safetyIdSp);
+								finishSpaceCardSprings();
+							};
+							var safetyIdSp = setTimeout(settleSp, tailMsSp + 250);
+							if (promisesSp.length === waapiCountSp && promisesSp.length > 0) {
+								Promise.all(promisesSp).then(settleSp, settleSp);
+							}
+						} else {
+							keysSp.forEach(function (key) {
+								var els = groupsSp[key];
+								var minSum = Infinity;
+								els.forEach(function (el) {
+									var s = spaceCardDiagonalSum(el);
+									if (s < minSum) minSum = s;
+								});
+								var groupDelay = minSum * EVT_STAGGER_SP;
+								els.forEach(function (el) {
+									setTimeout(function () {
+										el.classList.add('grid-schedule-card-spring');
+									}, groupDelay);
+								});
+								if (groupDelay + CARD_SPRING_MS_SP > evtMaxSp) {
+									evtMaxSp = groupDelay + CARD_SPRING_MS_SP;
+								}
+							});
+							setTimeout(finishSpaceCardSprings, evtMaxSp + 75);
+						}
+						return;
+					}
 					$evts.css({ opacity: '0', transform: 'scale(0.96)' });
 					var evtMax = 0;
 					$evts.each(function () {
@@ -467,14 +599,19 @@ function build_grid(data, data_schedule, admin=false) {
 					afterApply();
 				}
 			}
-			if (admin && !sgReduceMotion) {
+			if (admin && !sgReduceMotion && mode === 'space') {
 				var $tblSpace = $(target).find('table:first');
 				if ($tblSpace.length && $tblSpace.find('tbody td').length) {
-					requestAnimationFrame(function () {
-						run_table_diag_intro_animation($tblSpace, function () {
-							applySpaceScheduleWork(runSpaceCardStaggerThenPost);
-						}, { diagStep: 30, fadeMs: 0, timeColumnFadeMs: 1000 });
-					});
+					if (window.intracSpaceGridIntroPending) {
+						window.intracSpaceGridIntroPending = false;
+						requestAnimationFrame(function () {
+							run_table_diag_intro_animation($tblSpace, function () {
+								applySpaceScheduleWork(runSpaceCardStaggerThenPost);
+							}, { skipCellUnwrap: true });
+						});
+					} else {
+						applySpaceScheduleWork(runSpaceCardStaggerThenPost);
+					}
 				} else {
 					applySpaceScheduleWork(runSpaceCardStaggerThenPost);
 				}
@@ -1469,9 +1606,15 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 			runClassGridAfterScheduleIntro();
 		}
 
-		var shouldAnimateClassIntro = admin && !reduceMotion && !!window.intracClassGridIntroPending;
-		if (shouldAnimateClassIntro) {
-			window.intracClassGridIntroPending = false;
+		var shouldAnimateClassIntro = !roster && admin && !reduceMotion && !!window.intracClassGridIntroPending;
+		var shouldAnimateRosterIntro = roster && admin && !reduceMotion && !!window.intracRosterGridIntroPending;
+		if (shouldAnimateClassIntro || shouldAnimateRosterIntro) {
+			if (shouldAnimateClassIntro) {
+				window.intracClassGridIntroPending = false;
+			}
+			if (shouldAnimateRosterIntro) {
+				window.intracRosterGridIntroPending = false;
+			}
 			var $tblClass = $(target).find('table:first');
 			function runClassPhase2AfterIntro() {
 				runPhase2Events();

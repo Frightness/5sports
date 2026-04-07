@@ -1094,6 +1094,31 @@ input:checked + .toggle-bg {
 #rosters .time-shadow-wrapper-title {
   background-color: transparent;
 }
+#spaces.table-wrapper {
+  background-color: transparent;
+}
+#spaces table,
+#spaces thead,
+#spaces tbody,
+#spaces tr {
+  background-color: transparent;
+}
+#spaces .courts-many,
+#spaces .time-column-many {
+  background-color: transparent;
+}
+#spaces thead .courts-many,
+#spaces thead .time-column-many {
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+#spaces tbody .time-column-many {
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+#spaces .courts-many > div,
+#spaces .time-shadow-wrapper,
+#spaces .time-shadow-wrapper-title {
+  background-color: transparent;
+}
 .cell-many {
   position: relative;
   width: 125px;

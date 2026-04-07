@@ -2471,7 +2471,8 @@ body.dashboard-intro-running #dashboard .chart_canvas:not(.dash-anim-row) {
   will-change: transform, opacity;
 }
 
-#rosters .grid-schedule-card-spring {
+#rosters .grid-schedule-card-spring,
+#spaces .grid-schedule-card-spring {
   animation: grid-schedule-card-spring-kf 0.62s ease-out both !important;
 }
 

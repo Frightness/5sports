@@ -13,6 +13,8 @@ const USE_CUSTOMERS_MOCKS = true;
 let rosterGridXhr = null;
 let rosterGridRequestId = 0;
 window.intracClassGridIntroPending = false;
+window.intracRosterGridIntroPending = false;
+window.intracSpaceGridIntroPending = false;
 
 function mini_login_wizard(redirect) {
 	$('#loader-wrapper').hide();
@@ -28404,6 +28406,7 @@ $(async function() {
 	$('.nav_space').on('click', function (e) {
 		$('#main_page_title').text($(this).text()).removeClass('noshow');
 		$('#spaces').removeClass('noshow');
+		window.intracSpaceGridIntroPending = true;
 		deferHeavyWorkAfterNavPaint(function () {
 			get_grid();
 		});
@@ -28439,6 +28442,7 @@ $(async function() {
 	$('.nav_roster').on('click', function (e) {
 		$('#main_page_title').html($(this).text()).removeClass('noshow');
 		$('#rosters').removeClass('noshow');
+		window.intracRosterGridIntroPending = true;
 		deferHeavyWorkAfterNavPaint(function () {
 			get_roster_grid();
 		});
