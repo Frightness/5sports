@@ -1,7 +1,6 @@
 'use strict';
 
 $(function() {
-    // DOM ready
 
 	$('#form-signin').submit(async function (e) {
 		e.preventDefault();
@@ -58,7 +57,6 @@ $(function() {
 	        }).done(async function( response ) {
 
 	            if (response.success != undefined) {
-	            	//ignore
 	            } else if (response.redirect != undefined) {
 	                $('#2fa_error').text('Your session is expired, please click cancel and start again');
 	            } else {    

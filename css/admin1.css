@@ -222,7 +222,7 @@ b.half-bold {
 }
 
 .padding_1px {
-  padding: 1px; /*same as select border-width to show border correctly*/
+  padding: 1px; 
 }
 
 .no_padding_top {
@@ -287,8 +287,6 @@ b.half-bold {
 }
 
 .notes_menu {
-  /*top: 26px;
-  left: -76px;*/
   left: 0%;
   top: 130%;  
   transform: translate(-75%, 0);
@@ -490,7 +488,7 @@ tr.class_row{
 }
 
 .star_list > li:has(.star_fav) {
-  order: -1; /* moves these to the top */
+  order: -1; 
 }
 
 #calendar_main_lnk input {
@@ -763,8 +761,8 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
 .new-modal-content .modal-header::before {
   content: "";
   position: absolute;
-  top: -1rem; /* same as new-modal-content padding */
-  height: 1rem; /* same as new-modal-content padding */
+  top: -1rem; 
+  height: 1rem; 
   left: 0;
   right: 0;
   --tw-bg-opacity: 1;
@@ -809,7 +807,7 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
 
 .table-gap {
   border-collapse: separate;
-  border-spacing: 0 1rem; /* horizontal 0, vertical 1rem */
+  border-spacing: 0 1rem; 
 }
 
 .modal-tab-body tbody tr th.w-75p, .modal-tab-body tbody tr td.w-75p, .w-75p {
@@ -878,7 +876,6 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
   height: 24px;
   opacity: 0;
   cursor: pointer;
-  /* remove default arrow (for most browsers) */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -888,12 +885,12 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
 }
 
 .game_chevron {
-  pointer-events: none; /* click goes "through" to the select behind */
+  pointer-events: none; 
 }
 
 .game_timer {
   font-size: 1.8rem;
-  white-space: pre; /*for double spaces*/
+  white-space: pre; 
 }
 
 .modal:has(.score_div) {
@@ -925,7 +922,6 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
   display: none;
 }
 
-/* customer accordions*/
 .customer_accordion {
   display: flex;
   align-items: center;
@@ -957,7 +953,7 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
 }
 
 .cust_chevron, .flex_float_right, .widget_select {
-  margin-left: auto; /*float to right*/
+  margin-left: auto; 
 }
 
 .widget_select {
@@ -998,23 +994,19 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
 }
 
 .cregister_row .actions, .cpass_row .actions {
-  margin-left: auto; /*float to right*/
+  margin-left: auto; 
 }
 
 .cregister_row .creg_action, .cpass_row .cpass_action {
   margin-left: 20px;
 }
-/* customer accordions - end*/
 
-/*form auto widths*/
-/* The entire form is the grid container */
 .modal-tab-body form:not(.static_form), .grid_3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 
-/* Down to 2 columns below 1280px */
 @media (max-width: 1279px) {
   .modal-tab-body form:not(.static_form), .grid_3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1023,14 +1015,12 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
   }
 }
 
-/* Single column on mobile */
 @media (max-width: 767px) {
   .modal-tab-body form:not(.static_form), .grid_3 {
     grid-template-columns: 1fr;
   }
 }
 
-/* Fields that should stretch across full width */
 .modal-tab-body form .full-width, .modal-tab-body form h4, .modal-tab-body form .new-modal-footer, .modal-tab-body form .form-group:has(textarea), .modal-tab-body form .form-group:has(.quill_editor), .grid_3 .full-width {
   grid-column: 1 / -1;
 }
@@ -1042,9 +1032,7 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
 .modal-tab-body .first-column {
   grid-column: 1;
 }
-/*form widths - end*/
 
-/*grid_2 auto widths*/
 .grid_2, .modal-tab-body form.grid_2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1065,9 +1053,7 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
     grid-template-columns: 1fr;
   }
 }
-/*grid_2 - end*/
 
-/*fixt_cf_rounds grid*/
 .fixt_cf_rounds {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1079,9 +1065,7 @@ a.view_customer:not(.btn-edit), a.view_account:not(.btn-edit) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-/*fixt_cf_rounds - end*/
 
-/*form fields*/
 .modal-tab-body form .form-group {
   margin-bottom: 10px;
   display: flex;
@@ -1231,7 +1215,6 @@ input:disabled, select:disabled {
   display: none;
 }
 
-/*form fields - end*/
 
 .ps_space_ids .form-label .checkbox-custom {
   top: 25%;
@@ -1342,8 +1325,8 @@ input:disabled, select:disabled {
 
 .sticky-modal-footer {
   position: sticky; 
-  bottom: -1.5rem; /*to cater for 1.5rem padding*/
-  left: -1.5rem; /*to cater for 1.5rem padding*/
+  bottom: -1.5rem; 
+  left: -1.5rem; 
   z-index: 1101;
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));  
@@ -1440,7 +1423,6 @@ input:disabled, select:disabled {
   display: none;
 }
 
-/*swiper chevrons*/
 .calendar-box-wrapper {
   display: flex;
   align-items: center;
@@ -1463,9 +1445,7 @@ input:disabled, select:disabled {
 .swiper-button-prev:after {
   content: none;
 }
-/*swiper chevrons - end*/
 
-/*reports*/
 #report_result .table-wrapper .table thead tr th, #report_result .table-wrapper .table tbody tr td {
   white-space: inherit;
 }
@@ -1566,9 +1546,7 @@ input:disabled, select:disabled {
   font-size: 12px;
 }
 
-/*reports - end*/
 
-/*Flatpickr*/
 .flatpickr-day.selected,
 .flatpickr-day.today,
 .flatpickr-day.today:hover,
@@ -1608,7 +1586,6 @@ input:disabled, select:disabled {
   font-size: 14px;
 }
 
-/*spinner*/
 #loader:after,#loader:before{content:"";position:absolute}
 
 #loader-wrapper {
@@ -1640,12 +1617,10 @@ input:disabled, select:disabled {
   animation: spin var(--speed) linear infinite;
 }
 
-/* Fixed circular orbit */
 #loader .orbit {
   transform-origin: 0 0;
 }
 
-/* Radial placement */
 #loader .o1 {
   transform: rotate(180deg) translate(0, calc(-1 * var(--radius)));
 }
@@ -1656,7 +1631,6 @@ input:disabled, select:disabled {
   transform: rotate(60deg) translate(0, calc(-1 * var(--radius)));
 }
 
-/* Blade animation ONLY scales */
 #loader .blade {
   fill: url(#bladeGradient);
   transform-box: fill-box;
@@ -1666,7 +1640,6 @@ input:disabled, select:disabled {
   animation: elastic var(--speed) cubic-bezier(0.22, 1.15, 0.36, 1) infinite;
 }
 
-/* Phase offsets */
 #loader .o1 .blade {
   animation-delay: 0s;
 }
@@ -1677,14 +1650,12 @@ input:disabled, select:disabled {
   animation-delay: 0.32s;
 }
 
-/* Continuous rotation */
 @keyframes spin {
   to {
     transform: rotate(-360deg);
   }
 }
 
-/* Elastic scale (AE-style) */
 @keyframes elastic {
   0% {transform: scale(0); opacity: 0;}
   18% {transform: scale(1.26); opacity: 1;}
@@ -1694,9 +1665,7 @@ input:disabled, select:disabled {
   85% {opacity: 1;}
   100% {transform: scale(0); opacity: 0;}
 }
-/*spinner end*/
 
-/*dataTable customisations*/
 .cust_search_tab .customer_row {
   height: 45px;
 }
@@ -1710,7 +1679,6 @@ input:disabled, select:disabled {
   background-color: #f0f0f0;
 }
 
-/*Tippy theme*/
 .tippy-box[data-theme~='purple'] {
     background-color: var(--purple);
     color: white;
@@ -1719,15 +1687,12 @@ input:disabled, select:disabled {
 .tippy-box[data-theme~='purple'] > .tippy-arrow::before {
     color: var(--purple);
 }
-/*Tippy theme end*/
 
-/* Tooltip container (customer datatable) */
 .tooltip {
   position: relative;
   display: inline-block;
 }
 
-/* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
   position: absolute;
@@ -1749,25 +1714,20 @@ input:disabled, select:disabled {
   left: 20px;
 }
 
-/* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
 
-/*to cater for large last info panels*/
 #display_modal2 .customers_table_div:has(.tooltip:hover) .table-wrapper.overflow-hidden {
   overflow: visible;
 }
 
-/*printDiv*/
 
 #printDiv .table-scroll {
   max-height: 100%;
 }
 
-/*printDiv - end*/
 
-/*quill*/
 .quill_editor {
   min-height: 150px;
   max-height: 400px;
@@ -1777,26 +1737,21 @@ input:disabled, select:disabled {
   min-height: 250px;
 }
 
-/*limited css for .template_html_preview to keep it original as email*/
-/*mimics sanitiseQuillPs in b/end*/
 .template_html_preview p {
   margin: 0;
   padding: 0;
   font-size: 12px;
 }
 
-/*link color*/
 .template_html_preview a {
   color: #6d66e5;
 }
 
-/*to get around the * rule at the top*/
 .template_html_preview ul, .template_html_preview ol {
   padding: unset;
   padding-left: 40px;
 }
 
-/*hack for bold and underline not working in html, email clients are rendering fine without this*/
 .template_html_preview strong *, .ql-editor strong * {
   font-family: inherit;
   font-weight: inherit;
@@ -1824,25 +1779,20 @@ input:disabled, select:disabled {
 .ql-font-comic-sans { font-family: 'Comic Sans MS, cursive'; }
 .ql-font-verdana { font-family: 'Verdana, sans-serif'; }
 
-/*Adding the values from the array which has the values as data-values*/
 
-/*for font-size*/
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value]::before,
 .ql-snow .ql-picker.ql-size .ql-picker-item[data-value]::before {
   content: attr(data-value) !important;
 }
 
-/*for font-family*/
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value]::before {
   content: attr(data-value) !important;
 }
 
-/*.ap is for emojis*/
 .quill_editor .ap, .ql-emojiblot .ap {
   background-image: none;
   text-indent: 0;
-  /* It's also possible to adjust spacing. To make selecting emojis easier */
   width: 25px;
   height: 25px;
   align-items: center;
@@ -1862,9 +1812,7 @@ input:disabled, select:disabled {
   color: inherit;
 }
 
-/*quill - end*/
 
-/*dashboard - grid*/
 #dashboard {
   width: 100%;
   min-width: 320px;
@@ -1948,15 +1896,11 @@ input:disabled, select:disabled {
   max-height: 100%;
 }
 
-/*dashboard - grid - end*/
 
-/*flatpickr*/
 .flatpickr-current-month {
   font-size: 14px;
 }
-/*flatpickr - end*/
 
-/*modals full width and height*/
 .admin-page:not(.instructor-page) .modal-backdrop:not(.bottom_right_modal):not(.popup-modal):not(.offcanvse) .modal {
     width: 95% !important;
 }
@@ -1967,9 +1911,7 @@ input:disabled, select:disabled {
 .admin-page:not(.instructor-page) .modal-backdrop:not(.bottom_right_modal):not(.popup-modal):not(.offcanvse) .new-modal-content .table-scroll {
     max-height: 62vh;
 }
-/*modals full width and height - end*/
 
-/*instructor view*/
 .instructor-page .nav-link-row:not(.instructor_nav),
 .instructor-page .quick_favs, .instructor-page .manage_favs, .instructor-page .mobile_favourites_div,
 .instructor-page .functions_div, .instructor-page .mobile_functions_div,
@@ -2033,7 +1975,7 @@ input:disabled, select:disabled {
   --tw-shadow: 0px 2px 8px 0px #0000001A;
   --tw-shadow-colored: 0px 2px 8px 0px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  margin-top: 5px; /*for the shadow to work in all cases*/
+  margin-top: 5px; 
   flex-basis: calc((100% - 20px) / 2);
 }
 
@@ -2058,7 +2000,7 @@ input:disabled, select:disabled {
   padding: 0px;
 }
 
-.instructor-page .game-btn-wrapper:has(button.noshow) { /* so that grid item don't occupy space when button is hidden*/
+.instructor-page .game-btn-wrapper:has(button.noshow) { 
   display: none;
 }
 
@@ -2066,7 +2008,6 @@ input:disabled, select:disabled {
   display: none;
 }
 
-/*no shows*/
 .noshow {
   display: none;
 }
@@ -2087,7 +2028,6 @@ input:disabled, select:disabled {
   display: flex;
 }
 
-/*full screen*/
 .full_screen {
   width: 100dvw;
   height: 100dvh;
@@ -2097,7 +2037,6 @@ input:disabled, select:disabled {
   max-height: 100dvh;
 }
 
-/*media*/
 @media (max-width: 639px){
   .reports_left_menu:has(.toggle_div:not(.noshow)) {
     padding: 10px;
@@ -2132,8 +2071,8 @@ input:disabled, select:disabled {
   }
 
   .new-modal-content .modal-header::before {
-    top: -1.5rem; /* same as new-modal-content padding */
-    height: 1.5rem; /* same as new-modal-content padding */
+    top: -1.5rem; 
+    height: 1.5rem; 
   }
 
 }

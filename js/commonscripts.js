@@ -30,15 +30,15 @@ function parse_time (date,formats=['h:mma', 'h:mm a', 'hh:mma', 'hh:mm a', 'H:mm
     return dayjs(date, formats, true).format('HH:mm:ss');
 }
 
-function dates_diff(date1, date2, unit='day') { //assumes format is YYYY-MM-DD
+function dates_diff(date1, date2, unit='day') { 
     return dayjs(date1).diff(date2, unit);
 }
 
-function times_diff(time1, time2, unit='minute') { //assumes format is HH:mm:ss
+function times_diff(time1, time2, unit='minute') { 
     return dayjs(dayjs(time1,'HH:mm:ss')).diff(dayjs(time2,'HH:mm:ss'), unit);
 }
 
-function times_isbetween(time, time1, time2, mode='[]', unit='minute') { //assumes format is HH:mm:ss; [ is include ( is exclude start & finish respectively
+function times_isbetween(time, time1, time2, mode='[]', unit='minute') { 
     return dayjs(dayjs(time,'HH:mm:ss')).isBetween(dayjs(time1,'HH:mm:ss'), dayjs(time2,'HH:mm:ss'), unit, mode);
 }
 
@@ -68,8 +68,8 @@ function numberformatccy(num,round=2,locale="en-AU",ccy = "AUD") {
     } else {
         return parseFloat(num).toLocaleString(locale, {style:"currency", currency:ccy, minimumFractionDigits:2, maximumFractionDigits:round});  
     }
-    
-}
+
+    }
 
 function toString(d) {
     if (d) {
@@ -87,22 +87,21 @@ function wordCount(str, word) {
 
 function clean_json(json) {
     return JSON.stringify(json, null, 2)
-      .replace(/^{\s*/, '') // Remove opening brace and whitespace
-      .replace(/\s*}$/, '') // Remove closing brace and whitespace
-      .replace(/,\n\s*/g, '<br>') // Replace comma-newline combos
-      .replace(/\\r\\n/g, '<br>') // Replace literal "\r\n" strings from JSON
-      .replace(/\r?\n/g, '<br>') // Replace actual newlines
-      .replace(/:\s*/g, ': ') // Normalize colon spacing
+      .replace(/^{\s*/, '') 
+      .replace(/\s*}$/, '') 
+      .replace(/,\n\s*/g, '<br>') 
+      .replace(/\\r\\n/g, '<br>') 
+      .replace(/\r?\n/g, '<br>') 
+      .replace(/:\s*/g, ': ') 
       .replace(/"([^"]+)":/g, (_, key) => {
-            // Capitalize first letter of key
             const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
             return capitalizedKey + ':';
         })
-      .replace(/"\s*/g, ''); // Remove stray quotes
+      .replace(/"\s*/g, ''); 
 }
 
 function mini_login_wizard(redirect) {
-    window.location.href = redirect; //redirect returned by server
+    window.location.href = redirect; 
 }
 
 function isTouchDevice() {
@@ -127,9 +126,8 @@ function isEmptyJSON(json) {
 }
 
 function isMobile(str,locale) {
-    str = str.replace(/ /g, ''); //replace spaces and +
+    str = str.replace(/ /g, ''); 
     return validator.isMobilePhone(str, (locale ? locale : 'en-AU'), {strictMode: false});
-    //return validator.matches(str,/^04[\d]{8}/);
 }
 
 function isID(str) {
@@ -164,7 +162,6 @@ function isDSTAus (date, timezone='') {
     let month = targetDate.month();
 
     if (month >= 9 || month <= 3) {
-        //no DST anywhere on 2024-07-01, hence standardOffset
         let standardOffset = dayjs('2024-07-01').utcOffset();
         if (timezone) {
             standardOffset = dayjs('2024-07-01').tz(timezone, true).utcOffset();
@@ -182,12 +179,9 @@ function getAge(dob) {
     const now = dayjs();
     dob = dayjs(dob, 'YYYY-MM-DD', true);
 
-    // Calculate the years difference
     let years = now.year() - dob.year();
-    // Calculate the months difference
     let months = now.month() - dob.month();
 
-    // Adjust years and months if needed
     if (months < 0) {
         years--;
         months += 12;
@@ -216,20 +210,17 @@ function getFilteredDates(startDate, endDate, day, holidays = [], day_type = 0) 
         "All": "All"
     };
     const targetDay = daysMap[day];
-    const refDate = dayjs('2025-01-01').startOf('isoWeek'); // For fortnightly calc
+    const refDate = dayjs('2025-01-01').startOf('isoWeek'); 
 
     day_type = parseInt(day_type, 10);
 
     for (let date = start; date.isBefore(end) || date.isSame(end); date = date.add(1, 'day')) {
         const formattedDate = date.format('YYYY-MM-DD');
 
-        // Skip holidays
         if (holidays.includes(formattedDate)) continue;
 
-        // Filter by weekday
         if (day !== "All" && date.day() !== targetDay) continue;
 
-        // Apply week-based filtering
         if (day_type >= 1 && day_type <= 5) {
             const firstDayOfMonth = date.startOf('month');
             const weekOfMonth = Math.floor(date.diff(firstDayOfMonth, 'day') / 7) + 1;
@@ -243,7 +234,6 @@ function getFilteredDates(startDate, endDate, day, holidays = [], day_type = 0) 
             }
         }
 
-        // Fortnight filtering based on 2025-01-01
         if (day_type === 6 || day_type === 7) {
             const weeksSinceReference = Math.floor(date.startOf('day').diff(refDate, 'day') / 7) + 1;
             const isEvenWeek = weeksSinceReference % 2 === 0;
@@ -261,7 +251,6 @@ function uniqueJSONArray(jsonArray) {
     return Array.from(new Set(jsonArray.map(JSON.stringify))).map(JSON.parse);
 };
 
-//sql style sorting
 function sqlStyleSortJSONArray(arr, keys = [], direction = 'asc') {
   const isAsc = direction === 'asc';
 
@@ -285,19 +274,16 @@ function sqlStyleSortJSONArray(arr, keys = [], direction = 'asc') {
 
       if (result !== 0) return isAsc ? result : -result;
     }
-    return 0; // all keys equal
+    return 0; 
   });
 }
 
-//don't expand arrays
 function JSONprettyCompact(obj) {
     const raw = JSON.stringify(obj, null, 4);
 
-    // Regex to collapse arrays that span multiple lines
     const compacted = raw.replace(
         /\[\s+([^\[\]\{\}]+?)\s+\]/gs,
         (match, content) => {
-            // Remove line breaks and extra spaces
             const oneLine = content.trim().replace(/\s*,\s*/g, ', ');
             return `[ ${oneLine} ]`;
         }
@@ -307,9 +293,7 @@ function JSONprettyCompact(obj) {
 }
 
 function downloadCSV(data,filename) {
-    // Convert JSON data to CSV
     let csvData = jsonToCsv(data);
-    // Create a CSV file and allow the user to download it
     let blob = new Blob([csvData], { type: 'text/csv' });
     let url = window.URL.createObjectURL(blob);
     let a = document.createElement('a');
@@ -325,7 +309,6 @@ function downloadCSV(data,filename) {
 function jsonToCsv(jsonData) {
     let allKeys = new Set();
 
-    // Collect all unique keys
     jsonData.forEach(row => {
         Object.keys(row).forEach(key => allKeys.add(key));
     });
@@ -336,29 +319,28 @@ function jsonToCsv(jsonData) {
     jsonData.forEach(row => {
         const line = headers.map(header => {
             let value = row.hasOwnProperty(header) ? row[header] : ' ';
-            value = String(value).replace(/,/g, '.'); // replace commas with dot
+            value = String(value).replace(/,/g, '.'); 
             return JSON.stringify(value);
         }).join(',');
         csv += line + '\r\n';
     });
 
-    // Optional: remove quotes if you don't want any
     csv = csv.replace(/"/g, '');
 
     return csv;
 }
 
 function game_clock(el, cur_db_time, finish, period, game_periods) {
-    let j = dayjs(finish).diff(dayjs(cur_db_time), 'second') * 1000; //diff in milliseconds
-    
-    let start = new Date();
+    let j = dayjs(finish).diff(dayjs(cur_db_time), 'second') * 1000; 
+
+        let start = new Date();
 
     function updateClock() {
         let i = start-new Date();
         i = i+j;
         if (i < 0) {
             i = 0-i;
-            $(mc+' .'+el+'_timer').css('color', 'red'); //overtime
+            $(mc+' .'+el+'_timer').css('color', 'red'); 
         }
         let time_str = Math.floor(i/60000)+':'+(Math.floor(i/1000)%60<10?'0':'')+Math.floor(i/1000)%60;
 
@@ -369,9 +351,9 @@ function game_clock(el, cur_db_time, finish, period, game_periods) {
         $(mc+' .'+el+'_timer').text(period_str+time_str);
     }
 
-    updateClock(); //run once immediately
-    
-    let gameClockID = setInterval(updateClock, 250);
+    updateClock(); 
+
+        let gameClockID = setInterval(updateClock, 250);
     $('#game_clock_id').text(gameClockID);
 }
 
@@ -390,7 +372,7 @@ function htmlDecode(str) {
 function sanitiseCSSTemplate() {
     const $style = $('#css_template');
     let css = $style.html();
-    css = css.replace(/&#34;/g, '"'); // Replace &#34; with actual double quotes
+    css = css.replace(/&#34;/g, '"'); 
     $style.text(css);
 }
 
@@ -399,7 +381,6 @@ function findClosestPastSlot(target) {
     let hours = now.getHours();
     let minutes = now.getMinutes();
 
-    // Round down to nearest 15
     minutes = Math.floor(minutes / 15) * 15;
 
     while (hours >= 0) {
@@ -407,21 +388,19 @@ function findClosestPastSlot(target) {
         const mm = String(minutes).padStart(2, "0");
         const suffix = `_${hh}-${mm}`;
 
-        // Look for any element whose ID ends with this suffix
         const el = $(target+' '+`[id$='${suffix}']`);
 
         if (el.length) {
-            return el.first(); // Return the first match
+            return el.first(); 
         }
 
-        // Step back 15 mins
         minutes -= 15;
         if (minutes < 0) {
             minutes = 45;
             hours -= 1;
         }
     }
-    return null; // Nothing found
+    return null; 
 }
 
 
@@ -438,15 +417,14 @@ String.prototype.replaceCase = function(placeholder, replacement) {
 
 String.prototype.replaceCaseFull = function(search, replacement) {
     return this.replace(new RegExp(search, 'gi'), function(match) {
-        // Function to preserve case
         let result = '';
         let maxLen = Math.max(match.length, replacement.length);
-        
-        for (let i = 0; i < maxLen; i++) {
+
+                for (let i = 0; i < maxLen; i++) {
             let matchChar = match[i] || '';
             let char = replacement[i] || '';
-            
-            if (i < match.length) {
+
+                        if (i < match.length) {
                 if (matchChar === matchChar.toUpperCase()) {
                     result += char.toUpperCase();
                 } else {
@@ -460,7 +438,6 @@ String.prototype.replaceCaseFull = function(search, replacement) {
     });
 };
 
-//similar to jQuery contains but matches text exactly
 $.expr[':'].containsExact = function(el, i, m) {
     return $(el).text().trim() === m[3];
 };
@@ -503,29 +480,22 @@ function mergeJSONnums(obj1, obj2) {
         return val && typeof val === 'object' && !Array.isArray(val);
     }
 
-    // Recursive merge logic
     for (const key in obj1) {
         if (obj1.hasOwnProperty(key)) {
-            // If key exists in both objects
             if (obj2.hasOwnProperty(key)) {
                 if (isObject(obj1[key]) && isObject(obj2[key])) {
-                    // Recursively merge nested objects
                     merged[key] = mergeJSONnums(obj1[key], obj2[key]);
                 } else if (typeof obj1[key] === 'number' && typeof obj2[key] === 'number') {
-                    // Pick the highest number if both are numbers
                     merged[key] = Math.max(obj1[key], obj2[key]);
                 } else {
-                    // Default to obj1's value if types differ
                     merged[key] = obj1[key];
                 }
             } else {
-                // If key is only in obj1
                 merged[key] = obj1[key];
             }
         }
     }
 
-    // Add keys that only exist in obj2
     for (const key in obj2) {
         if (obj2.hasOwnProperty(key) && !obj1.hasOwnProperty(key)) {
             merged[key] = obj2[key];
@@ -583,8 +553,8 @@ const StripePaymentManager = (() => {
         isMounted() {
             return !!paymentElement;
         },
-        
-        async mount(config, selector) {
+
+                async mount(config, selector) {
             try {
                 if (paymentElement) {
                     await this.unmount();
@@ -593,7 +563,7 @@ const StripePaymentManager = (() => {
                 config = {...config, appearance: appearance};
 
                 if (config.amount <= 0) {
-                    config.amount = 1; //set to 1c to avoid an error
+                    config.amount = 1; 
                 }
 
                 config.allowedCardBrands = $('#allow_amex').length ? ['visa', 'mastercard', 'american_express'] : ['visa', 'mastercard'];
@@ -629,7 +599,7 @@ const StripePaymentManager = (() => {
                 if (elements) {
 
                     if (amount <= 0) {
-                        amount = 1; //set to 1c to avoid an error
+                        amount = 1; 
                     }
 
                     elements.update({ amount });
@@ -668,7 +638,7 @@ const StripePaymentManager = (() => {
             }
             try {
                 const result = await elements.submit();
-                return result; // Will contain {error} if there’s an issue, or undefined if successful
+                return result; 
             } catch (error) {
                 console.error('Failed to create submit elements:', error);
                 return { error: { message: 'Something went wrong! Please refresh the page and re-try. Your card has not been charged' } };
@@ -683,7 +653,7 @@ const StripePaymentManager = (() => {
 
             try {
                 const result = await stripe.createConfirmationToken({elements});
-                return result; // {error, confirmationToken}
+                return result; 
             } catch (error) {
                 console.error('Failed to create confirmation token:', error);
                 return { error: { message: 'Something went wrong! Please refresh the page and re-try. Your card has not been charged' } };
@@ -693,51 +663,42 @@ const StripePaymentManager = (() => {
 })();
 
 function evalTemplateRules(text) {
-    // regex to match the desired structure {% (condition) textToShow %}
     const regex = /{%\s*\((.*?)\)\s*(.*?)\s*%}/g;
     text = text.replace(regex, (match, condition, textToShow) => {
 
         condition = condition.replace(/&amp;/g, '&').replace(/&gt;/g, '>').replace(/&lt;/g, '<');
 
-        // Split condition on logical operators to evaluate individual expressions
         const conditions = condition.split(/\s*(&&|\|\|)\s*/);
         let conditionResult = true;
 
-        // Evaluate each part of the condition
         for (let i = 0; i < conditions.length; i += 2) {
             let cond = conditions[i];
 
-            // Replace single `=` with `==` for comparison
             cond = cond.replace(/([^=!<>])=([^=!<>])/g, '$1==$2');
 
-            const operator = conditions[i + 1]; // '&&' or '||'
+            const operator = conditions[i + 1]; 
 
-            // Evaluate the current condition
             const result = simpleEval(cond.trim());
 
-            // Combine results based on the logical operator
             if (operator === '&&' && !result) {
                 conditionResult = false;
-            break; // Short-circuit for AND
+            break; 
             } else if (operator === '||' && result) {
                 conditionResult = true;
-            break; // Short-circuit for OR
+            break; 
             } else if (operator === undefined) {
-                conditionResult = result; // Final single condition case
+                conditionResult = result; 
             }
         }
 
-        // Return the content if the condition is true, otherwise return an empty string
         return conditionResult ? textToShow.trim() : '';
     });
 
-    //failed evalTemplateRule - handle breaks
-    text = text.replace(/<p>\s*(<span[^>]*>)?\s*(<\/span>)?\s*<\/p>/g, ''); //remove empty <p></p> lines without any content, incl those with fonts (using spans)
-    text = text.replace(/(<p><br><\/p>)+/g, '<p><br></p>'); //replace multiple <p><br></p> lines with one
+    text = text.replace(/<p>\s*(<span[^>]*>)?\s*(<\/span>)?\s*<\/p>/g, ''); 
+    text = text.replace(/(<p><br><\/p>)+/g, '<p><br></p>'); 
 
     return text;
 
-    //helper function
     function simpleEval(cond) {
         try {
             const [left, operator, right] = cond.split(/(==|!=|<=|>=|<|>)/).map(s => s.trim());
@@ -752,7 +713,7 @@ function evalTemplateRules(text) {
                 case '<=': return leftVal <= rightVal;
                 case '>': return leftVal > rightVal;
                 case '>=': return leftVal >= rightVal;
-                default: return false; // Handle unexpected operators
+                default: return false; 
             }
         } catch (error) {
             console.log("evalTemplateRules - Error evaluating condition:", error);
@@ -773,7 +734,6 @@ String.prototype.replaceCase = function(placeholder, replacement) {
 };
 
 function register_quill_plugins() {
-    /*Fix for Image resizing not preserving styles on save*/
     var BaseImageFormat = Quill.import('formats/image');
     const ImageFormatAttributesList = ['alt', 'height', 'width', 'style'];
 
@@ -800,7 +760,6 @@ function register_quill_plugins() {
     }
 
     Quill.register('formats/image', ImageFormat, true);
-    /*end of fix*/
 
     Quill.register('modules/imageResize', QuillResizeModule);
     Quill.register("modules/imageCompressor", imageCompressor);
@@ -814,9 +773,8 @@ function register_quill_plugins() {
     Size.whitelist = fontSizeArr;
     Quill.register(Size, true);
 
-    /*Fixes for classes to inline style*/
-    Quill.register(Quill.import("attributors/style/direction"), true); //Text direction
-    Quill.register(Quill.import("attributors/style/align"), true); //Alignment
+    Quill.register(Quill.import("attributors/style/direction"), true); 
+    Quill.register(Quill.import("attributors/style/align"), true); 
 
     const Parchment = Quill.import("parchment");
     class IndentAttributor extends Parchment.StyleAttributor {
@@ -835,9 +793,7 @@ function register_quill_plugins() {
         whitelist: ["1em", "2em", "3em", "4em", "5em", "6em", "7em", "8em", "9em"]
     });
     Quill.register(IndentStyle, true);
-    /*End of Fixes for classes to inline style*/
 
-    //custom icon for image_url handler
     var icons = Quill.import('ui/icons');
     icons['image_url'] = '<img src="/images/icons/add_photo.svg" title="Image URL" style="width:18px;height:18px;">'
     icons['image_original'] = '<span class="material-symbols-sharp" title="Image Original" style="font-size: 18px">wallpaper</span>';
@@ -845,7 +801,7 @@ function register_quill_plugins() {
 
 function quill_init(target, mode='') {
 
-    let imageOptions =['image_url']; //['image_url', 'image', 'image_original'];
+    let imageOptions =['image_url']; 
     let linkOptions = ['link'];
 
     if (mode == 'basic') {
@@ -858,21 +814,21 @@ function quill_init(target, mode='') {
 
         [{ 'font': ['', 'serif', 'monospace', 'arial', 'times-new-roman', 'courier', 'comic-sans', 'verdana'] }],
         [{ 'size': [false, '8px', '10px', '12px', '14px', '16px', '18px', '20px', '22px', '24px', '26px', '28px'] }],
-        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        [{ 'color': [] }, { 'background': [] }],          
         [{ 'align': [] }],
 
-        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['bold', 'italic', 'underline', 'strike'],        
         linkOptions,
         imageOptions,
 
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-        [{ 'direction': 'rtl' }],                         // text direction
+        [{ 'script': 'sub'}, { 'script': 'super' }],      
+        [{ 'indent': '-1'}, { 'indent': '+1' }],          
+        [{ 'direction': 'rtl' }],                         
 
-        ['emoji'],                                        // emoji
+        ['emoji'],                                        
 
-        ['clean']                                         // remove formatting button
+        ['clean']                                         
     ];
 
     const quill = new Quill(target, {
@@ -895,9 +851,8 @@ function quill_init(target, mode='') {
 
                         input.onchange = function() {
                             var file = input.files[0];
-                            var maxFileSize = 500 * 1024; // 500KB in bytes
+                            var maxFileSize = 500 * 1024; 
 
-                            // Check if the file size exceeds the limit
                             if (file.size > maxFileSize) {
                                 alert('Image size exceeds 500KB, please upload a smaller image.');
                                 return;
@@ -905,7 +860,6 @@ function quill_init(target, mode='') {
                                 console.log('image Un-compressed - file.size is: '+ numberformat(file.size/(1024 * 1024), 3) + ' MB')
                             }
 
-                            // Proceed with the upload if the file size is acceptable
                             var reader = new FileReader();
                             reader.onload = function(e) {
                                 var range = quill.getSelection();
@@ -920,14 +874,13 @@ function quill_init(target, mode='') {
             imageResize: {},
             imageCompressor: {
                 quality: 0.7,
-                maxWidth: 1000, // default
-                maxHeight: 1000, // default
+                maxWidth: 1000, 
+                maxHeight: 1000, 
                 imageType: 'image/jpeg',
-                keepImageTypes: ['image/png'], //to keep transparency
-                //debug: true,
+                keepImageTypes: ['image/png'], 
                 insertIntoEditor: (imageBase64URL, imageBlob, editor) => {                    
                     const fileSizeInBytes = imageBlob.size;
-                    const maxFileSizeInBytes = 1024 * 1024; // 1MB in bytes
+                    const maxFileSizeInBytes = 1024 * 1024; 
 
                     console.log('imageCompressor - Compressed image size: ' + numberformat(fileSizeInBytes/(1024 * 1024), 3) + ' MB');
 
@@ -936,12 +889,11 @@ function quill_init(target, mode='') {
                       return;
                     }
 
-                    // Insert the image into the editor
                     const range = editor.getSelection();
                     editor.insertEmbed(range.index, "image", imageBase64URL, "user");
                 },                
             },
-            keyboard: { //to retain format after pressing ENTER
+            keyboard: { 
                 bindings: {
                   handleEnter: {
                     key: "Enter",
@@ -968,7 +920,6 @@ function quill_init(target, mode='') {
                       this.quill.updateContents(delta, Quill.sources.USER);
                       this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
 
-                      // NOTE: Changed from default handler! Applies previous formats on the new line.
                       Object.keys(context.format).forEach((name) => {
                         if (lineFormats[name] != null) return;
                         if (Array.isArray(context.format[name])) return;
@@ -980,7 +931,6 @@ function quill_init(target, mode='') {
                         );
                       });
 
-                      // NOTE: Changed from default handler! Ensure toolbar reflects the styles after the newline. Otherwise the buttons won't reflect the active formats until the user starts typing.
                       this.quill.getModule("toolbar").update(range);
 
                       return false;
@@ -996,12 +946,10 @@ function quill_init(target, mode='') {
     let debounceTimeout;
     quill.on('text-change', function(delta, oldDelta, source) {
         clearTimeout(debounceTimeout);
-      
-        // Set the debounce timeout to wait for the user to stop typing
+
         debounceTimeout = setTimeout(function() {
-            // Handle the event after the debounce timeout, like a "change" event
-            $(target+' .ql-editor').trigger('content-changed'); //custom trigger
-        }, 500); // 500ms debounce delay
+            $(target+' .ql-editor').trigger('content-changed'); 
+        }, 500); 
     });
 
     return quill;
@@ -1042,13 +990,10 @@ function convertULOLQuill(str) {
 };
 
 function sanitiseSMSText(input, maxLength = 160) {
-    // Characters that count as 2 in GSM-7 (extended table + line breaks)
     const GSM_DOUBLE = ['^','{','}','\\','[','~',']','|','\r','\n'];
 
-    //Sanitize: remove non-ASCII characters
     const sanitized = input.replace(/[^\x00-\x7f]/g, '');
 
-    //Calculate GSM length and trim safely
     let length = 0;
     let trimmed = '';
     for (const ch of sanitized) {
@@ -1062,14 +1007,11 @@ function sanitiseSMSText(input, maxLength = 160) {
 }
 
 function splitSanitisedSMSText(input, maxLength = 160) {
-    // Characters that count as 2 in GSM-7 (extended table + line breaks)
     const GSM_DOUBLE = ['^', '{', '}', '\\', '[', '~', ']', '|', '\r', '\n'];
 
-    //Sanitize: remove non-ASCII characters
     const sanitized = input.replace(/[^\x00-\x7f]/g, '');
 
-    //Split by lines first
-    const lines = sanitized.split(/(\r?\n)/); // keeps newlines as separate tokens
+    const lines = sanitized.split(/(\r?\n)/); 
 
     const messages = [];
     let current = '';
@@ -1083,17 +1025,13 @@ function splitSanitisedSMSText(input, maxLength = 160) {
         }
     };
 
-    // Go line by line (and newline by newline) to gracefully split messages around new lines
     for (const segment of lines) {
         let segLen = 0;
         for (const ch of segment) {
             segLen += GSM_DOUBLE.includes(ch) ? 2 : 1;
         }
 
-        // if adding this segment exceeds limit → flush before adding
         if (length + segLen > maxLength) {
-            // BUT: if the segment itself is too big (like a 300-char paragraph),
-            // then split it internally at GSM-safe points
             if (segLen > maxLength) {
                 for (const ch of segment) {
                     const add = GSM_DOUBLE.includes(ch) ? 2 : 1;
@@ -1104,19 +1042,17 @@ function splitSanitisedSMSText(input, maxLength = 160) {
                     length += add;
                 }
             } else {
-                // otherwise just start new message before this line
                 flush();
                 current += segment;
                 length = segLen;
             }
         } else {
-            // safe to add
             current += segment;
             length += segLen;
         }
     }
 
-    flush(); // push last message
+    flush(); 
 
     return messages.map(item => item.text);
 }
@@ -1250,7 +1186,6 @@ function set_side_error(text,type='',keep='') {
     $('#side_errors').append(el);
     $('#side_errors').show();
 
-    // Auto-close green messages unless explicitly kept
     if ((type == 'green') && (keep == '')) {
         setTimeout(() => {
             el.find('.error_close').click();
@@ -1316,8 +1251,7 @@ function close_popup() {
 function execute_confirm_popup() {
     let fn = $('#btn_execConfPopup').prop('dataset').intrac_fn;
     let fn_data = $('#btn_execConfPopup').prop('dataset').intrac_fn_data.split('~');
-    
-    //check for any selects in popups
+
     for (let i = 0; i < fn_data.length; i++) {
         if (fn_data[i] == 'fn_select') {
             fn_data[i] = $('#confirm_popup .popup_select').val() || '';
@@ -1332,25 +1266,24 @@ function execute_confirm_popup() {
 
     close_popup();
     if (fn) {
-        window[fn](...fn_data);// function call e.g. delete_class_comment(comment_id)
+        window[fn](...fn_data);
     } else {
-        set_side_error('Something went wrong with executing the confirmation pop-up, please re-try'); //this should never show
+        set_side_error('Something went wrong with executing the confirmation pop-up, please re-try'); 
     }
 }
 
-function add_url_param(param,value) { // Add and Update the URL without reloading the page
+function add_url_param(param,value) { 
     const url = new URL(window.location.href);
     url.searchParams.set(param, value);
     window.history.replaceState({}, '', url.toString());
 }
 
-function remove_url_param(param) { // Delete and Update the URL without reloading the page
+function remove_url_param(param) { 
     const url = new URL(window.location.href);
     url.searchParams.delete(param);
     window.history.replaceState({}, '', url.toString());     
 }
 
-//Basic encryption to mask data
 function encryptData(data) {
     if (data === '') {
         return data;

@@ -4,20 +4,7 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.monthSelectPlugin = factory());
 }(this, (function () { 'use strict';
 
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation.
 
-    Permission to use, copy, modify, and/or distribute this software for any
-    purpose with or without fee is hereby granted.
-
-    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-    PERFORMANCE OF THIS SOFTWARE.
-    ***************************************************************************** */
 
     var __assign = function() {
         __assign = Object.assign || function __assign(t) {
@@ -180,7 +167,7 @@
                 if (eventTarget.classList.contains("flatpickr-disabled"))
                     return;
                 if (eventTarget.classList.contains("notAllowed"))
-                    return; // necessary??
+                    return; 
                 setMonth(eventTarget.dateObj);
                 if (fp.config.closeOnSelect) {
                     var single = fp.config.mode === "single";
@@ -247,7 +234,6 @@
                 if (!fp.selectedDates.length)
                     buildMonths();
             }
-            // Help the prev/next year nav honor config.minDate (see 3fa5a69)
             function stubCurrentMonth() {
                 config._stubbedCurrentMonth = fp._initialDate.getMonth();
                 fp._initialDate.setMonth(config._stubbedCurrentMonth);

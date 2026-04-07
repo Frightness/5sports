@@ -2,9 +2,7 @@
   <title>Intrac Login</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, shrink-to-fit=no">
-  <!-- FAVICONS -->
   <link rel="icon" href="images/favicon/favicon.ico">
-  <!-- CSS -->        
   <link rel="stylesheet" href="css/tailwind_admin.css" type="text/css">
   <link rel="stylesheet" href="css/admin.css" type="text/css">
   <style type="text/css">
@@ -42,42 +40,41 @@ border-color: var(--yellow);
 }
 .customer-body #bg_carousel_mobile_1{
   filter: brightness(0.6);
-}     
-  </style>    
+}
+  </style>
 </head>
 <body class="login-page flex h-[100vh] justify-center items-center bg-[#f8f9fb]">
   <div class="login login-card-shell">
       <div class="login-anim-logo-wrap">
           <img src="https://intrac-files.intrac.com.au/5s/logo.png" alt="" class="client-logo login-anim-logo-spring">
-      </div>
+                          </div>
       <h1 class="login-anim-title leading-[150%] text-[2.3rem]"><span class="login-anim-title-inner">Welcome back</span></h1>
       <form id="form-signin" role="form" method="post" action="/authenticateclient" autocomplete="off" class="flex flex-col gap-4 w-full">
           <div class="login-anim-field">
               <label for="username" class="block mb-2 text-main">Username</label>
               <input type="text" id="username" name="username" class="custom-field placeholder:text-grey-neutral h-[44px]" placeholder="Enter your username" value="" autocomplete="off">                
-          </div>
+                          </div>
           <div class="login-anim-field login-anim-field--2">
               <label for="password" class="block mb-2 text-main">Password</label>
               <input type="password" id="password" name="password" class="custom-field placeholder:text-grey-neutral h-[44px]" placeholder="Enter your password" value="" autocomplete="off">    
-          </div>
+                                  </div>
           <input type="hidden" id="recaptcha_response" name="recaptcha_response" value="">
           <button name="form-signin-btn" type="button" id="form-signin-btn" class="primary-btn login-anim-btn mt-2">Sign in</button>
-      </form>
+                      </form>    
       <div id="error" class="red text-center">
-          
 
-          
-      </div>        
-  </div>
-  <div class="noshow">
+
+
+                          </div>
+                      </div>
+                      <div class="noshow">
       <div id="recaptcha_key">6LcwqSgpAAAAAFJfCyUpiA1SqPpFpdusVsJjVs8L</div>    
-  </div>
+                      </div>
 
-  <!-- SCRIPTS -->
   <script type="text/javascript" async="" charset="utf-8" src="https://www.gstatic.com/recaptcha/releases/79clEdOi5xQbrrpL2L8kGmK3/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-8ttzcqn1x3spzHELLkLBHjQJV6/TydNHFuVP0+hKYrIsPW/qumOm8LQWdez/Qzbi"></script><script type="text/javascript" src="js/jquery.min.js"></script>
-  
-  <script type="text/javascript" src="https://www.recaptcha.net/recaptcha/enterprise.js?render=6LcwqSgpAAAAAFJfCyUpiA1SqPpFpdusVsJjVs8L"></script>
-  
-  <script type="text/javascript" src="js/loginscripts.js"></script>
+
+    <script type="text/javascript" src="https://www.recaptcha.net/recaptcha/enterprise.js?render=6LcwqSgpAAAAAFJfCyUpiA1SqPpFpdusVsJjVs8L"></script>
+
+    <script type="text/javascript" src="js/loginscripts.js"></script>
 
 <div><div class="grecaptcha-badge" data-style="bottomright" style="width: 256px; height: 60px; display: block; transition: right 0.3s; position: fixed; bottom: 14px; right: -186px; box-shadow: gray 0px 0px 5px; border-radius: 2px; overflow: hidden;"><div class="grecaptcha-logo"><iframe title="reCAPTCHA" width="256" height="60" role="presentation" name="a-cdmhy01fi2fx" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox allow-storage-access-by-user-activation" src="https://www.recaptcha.net/recaptcha/enterprise/anchor?ar=1&amp;k=6LcwqSgpAAAAAFJfCyUpiA1SqPpFpdusVsJjVs8L&amp;co=aHR0cHM6Ly81c3BvcnRzLmJlZHJvY2stdGVzdC5pbnRyYWMuY29tLmF1OjQ0Mw..&amp;hl=en&amp;v=79clEdOi5xQbrrpL2L8kGmK3&amp;size=invisible&amp;anchor-ms=20000&amp;execute-ms=30000&amp;cb=jrn99vbvd1y9"></iframe></div><div class="grecaptcha-error"></div><textarea id="g-recaptcha-response-100000" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid rgb(193, 193, 193); margin: 10px 25px; padding: 0px; resize: none; display: none;"></textarea></div><iframe style="display: none;"></iframe></div></body></html>

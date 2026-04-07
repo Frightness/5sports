@@ -16,14 +16,13 @@ let rosterGridRequestId = 0;
 function mini_login_wizard(redirect) {
 	$('#loader-wrapper').hide();
 	if (redirect == 'reload') {
-		//rare scenario, only some admin APIs do this e.g. getClientOptions
 		if ($('.instructor-page').length) {
 			window.location.href = '/instructorlogin?action=timeout';
 		} else {
 			window.location.href = '/adminlogin?action=timeout';	
 		}
 	} else {
-		window.location.href = redirect; //redirect returned by server	
+		window.location.href = redirect; 
 	}
 }
 
@@ -40,7 +39,7 @@ async function get_api(api, silent=false) {
 	    }
 
 	    if (api == 'getClasss') {
-	    	data.location_id = $('#location_id').val(); //always send for classes
+	    	data.location_id = $('#location_id').val(); 
 	    }
 
 	    if (api == 'getClasss' && USE_EVENTS_MOCKS) {
@@ -63,12 +62,12 @@ async function get_api(api, silent=false) {
 	    }
 
 	    if (api == 'getAvails') {
-	    	data.location_id = $('#location_id').val(); //mandatory for avails
+	    	data.location_id = $('#location_id').val(); 
 	        data.date = parse_date($(mc+' .avail_date').val());
 	    }
 
 	    if (api == 'getRosters') {
-	    	data.location_id = $('#location_id').val(); //mandatory for rosters
+	    	data.location_id = $('#location_id').val(); 
 	        data.date = parse_date($(mc+' .roster_date').val());
 	        if ($('.instructor-page').length) {
 	        	data.from = 'instructor';
@@ -82,8 +81,8 @@ async function get_api(api, silent=false) {
 	    if (!silent) {
 	    	$('#loader-wrapper').show();
 	    }
-		
-	    $.ajax({
+
+			    $.ajax({
 	        type: 'GET',
 	        url: '/api/'+api,
 	        data: data,
@@ -99,7 +98,7 @@ async function get_api(api, silent=false) {
 	            if (api === 'getClasss') { requestAnimationFrame(run_events_intro_animation); }
 
 	        } else if (response.redirect != undefined) {
-	            mini_login_wizard(response.redirect); //session timeout case
+	            mini_login_wizard(response.redirect); 
 	        } else {    
 	            set_side_error(response.error.join("<br>"));
 	            $('#loader-wrapper').hide();
@@ -124,7 +123,6 @@ function get_grid(spinner=true) {
 	    let mode = $('#lessons').is(":visible") ? 'lesson' : 'space';
 	    let target = (mode == 'lesson') ? '#lessons' : '#spaces';
 
-	    //flush non-target grids
 	    $('#classes').html('');
 	    $('#rosters').html('');
 	    if (target == '#lessons') {
@@ -171,9 +169,7 @@ function get_grid(spinner=true) {
                             })));	                    	
 	                    }
 
-	                    //alter
 	                    if ($('#lesson_modal').hasClass('show-box')) {
-	                    	//refresh users list - avails might be different
 							let cur_user_id = $('#lesson_modal .users_list li.checked:first').length ? $('#lesson_modal .users_list li.checked:first a').prop('dataset').intrac : '';
 							$('#lesson_modal .users_list').html('');
 							set_booking_users(cur_user_id);
@@ -183,7 +179,7 @@ function get_grid(spinner=true) {
 	                    }
 	                }
 	            } else if (response.redirect != undefined) {
-	                mini_login_wizard(response.redirect); //session timeout case
+	                mini_login_wizard(response.redirect); 
 	            } else {    
 		        	$('#loader-wrapper').hide();
 		        	let unavail = (response.error.errors && response.error.errors[0].includes('unavailable')) ? true : false;
@@ -191,7 +187,7 @@ function get_grid(spinner=true) {
 	                	$(target).html('<div class="unavail">'+(response.error.errors || response.error).join("<br>")+'</div>');
 	                } else {
 	                	set_side_error((response.error.errors || response.error).join("<br>"));
-	                	$(target).html(''); //flush grid
+	                	$(target).html(''); 
 	                }	                
 	            }
 	            resolve();
@@ -613,7 +609,6 @@ function get_class_grid(spinner=true) {
 	    let location_id = $('#location_id').val();
 	    let date = $('#main_date').val();
 
-	    //flush non-target grids
 	    $('#spaces').html('');
 	    $('#lessons').html('');
 	    $('#rosters').html('');
@@ -647,7 +642,7 @@ function get_class_grid(spinner=true) {
 	                }
 
 	            } else if (response.redirect != undefined) {
-	                mini_login_wizard(response.redirect); //session timeout case
+	                mini_login_wizard(response.redirect); 
 	            } else {
 	            	$('#loader-wrapper').hide();
 	            	let unavail = (response.error.errors && response.error.errors[0].includes('No') && response.error.errors[0].includes('selected date')) ? true : false;
@@ -655,7 +650,7 @@ function get_class_grid(spinner=true) {
 	                	$('#classes').html('<div class="unavail">'+(response.error.errors || response.error).join("<br>")+'</div>');
 	                } else {
 	                	set_side_error((response.error.errors || response.error).join("<br>"));
-	                	$('#classes').html(''); //flush grid
+	                	$('#classes').html(''); 
 	                }
 	            }
 	            resolve();
@@ -735,7 +730,7 @@ function get_roster_grid(spinner=true) {
 	                }
 
 	            } else if (response.redirect != undefined) {
-	                mini_login_wizard(response.redirect); //session timeout case
+	                mini_login_wizard(response.redirect); 
 	            } else {
 	            	$('#loader-wrapper').hide();
 	            	let unavail = (response.error.errors && response.error.errors[0].includes('No') && response.error.errors[0].includes('selected date')) ? true : false;
@@ -743,7 +738,7 @@ function get_roster_grid(spinner=true) {
 	                	$('#rosters').html('<div class="unavail">'+(response.error.errors || response.error).join("<br>")+'</div>');
 	                } else {
 	                	set_side_error((response.error.errors || response.error).join("<br>"));
-	                	$('#rosters').html(''); //flush grid
+	                	$('#rosters').html(''); 
 	                }
 	            }
 	            resolve();
@@ -785,7 +780,7 @@ function get_my_image() {
             $('.self_image').removeClass('noshow');
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
         }
@@ -800,7 +795,6 @@ function get_client_options(mode) {
 
     	let modes = (Array.isArray(mode)) ? mode : [mode ? mode : 'cuser'];
 
-    	//locations visible or location_id set from deeplink/admin_location_id
     	let location_id = (!$('#main_switch_location').closest('.locations').hasClass('noshow') || ($('#location_id').val() > 0)) ? $('#location_id').val() : '0';
 
         $.ajax({
@@ -813,7 +807,7 @@ function get_client_options(mode) {
             if (response.success != undefined) {
                 $('#loader-wrapper').hide();
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();            
@@ -850,7 +844,6 @@ async function set_client_options() {
 	options.message = options.message || '';
 	options.self = options.self || '';
 
-    //admin
     if (options.is_admin) {
         $('#is_admin').val(options.is_admin);
     } else {
@@ -871,8 +864,8 @@ async function set_client_options() {
 	if (!options.is_admin && !options.is_instructor) {
 		$('.admin_or_instructor_only').remove();
 	}
-    
-    if (!options.is_admin_reports) {
+
+        if (!options.is_admin_reports) {
     	$('.reports_only').remove();
     }
 
@@ -886,7 +879,6 @@ async function set_client_options() {
     	$('.admin_0_only').remove();
     }
 
-	//client
 	$('#locale').val(options.client.locale);
 	$('#ccy_code').val(options.client.currency);
 
@@ -894,7 +886,7 @@ async function set_client_options() {
 		$('.class_items').remove();
 	}
 
-	if (options.client.hide_classes) { //completely remove all class items; override show_classes
+	if (options.client.hide_classes) { 
 		$('.class_items').remove();
 		$('.class_mgmt_items').remove();
 	}
@@ -935,7 +927,6 @@ async function set_client_options() {
 		$('.multi_regs_items').show();
 	} else {
 		if (options.is_admin_intrac && options.class.level_types_0_1) {
-			//re-purpose for recalc
 			if ($('.tl_multir').length) {
 				$('.tl_multir').prop('dataset').intrac_class_id = 0;
 			};
@@ -955,7 +946,7 @@ async function set_client_options() {
     }
 
 	if (!options.class.show_scoreboard_items) {
-		$('.modal_o_scoreboards').remove(); //process_tiering
+		$('.modal_o_scoreboards').remove(); 
 	}
 
 	if (options.client.integrated_eftpos) {
@@ -1037,21 +1028,19 @@ async function set_client_options() {
 	}
 
 	if (!options.client.show_print_grid) {
-		$('.print_grid').remove(); //process_tiering
+		$('.print_grid').remove(); 
 	}
 
 	if ($('#stripe_pub_key').text()) {
 		$('.non_stripe_items').remove();
-		$('.cust_payment_options .directs_items').addClass('noshow'); //will be shown as part of stripe mount
+		$('.cust_payment_options .directs_items').addClass('noshow'); 
 	} else {
 		$('.stripe_items').remove();
 	}
 
-	//store special rates for calculations later
 	$('#special_rates').text(encryptData(JSON.stringify({rates: options.client.special_rates})));
 	$('#special_rates_usage').text(encryptData(JSON.stringify({"back_end":{},"front_end":{}})));
 
-	//ho
     if (options.client.ho_title) {
         $('.ho-title').text(function() {
             if ($(this).prop('dataset').intrac_fav_name) {
@@ -1062,7 +1051,6 @@ async function set_client_options() {
         $('#ho_title').val(options.client.ho_title);
     }
 
-	//class
 	if (options.class.class_title) {
 		$('.class-title').text(function() {
 		    if ($(this).prop('dataset').intrac_fav_name) {
@@ -1075,7 +1063,6 @@ async function set_client_options() {
 	getClasssOptions(options.class, options);
     getRegistersOptions(options.register);
 
-	//term
 	if (options.term.term_title) {
 		$('.term-title').text(function() {
 		    if ($(this).prop('dataset').intrac_fav_name) {
@@ -1087,7 +1074,6 @@ async function set_client_options() {
 	}
 	getTermsOptions(options.term);
 
-	//location
 	if (options.location.location_title) {
 		$('.location-title').text(function() {
 		    if ($(this).prop('dataset').intrac_fav_name) {
@@ -1111,7 +1097,6 @@ async function set_client_options() {
     }
     getLocationsOptions(options.location);
 
-    //passtype
     if (options.passtype.pass_title) {
 		$('.pass-title').text(function() {
 		    if ($(this).prop('dataset').intrac_fav_name) {
@@ -1129,13 +1114,10 @@ async function set_client_options() {
     }
     getPasstypesOptions(options.passtype);
 
-    //customer
     getCustomersOptions(options.customer, options);
 
-    //multitenant
     getMultiTenantOptions(options.client);
 
-    //surcharge
 	if (!options.client.show_surcharge) {
 		$('.surcharge_items').remove();
 	} else {
@@ -1149,13 +1131,10 @@ async function set_client_options() {
 		}
 	}    
 
-    //users
     getUsersOptions(options.user, options);
 
-    //products
     getProductsOptions(options.product, options);
 
-    //roster
 	if (options.roster.roster_title) {
 		$('.roster-title').text(function() {
 		    if ($(this).prop('dataset').intrac_fav_name) {
@@ -1167,50 +1146,37 @@ async function set_client_options() {
 	}    
     getRostersOptions(options.roster);
 
-    //assess
     getAssessOptions(options.assess);
 
-    //sms
     getSMSsOptions(options.sms);
 
-    //reports
     getReportsOptions(options.reports);
 
-    //holds
     getHoldsOptions(options.hold);
 
-    //weather
     getWeathersOptions(options.weather);
 
-    //templates
     getTemplatesOptions(options.template);
 
-    //messages
     getMessagesOptions(options.message, true);
 
-    //fortnightly dates for prog_day_type
     let evenMondays = getFilteredDates(dayjs(),dayjs().add(28, 'day'),'Mon',[],6);
     let oddMondays = getFilteredDates(dayjs(),dayjs().add(28, 'day'),'Mon',[],7);
     $('.tb_prog_day_type option[value="6"], .pb_prog_day_type option[value="6"]').text('Fortnightly on even weeks of month only (e.g. week starting '+convert_date(evenMondays[0], 'ddd D MMM')+')');
     $('.tb_prog_day_type option[value="7"], .pb_prog_day_type option[value="7"]').text('Fortnightly on odd weeks of month only (e.g. week starting '+convert_date(oddMondays[0], 'ddd D MMM')+')');
 
-    //processes link
     if (!$('#master_proc_view .tab-list li').length) {
     	$('.modal_o_procs').remove();
     }
 
-    //instructor_view
     if ($('.instructor-page').length) {
     	$('.rtab-close').click();
     }
 
-    //all settings done
-    //show hide-on-load items
     $('.hol').removeClass('noshow');
 
-    //location logic and trigger
     if (options.location.show_location) {
-    	$('.locations').removeClass('noshow'); //Don't show location if there are no spaces in Yes/Read-Only
+    	$('.locations').removeClass('noshow'); 
     } else {
     	$('.cur_location_name').remove();
     }
@@ -1222,28 +1188,24 @@ async function set_client_options() {
 	}	
 	$('.switch_location').html(locs_str);
 
-	let l_id = $('#location_id').val(); //from deeplink/admin_location_id
+	let l_id = $('#location_id').val(); 
 
-	if ((l_id) && ($('#main_switch_location a[data-intrac="'+l_id+'"]').length)) { //deeplink/admin_location_id
+	if ((l_id) && ($('#main_switch_location a[data-intrac="'+l_id+'"]').length)) { 
 		$('#main_switch_location').closest('.dropdown').find('.dropdown-toggle span').text($('#main_switch_location a[data-intrac="'+l_id+'"]').text());
 		$('.cur_location_name').text($('#main_switch_location a[data-intrac="'+l_id+'"]').text());
-	} else { //set first location as default
+	} else { 
 		let f = $('#main_switch_location a:first');
 		$('#location_id').val($(f).prop('dataset').intrac);
 		$('#main_switch_location').closest('.dropdown').find('.dropdown-toggle span').text($(f).text());
 		$('.cur_location_name').text($(f).text());
 
-		if (l_id) {localStorage.removeItem('admin_location_id');} //stale location
+		if (l_id) {localStorage.removeItem('admin_location_id');} 
 	}
 
-	//these must run at the end
-    //availability - need location_id to be set
     getAvailsOptions(options.avail);
 
-    //cash sale - need location_id to be set
     getCashSaleOptions(options.cash_sale, options);
 
-    //cleanup and copy functions and reports list to mobile. mobile_favourites are part of getFavsOptions
 	$('#functions_list li').filter(function() {
 	    return $(this).text().trim() === '';
 	}).remove();
@@ -1252,17 +1214,16 @@ async function set_client_options() {
 	}).remove();
 
     if ($('#functions_list li').length) {
-    	$('#mobile_functions').html($('#functions_list').html().replace(/\bfav_\w+\b/g, match => match.replace('fav_', 'favm_'))); //rename all classes with word fav_ to favm_
+    	$('#mobile_functions').html($('#functions_list').html().replace(/\bfav_\w+\b/g, match => match.replace('fav_', 'favm_'))); 
     } else {
     	$('.functions_div, .mobile_functions_div').remove();
     }
     if ($('#reports_list li:not(.noshow)').length) {
-    	$('#mobile_reports').html($('#reports_list').html().replace(/\bfav_\w+\b/g, match => match.replace('fav_', 'favm_'))); //rename all classes with word fav_ to favm_
+    	$('#mobile_reports').html($('#reports_list').html().replace(/\bfav_\w+\b/g, match => match.replace('fav_', 'favm_'))); 
     } else {
     	$('.reports_div, .mobile_reports_div').remove();
     }
-    
-    //move functions to top menu, use mobile_functions which are already clean without fav_
+
     if ($('.instructor-page').length) {
     	$('#mobile_functions .instructor_fn').each(function() {
     		let el = $(this).closest('li').clone();
@@ -1279,17 +1240,15 @@ async function set_client_options() {
     		$('#nav_list').append($(el));
     	});
 
-    	if (!$('#hamburger').is(":visible") && !$('#cross').is(":visible")) { //not mobile
+    	if (!$('#hamburger').is(":visible") && !$('#cross').is(":visible")) { 
     		$('#calendar_main_div').insertBefore('.functions_div');
     		$('#instructor_weekly_div').insertBefore('.functions_div');
     	}
     }
 
 
-    //favs
-    getFavsOptions(options.favs); //mobile_favourites and adjustFavs done as part of this
+    getFavsOptions(options.favs); 
 
-    //set default grid
     if (options.client.grid_default_admin) {
     	if ($('.instructor-page').length) {
     		$('.nav-link-main.nav_roster').click();
@@ -1441,8 +1400,6 @@ function getClasssOptions(options, options_all) {
     $('.multir_term_id').html(term_id_options_);
     $('.notices_term_id').html(term_id_options_);
 
-    //users and spaces select options - start
-    //spaces select options
     let space_id_options = '<option value="0"></option>';
 
     for (let i = 0; i < options.spaces.length; i++) {
@@ -1456,7 +1413,6 @@ function getClasssOptions(options, options_all) {
     }
     $('.shuffle_space_id').html(space_id_options.replace('<option value="0"></option>',''));
 
-    //users select options
     let user_id_options = '<option value="0"></option>';
 
     for (let i = 0; i < options.users.length; i++) {
@@ -1472,7 +1428,6 @@ function getClasssOptions(options, options_all) {
     $('.sched_swap_user_id').html(user_id_options.replace('<option value="0"></option>', '<option value="0">No User Assigned</option>'));
     $('.lists_pr_user_id').html(user_id_options.replace('<option value="0"></option>', '<option value=""></option>'));
 
-    //multi options
     $('.ps_space_ids tbody').html('');
     let space_ids_html = '';
     for (let i = 0; i < Math.max(options.spaces.length, options.users.length); i++) {
@@ -1496,26 +1451,23 @@ function getClasssOptions(options, options_all) {
                                     </td>\
                                 <tr>';
         } else {
-            break; //break the loop
+            break; 
         }
 
     }    
     $('.ps_space_ids tbody').html(space_ids_html);
 
-    //hide spaces selection if there are no spaces
     if (!options.spaces.length) {
         $('.ps_space_single_div, .ps_space_id_').addClass('noshow')
     } else {
         $('.ps_space_single_div, .ps_space_id_').removeClass('noshow')
     }
 
-    //hide users selection if there are no users
     if (!options.users.length) {
         $('.ps_user_id_div, .ps_user_id_').addClass('noshow')
     } else {
         $('.ps_user_id_div, .ps_user_id_').removeClass('noshow')
     }
-    //users and spaces select options - end
 
     $('.class_term_id option:last').prop('selected', true);
 
@@ -1545,7 +1497,7 @@ function getRegistersOptions(options) {
         $('.cregister_cancel_reason').text(cancel_reason_str);
     }
 
-    if (options.max_quantity) { //serves as show_register_quantity too
+    if (options.max_quantity) { 
         $('.reg_alter_quantity').prop('max',options.max_quantity);
         $('.reg_alter_quantity_div').removeClass('noshow');
 
@@ -1574,12 +1526,12 @@ function getRegistersOptions(options) {
 function getCustomersOptions(options, options_all) {
 
 	if (options_all.client.integrated_eftpos) {
-		$('.cust_payment input[name="mode"][value="eftpos"]').attr('checked', 'checked'); //using .attr instead of .prop because the latter won't work on hidden elements that are copied later as html()
+		$('.cust_payment input[name="mode"][value="eftpos"]').attr('checked', 'checked'); 
 	} else {
-		$('.cust_payment input[name="mode"][value="cash"]').attr('checked', 'checked'); //using .attr instead of .prop because the latter won't work on hidden elements that are copied later as html()
+		$('.cust_payment input[name="mode"][value="cash"]').attr('checked', 'checked'); 
 	}
-    
-    if (!options.show_child) {
+
+        if (!options.show_child) {
         $('.child_items').remove();
     }
 
@@ -1598,7 +1550,6 @@ function getCustomersOptions(options, options_all) {
         $('.cust_img_buttons').addClass('noshow');
     }
 
-    //purchase settings
     if (options.show_refund_choice) {
         $('.refund_payments_tr').removeClass('noshow');
         $('.refund_payments_eftpos_tr').removeClass('noshow');
@@ -1607,7 +1558,6 @@ function getCustomersOptions(options, options_all) {
         $('.refund_payments_eftpos_tr').addClass('noshow');
     }
 
-    //lists related options
     if (!options.show_dob && !options.show_dob_ch) {
     	$('.lists_dob_from').closest('div').remove();
     	$('.lists_dob_to').closest('div').remove();
@@ -1636,15 +1586,13 @@ function getTermsOptions(options) {
     }
 
     if (options.client_booking) {
-        $('.term_clientbookingdt').attr('value', convert_date(options.client_booking)); //$(mc+' .term_clientbookingdt') isn't loaded yet, so setting it in the master
-        //using .attr instead of .val because the latter won't work on hidden elements that are copied later as html()
+        $('.term_clientbookingdt').attr('value', convert_date(options.client_booking)); 
         $('.term_client_booking_div').show();
 
         if (options.client_delay) {
         	if (isvalidDateTime(options.client_delay)) {
-        		$('.term_clientdelaydt').attr('value', convert_date_time(options.client_delay, 'D MMM YYYY')); //$(mc+' .term_clientdelaydt') isn't loaded yet, so setting it in the master
+        		$('.term_clientdelaydt').attr('value', convert_date_time(options.client_delay, 'D MMM YYYY')); 
         		$('.term_clientdelaytime').attr('value', convert_date_time(options.client_delay, 'HH:mm'));
-        		//using .attr instead of .val because the latter won't work on hidden elements that are copied later as html()
         	} else {
         		$('.term_clientdelaydt').attr('value','');
         		$('.term_clientdelaytime').attr('value','');
@@ -1663,7 +1611,6 @@ function getTermsOptions(options) {
 
 function getUsersOptions(options, options_all) {
 
-	//user images always available
     $('.user_image_tr').addClass('show_images');
     $('.user_img_buttons').addClass('noshow');
 
@@ -1730,7 +1677,6 @@ function getUsersOptions(options, options_all) {
         $('.usr_location_tr').addClass('noshow');
     }
 
-    //extras
     if (!options.show_apiuser) {
         $('.btn_usr_apiuser').remove();
     }
@@ -1828,8 +1774,7 @@ function getPasstypesOptions(options) {
     }
 
     if (options.client_memberday) {
-        $('.passtyp_memberday').attr('value', convert_date(options.client_memberday)); //$(mc+' .passtyp_memberday') isn't loaded yet, so setting it in the master
-        //using .attr instead of .val because the latter won't work on hidden elements that are copied later as html()
+        $('.passtyp_memberday').attr('value', convert_date(options.client_memberday)); 
     }
 
     if (!options.show_restrictions) {
@@ -1886,7 +1831,7 @@ function getAvailsOptions(options) {
 	        if ((hours.location_id == $('#location_id').val()) || (options.hours.length == 1)) {
 	            let start = hours.hours_start;
 	            let finish = hours.hours_finish;
-	            let incr = hours.intervals || 30; //default to 30 mins if intervals is 0
+	            let incr = hours.intervals || 30; 
 
 	            let y_slots = times_diff(finish, start)/incr;
 
@@ -1895,19 +1840,18 @@ function getAvailsOptions(options) {
 	            for (let i = 0; i < y_slots; i++) {
 	                let slot_start = dayjs(start,'HH:mm:ss').add(i*incr,'minute');
 	                let slot_finish = dayjs(start,'HH:mm:ss').add((i+1)*incr,'minute');
-	                
-	                options_str_s += '<option value="'+slot_start.format('h:mma')+'">'+slot_start.format('h:mma')+'</option>';
+
+	                	                options_str_s += '<option value="'+slot_start.format('h:mma')+'">'+slot_start.format('h:mma')+'</option>';
 	                options_str_f += '<option value="'+slot_finish.format('h:mma')+'">'+slot_finish.format('h:mma')+'</option>';
 	            }
 	            $('.avail_start').html(options_str_s);
 	            $('.avail_finish').html(options_str_f);
 
-	            //using .attr instead of .val because the latter won't work on hidden elements that are copied later as html()
 	            $('.avail_hours_id').attr('value', hours.hours_id);
 	            $('.avail_hours_start').attr('value', convert_time(start));
 	            $('.avail_hours_finish').attr('value', convert_time(finish));
 
-	            break; //break the loop
+	            break; 
 	        }
 	    }
     }
@@ -1917,13 +1861,12 @@ function getRostersOptions(options) {
 
     if (!options.show_roster) {
     	if (!$('.instructor-page').length) {
-    		$('.roster_items_nav').addClass('noshow_imp');//don't remove for instructors as this is their main page
+    		$('.roster_items_nav').addClass('noshow_imp');
     	}
         $('.roster_items').remove();
     }
 
     if (options.roster_mgmt_restricted) {
-    	//convert btn_add_shift to rosters button
     	$('.btn_add_shift').removeClass('.btn_add_shift');
 		$('.btn_add_shift img').remove();
     	$('.btn_add_shift span').text(toTitleCase($('#roster_title').val()+'s'));
@@ -1948,7 +1891,7 @@ function getRostersOptions(options) {
     $('.roster_functions').html(options_str);
     if (roster_count == 0) {
     	if (!$('.instructor-page').length) {
-    		$('.roster_items_nav').addClass('noshow_imp');//don't remove for instructors as this is their main page
+    		$('.roster_items_nav').addClass('noshow_imp');
     	}
     	$('.roster_items').remove();
     }
@@ -2048,9 +1991,9 @@ function getMultiTenantOptions(options) {
 function getCashSaleOptions(options, options_all) {
 
 	if (options_all.client.integrated_eftpos) {
-		$('.cash_sale_payment_options input[name="mode"][value="eftpos"]').attr('checked', 'checked'); //using .attr instead of .prop because the latter won't work on hidden elements that are copied later as html()
+		$('.cash_sale_payment_options input[name="mode"][value="eftpos"]').attr('checked', 'checked'); 
 	} else {
-		$('.cash_sale_payment_options input[name="mode"][value="cash"]').attr('checked', 'checked'); //using .attr instead of .prop because the latter won't work on hidden elements that are copied later as html()
+		$('.cash_sale_payment_options input[name="mode"][value="cash"]').attr('checked', 'checked'); 
 	}
 
 	let location_id = $('#location_id').val();
@@ -2090,7 +2033,6 @@ function getReportsOptions(options) {
 
     let html_str = '';
 
-    //add lists manually
     let lists_rep = $('.modal_o_lists').text();
     let lists_rep_html = lists_rep && !$('.instructor-page').length ? '<li><a href="#" class="menu_item view_lists_report fav_lists" data-intrac_fav_name="'+lists_rep+'">'+lists_rep+'</a></li>' : '';
     let lists_rep_i = -1;
@@ -2103,7 +2045,6 @@ function getReportsOptions(options) {
 	    }
 	}
 
-    //add pass report manually
     let pass_rep = $('.modal_o_passtypes').text();
     let pass_rep_html = pass_rep && !$('.instructor-page').length ? '<li><a href="#" class="menu_item view_pass_report">'+pass_rep+'</a></li>' : '';
     let pass_rep_i = -1;
@@ -2134,8 +2075,7 @@ function getReportsOptions(options) {
 }
 
 function getFavsOptions(options) {
-	
-	//defaults
+
 	let all_favs = [];
 
 	$('a[class*="fav_"]').each(function () {
@@ -2147,13 +2087,13 @@ function getFavsOptions(options) {
 		});
     });
 
-	all_favs.sort((a, b) => a.name.localeCompare(b.name)); //sort alphabetically based on name
+	all_favs.sort((a, b) => a.name.localeCompare(b.name)); 
 
 	let opts_str = '';
 	let html_str = '';
 	for (let i = 0; i < all_favs.length; i++) {
 		opts_str += '<option value="'+all_favs[i].key+'">'+all_favs[i].name+'</option>';
-		if (i < 10) { //max 10 favs can be set
+		if (i < 10) { 
 			html_str += '<tr class="usr_favs_row">\
 							<td class="no-form form-group-flex">\
 								<div class="form-label">\
@@ -2177,16 +2117,15 @@ function getFavsOptions(options) {
 	$('.favs_list tbody').html(html_str);
 	$('.favs_list .usr_favs_key').html(opts_str);
 
-	//selected favs
 	let favs = options.favourites ? options.favourites : all_favs;
 
 	let li_str = '';
-	for (let i = 0; i < (options.favourites ? favs.length : Math.min(favs.length, 10)); i++) { //max 10 favs of the default
+	for (let i = 0; i < (options.favourites ? favs.length : Math.min(favs.length, 10)); i++) { 
 		if ($('.fav_'+favs[i].key+':first').length) {
-			let classlist = [...$('.fav_'+favs[i].key+':first').prop('classList')].filter(cls => !cls.startsWith('fav_')).join(' ')+' menu_item'; //remove fav_ from class names for li
-			let datalist =  Object.entries($('.fav_'+favs[i].key+':first')[0].dataset).map(([key, value]) => key == 'intrac_sub_reports' ? `data-${key}="${String(value).replace(/"/g, '&quot;')}"` : `data-${key}="${value}"`).join(' '); //all data-* items
-			
-			let fav_name = (favs[i].name || $('.fav_'+favs[i].key+':first').prop('dataset').intrac_fav_name);
+			let classlist = [...$('.fav_'+favs[i].key+':first').prop('classList')].filter(cls => !cls.startsWith('fav_')).join(' ')+' menu_item'; 
+			let datalist =  Object.entries($('.fav_'+favs[i].key+':first')[0].dataset).map(([key, value]) => key == 'intrac_sub_reports' ? `data-${key}="${String(value).replace(/"/g, '&quot;')}"` : `data-${key}="${value}"`).join(' '); 
+
+						let fav_name = (favs[i].name || $('.fav_'+favs[i].key+':first').prop('dataset').intrac_fav_name);
 			if (classlist.includes('view_report') && !fav_name.toLowerCase().includes('report') && !favs[i].name) {
 				fav_name += ' Report';
 			}
@@ -2204,7 +2143,6 @@ function getFavsOptions(options) {
 	$('#mobile_favourites .manage_favs').remove();
 	adjustFavs();
 
-	//re-order functions and reports
 	if (!$('.instructor-page').length) {
 		$('.star_fav').removeClass('star_fav');
 		if (options.favourites) {
@@ -2220,7 +2158,6 @@ function getFavsOptions(options) {
 		}
 	}
 
-	//dashboard
 	if ($('.reports_only').length) {
 		if (options.dashboard_layout) {
 			$('#dashboard_layout').text(JSON.stringify(options.dashboard_layout));
@@ -2229,7 +2166,6 @@ function getFavsOptions(options) {
 		}
 	}
 
-	//grid_default
 	if (options.grid_default) {
 		$('#grid_default').closest('li').addClass('noshow');
 		$('#grid_default_reset').closest('li').removeClass('noshow');
@@ -2238,7 +2174,6 @@ function getFavsOptions(options) {
 		$('#grid_default_reset').closest('li').addClass('noshow');
 	}
 
-	//mini_grid
 	if (options.mini_grid) {
 		if (options.mini_grid.includes('s')) {
 			$('#spaces').addClass('mini_grid');	
@@ -2393,7 +2328,6 @@ function popup_change_location(location_id) {
 
 async function location_changed() {
 	$('.cur_location_name').text($('#main_switch_location a[data-intrac="'+$('#location_id').val()+'"]').text());
-	//start/end times for avail; others have options dependant on location
     let options = await get_client_options(['loc_change']);
     getAvailsOptions(options.avail || '');
     getCashSaleOptions(options.cash_sale || '', options);
@@ -2415,12 +2349,12 @@ function getClasssResults(res) {
     let html_str = '';
 
     for (let i = 0; i < data.length; i++) {
-        
-    	data[i].term_name = data[i].term_name || ''; //legacy classes without any term_id e.g. sports
+
+            	data[i].term_name = data[i].term_name || ''; 
 
         let comp = (data[i].level_type == 4) ? true : false;
         let enr = ([0,1,2,4].includes(data[i].level_type)) ? true : false;
-        let rlvr = ([0,1,6].includes(data[i].level_type)) && (data[i].status > 0) && data[i].term_id && (data[i].category != 'Deprecated') ? true : false; //legacy classes without any term_id or deprecated level e.g. sports are excluded
+        let rlvr = ([0,1,6].includes(data[i].level_type)) && (data[i].status > 0) && data[i].term_id && (data[i].category != 'Deprecated') ? true : false; 
 
         let is_admin = $('#is_admin').val() ? true : false;
 
@@ -2433,7 +2367,6 @@ function getClasssResults(res) {
             5: '<span class="event-status bg-coral-100 text-coral"><span class="size-1.5 bg-coral rounded-[20px]"></span> Closed</span>'
         }
 
-        //header
         if ((i == 0) || (data[i].level_name != data[i-1].level_name) || ((data[i].level_type == 4) && (data[i].term_name != data[i-1].term_name))) {
             let header = (data[i].level_type == 4) ? data[i].term_name : data[i].level_name;
             html_str += '<h4 class="section_title text-xl leading-[18px]">'+header+'</h4><div class="table-wrapper plain-table classes-table">';
@@ -2454,7 +2387,6 @@ function getClasssResults(res) {
 
         }
 
-        //table body
         html_str += '<tr class="class_row">\
                         <td><a href="#" class="primary modal_o_class edit_class class_name">'+data[i].class_name+'</a></td>\
                         <td>'+(rlvr ? '<a href="#" class="primary modal_o_rollover get_class_rollover">'+data[i].term_name+'</a>' : data[i].term_name)+'</td>\
@@ -2482,7 +2414,6 @@ function getClasssResults(res) {
                         </td>\
                     </tr>';
 
-        //close table
         if ((i == data.length-1) || (data[i].level_name != data[i+1].level_name) || ((data[i].level_type == 4) && (data[i].term_name != data[i+1].term_name))) {
             html_str += '</tbody></table></div>';
         }
@@ -2505,27 +2436,22 @@ function toggle_class_inputs() {
 
     let new_class = $(mc+' .class_class_id').val() ? false : true;
 
-    //status
     if ((level_type != '0') && (level_type != '1')) {
-    	$(mc+' .class_status option[value="2"]').hide(); //Returning Customers
-    	$(mc+' .class_status option[value="3"]').hide(); //Changes
+    	$(mc+' .class_status option[value="2"]').hide(); 
+    	$(mc+' .class_status option[value="3"]').hide(); 
     } else {
-		$(mc+' .class_status option[value="2"]').show(); //Returning Customers
-    	$(mc+' .class_status option[value="3"]').show(); //Changes    	
+		$(mc+' .class_status option[value="2"]').show(); 
+    	$(mc+' .class_status option[value="3"]').show(); 
     }
 
-    //status tooltip
     if (level_type == '4') {
     	$(mc+' .clstatuscompttip').removeClass('noshow');
     } else {
     	$(mc+' .clstatuscompttip').addClass('noshow');
     }
 
-    //features
-    //features set per client
     let features = $(mc+' .client_class_features').val().split('');
 
-    //resets
     $(mc+' .class_feature_div').hide();
     $(mc+' .class_feature_div_group [class*="class_feature_"]').prop('disabled', false);
 
@@ -2552,15 +2478,13 @@ function toggle_class_inputs() {
                 passed = true;
             }          
         } else {
-            passed = true; //h
+            passed = true; 
         }
 
         if (passed) {
             $(mc+' .class_feature_'+features[i]).closest('.class_feature_div').show();
         }
     }
-    //features - common
-    //s
     if (level_type == '4') {
         $(mc+' .class_feature_s').closest('.class_feature_div').show();
         if (status != '1') {
@@ -2568,7 +2492,6 @@ function toggle_class_inputs() {
         }
     }
 
-    //n
     if (level_type == '4') {
         $(mc+' .class_feature_n').closest('.class_feature_div').show();
         if ((status != '4') && (status != '5')) {
@@ -2576,23 +2499,19 @@ function toggle_class_inputs() {
         }
     }
 
-    //r
 	if ((level_type == '0') || (level_type == '1') || (level_type == '6') || (level_type == '4')) {
-		$(mc+' .class_feature_r').closest('.class_feature_div').show(); //div already removed if no emailconfirmregister - register_email_div
-		$(mc+' .class_feature_w').closest('.class_feature_div').show(); //div already removed if no emailonlineregister - regworkflow_email_div
+		$(mc+' .class_feature_r').closest('.class_feature_div').show(); 
+		$(mc+' .class_feature_w').closest('.class_feature_div').show(); 
 	}
 
-    //m
 	if ((level_type == '0') || (level_type == '1') || (level_type == '6')) {
-		$(mc+' .class_feature_m').closest('.class_feature_div').show(); //div already removed if no register_addons
+		$(mc+' .class_feature_m').closest('.class_feature_div').show(); 
 	}
 
-    //a
 	if ((level_type == '0') || (level_type == '1') || (level_type == '6')) {
-		$(mc+' .class_feature_a').closest('.class_feature_div').show(); //div already removed if no product_addons
+		$(mc+' .class_feature_a').closest('.class_feature_div').show(); 
 	}
 
-    //0,1,6 - class_public_items, won't show unless public_view is set for classes
 	if ((level_type == '0') || (level_type == '1') || (level_type == '6')) {
 		$(mc+' .class_feature_0').closest('.class_feature_div').show();
 		if (features.includes('0') && new_class) {
@@ -2609,22 +2528,18 @@ function toggle_class_inputs() {
 		$(mc+' .class_feature_2').closest('.class_feature_div').show();
 	}
 
-	//3 - makeup_items, won't show unless makeup module is set
 	if (level_type == '1') {
 		$(mc+' .class_feature_3').closest('.class_feature_div').show();
 	}
 
-	//4 - private registers, won't show unless option in class is set
 	if ((level_type == '0') || (level_type == '1') || (level_type == '6')) {
 		$(mc+' .class_feature_4').closest('.class_feature_div').show();
 	}
 
-    //5 - roll code, won't show unless emailrollcode is set
 	if ((level_type == '0') || (level_type == '1') || (level_type == '6') || (level_type == '4')) {
 		$(mc+' .class_feature_5').closest('.class_feature_div').show();
 	}
 
-    //cost per
     let per = 'per ';
     if (level_type == '0') {
         per += $('#term_title').val(); 
@@ -2636,8 +2551,8 @@ function toggle_class_inputs() {
         } else {
             per += 'player'; 
         }
-        
-    }
+
+            }
     if (($(mc+' .class_flat_cost').val() == 'flat_cost') || (($(mc+' .class_flat_cost').val() == 'flat_cost_0') && (level_type == '0'))) {
         per = '';
     }
@@ -2680,15 +2595,11 @@ function editClass(class_id, spinner=true) {
 
 	return new Promise((resolve, reject) => {
 
-	    //resets
-	    //need to do resets because we are using term_id/name, level_id/name from the api below
 	    $(mc+' select.class_level_id option[value!="0"]').remove();
 	    $(mc+' select.class_term_id option[value!="0"]').remove();
 
-	    //data
-	    $(mc+' .class_class_id').val(class_id); //set it first incase any parallel modal actions are dependant on it
+	    $(mc+' .class_class_id').val(class_id); 
 
-	    /* fetch from api directly because of html in class_comment*/
 	    if (spinner) {$('#loader-wrapper').show()};
 
 	    let querydata = {class_id: class_id, show_archive: true};
@@ -2709,7 +2620,7 @@ function editClass(class_id, spinner=true) {
 	            if (spinner) {$('#loader-wrapper').hide()};
 
 	            if (response.success.data.length) {
-	                let itemobj = response.success.data[0]; //override itemobj
+	                let itemobj = response.success.data[0]; 
 
 	                if (itemobj.level_id != 0) {
 	                    $(mc+' .class_level_id').append($('<option>', {
@@ -2743,8 +2654,8 @@ function editClass(class_id, spinner=true) {
 	                let quill = Quill.find($(mc+' .class_class_comment')[0]);
 	                quill.clipboard.dangerouslyPasteHTML(itemobj.class_comment);
 	                quill.blur();
-	                
-	                $(mc+' .class_info').val(itemobj.info);
+
+	                	                $(mc+' .class_info').val(itemobj.info);
 
 	                $(mc+' .class_class_features').val(itemobj.features);
 
@@ -2762,7 +2673,6 @@ function editClass(class_id, spinner=true) {
 
 	                toggle_class_inputs();
 
-	                //comments
 	                let comments_str = '';
 	                for (let i = 0; i < itemobj.comments.length; i++) {
 	                    let c = itemobj.comments[i];
@@ -2788,7 +2698,6 @@ function editClass(class_id, spinner=true) {
 	                }
 	                $(mc+' .class_comments_list tbody').html(comments_str);
 
-	                //restrictions
 	                let restr_str = '';
 	                if (itemobj.restrictions) {
 	                    let restrictions = itemobj.restrictions;                
@@ -2829,25 +2738,22 @@ function editClass(class_id, spinner=true) {
 	                }
 	                $(mc+' .class_restrictions tbody').html(restr_str);
 
-	                //deeplink
 	                if (itemobj.level_type == 4) {
 	                	$(mc+' .class_deeplink').text(window.location.origin+'/dashboard?page=team&tab=create_team&term_id='+itemobj.term_id+'&class_id='+class_id+(response.success.options?.is_multilocation ? '&location_id='+itemobj.location_id : ''));
 	                } else {
 	                	$(mc+' .class_deeplink').text(window.location.origin+'/dashboard?enrol='+class_id+(response.success.options?.is_multilocation ? '&location_id='+itemobj.location_id : ''));
 	                }
 
-	                //archived class
 	                if (itemobj.status == 0) {
 	                	$(mc+' .btn-default').remove();
 	                	$(mc+' .btn-edit').remove();
 	                }
 
-                    //get image if exists
                     if ($(mc+' .class_image_tr').hasClass('show_images')) {
 
                         $(mc+' .class_image_tr').show();
-                        
-                        $(mc+' .class_image_tr .display_img').hide();
+
+                                                $(mc+' .class_image_tr .display_img').hide();
 
                         get_class_image(itemobj.class_id);
                     }
@@ -2855,7 +2761,7 @@ function editClass(class_id, spinner=true) {
 	            }
 
 	        } else if (response.redirect != undefined) {
-	            mini_login_wizard(response.redirect); //session timeout case
+	            mini_login_wizard(response.redirect); 
 	        } else {    
 	            set_side_error(response.error.join("<br>"));
 	            $('#loader-wrapper').hide();           
@@ -2874,7 +2780,6 @@ function saveClass() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
 
     let features = '';
     $(mc+' .class_feature_div input[type="checkbox"]:visible').each(function () {
@@ -2883,7 +2788,7 @@ function saveClass() {
         }
     });
 
-    if ($(mc+' .class_feature_t:visible').val()) { //Payment type
+    if ($(mc+' .class_feature_t:visible').val()) { 
         features += $(mc+' .class_feature_t:visible').val();
     }
 
@@ -2903,7 +2808,6 @@ function saveClass() {
     };  
 
     let errors = [];
-    //validations
     if (!validator.isInt(data.level_id,{min: 1})) {
         errors.push('Invalid level'); 
     }
@@ -2949,24 +2853,22 @@ function saveClass() {
                 $('#loader-wrapper').hide();
 
                 set_side_error(toTitleCase($('#class_title').val())+' saved succesfully', 'green');
-                if ((!data.class_id) || (data.status == 0)) { //new class or archive
+                if ((!data.class_id) || (data.status == 0)) { 
                     close_modal();
                 } else {
-                	editClass(data.class_id); //refresh data
+                	editClass(data.class_id); 
                 }
 
-                //refresh classes
                 if ($('#classes_main').is(":visible")) {
                 	get_api('getClasss');
                 }
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                 	get_class_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -2986,7 +2888,6 @@ function get_class_image(class_id) {
 
     let querydata = {class_id: class_id};
 
-    //resets related to class images
     $(mc+' .class_image_id').text('');
     $(mc+' .class_img_buttons').addClass('noshow');
     $(mc+' .image_upload_div .display_img').attr('src','/images/avatar.png').hide();
@@ -3014,7 +2915,7 @@ function get_class_image(class_id) {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -3030,9 +2931,8 @@ function delete_class_image(image_id) {
     $('#loader-wrapper').show();
 
     let class_id = $(mc+' .class_class_id').val();
-    
-    let errors = [];
-    //validations
+
+        let errors = [];
 
     if (errors.length == 0) {
         $.ajax({
@@ -3049,7 +2949,7 @@ function delete_class_image(image_id) {
                 get_class_image(class_id);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -3067,7 +2967,6 @@ function delete_class_image(image_id) {
 
 function get_all_classes() {
 
-    //resets
     $('#loader-wrapper').show();
 
 	if (USE_EVENTS_MOCKS) {
@@ -3087,13 +2986,13 @@ function get_all_classes() {
     }).done(function( response ) {
 
         if (response.success != undefined) {
-            
-            $('#loader-wrapper').hide();
+
+                        $('#loader-wrapper').hide();
             getClasssResults(response.success);
             requestAnimationFrame(run_events_intro_animation);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();           
@@ -3117,7 +3016,6 @@ function save_class_comment() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
 
     let data ={
         comment_id: $(mc+' .class_comment_id').val(),
@@ -3127,7 +3025,6 @@ function save_class_comment() {
     };  
 
     let errors = [];
-    //validations
 
     if (isEmpty(data.comment_data)) {
         errors.push('Please enter a comment and re-try');
@@ -3146,10 +3043,10 @@ function save_class_comment() {
                 $('#loader-wrapper').hide();
 
                 editClass(data.class_id);
-                $(mc+' .class_comment_form').html($('#master_class_view .class_comment_form').html()); //reset
+                $(mc+' .class_comment_form').html($('#master_class_view .class_comment_form').html()); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -3171,7 +3068,6 @@ function delete_class_comment(comment_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -3186,10 +3082,10 @@ function delete_class_comment(comment_id) {
                 $('#loader-wrapper').hide();
 
                 editClass($(mc+' .class_class_id').val());
-                $(mc+' .class_comment_form').html($('#master_class_view .class_comment_form').html()); //reset
+                $(mc+' .class_comment_form').html($('#master_class_view .class_comment_form').html()); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -3208,16 +3104,16 @@ function delete_class_comment(comment_id) {
 function update_class_restriction(restriction_row) {
     $(mc+' .restr_restriction_id').text($(restriction_row).find('.restriction_id').text());
     $(mc+' .restr_restriction_type').val($(restriction_row).find('.restriction_type').text()).change();
-    
-    let value = $(restriction_row).find('.restriction_value').text();
+
+        let value = $(restriction_row).find('.restriction_value').text();
     if ($(mc+' .restr_restriction_type').val() == 4) {
     	value = value.split(',');
     	$(mc+' .restr_level_ids_class').val(value).change();
     } else {
     	$(mc+' .restr_value').val(value);
     }
-    
-    $(mc+' .new-modal-content').animate({
+
+        $(mc+' .new-modal-content').animate({
         scrollTop: $(mc+' .class_restr_form').position().top + $(mc+' .new-modal-content').scrollTop() - $(mc + ' .modal-header').outerHeight()
     }, 500);     
 }
@@ -3234,7 +3130,6 @@ function save_class_restriction() {
     };
 
     let errors = [];
-    //validations
 
     if (isEmpty(data.value)) {
         errors.push("Invalid restriction value");
@@ -3257,10 +3152,10 @@ function save_class_restriction() {
                 $('#loader-wrapper').hide();
 
                 editClass($(mc+' .class_class_id').val());
-                $(mc+' .class_restr_form').html($('#master_class_view .class_restr_form').html()); //reset
+                $(mc+' .class_restr_form').html($('#master_class_view .class_restr_form').html()); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -3281,7 +3176,6 @@ function delete_class_restriction(restriction_id) {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -3296,10 +3190,10 @@ function delete_class_restriction(restriction_id) {
                 $('#loader-wrapper').hide();
 
                 editClass($(mc+' .class_class_id').val());
-                $(mc+' .class_restr_form').html($('#master_class_view .class_restr_form').html()); //reset
+                $(mc+' .class_restr_form').html($('#master_class_view .class_restr_form').html()); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -3319,23 +3213,22 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
 
     $('#loader-wrapper').show();
 
-    //grab inputs before reset
     if ($(mc).hasClass('modal-open') && ($(mc+' .reg_class_id').val() > 0)) {
         class_id = $(mc+' .reg_class_id').val();
         level_type = $(mc+' .reg_level_type').val();
         term_id = $(mc+' .reg_term_id').val();
-        if (!term_changed) { //this check is to ensure new term_id is not sent with old schedule_id
+        if (!term_changed) { 
             schedule_id = $(mc+' .reg_schedule_id_li:not(.noshow) .reg_schedule_id').val();
         }
     }
 
     if (!no_reset) {
-    	$(mc+' .class_enrolments_tab').html($('#master_class_view .class_enrolments_tab').html()); //reset	
+    	$(mc+' .class_enrolments_tab').html($('#master_class_view .class_enrolments_tab').html()); 
     } else {
-    	$(mc+' .sched_items').remove(); //schedule specific items e.g. comments
+    	$(mc+' .sched_items').remove(); 
     }
-    
-    let class_enrolment_titles = JSON.parse($('#class_enrolment_titles').text());
+
+        let class_enrolment_titles = JSON.parse($('#class_enrolment_titles').text());
 
     let register_mode = '';
     if (level_type == 0) {
@@ -3362,15 +3255,13 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
 
                 let res = response.success;
 
-                //class info
                 $(mc+' .reg_class_id').val(res.class.class_id);
                 $(mc+' .reg_level_type').val(res.class.level_type);
                 $(mc+' .reg_capacity').val(res.class.capacity);
 
-                //term info
                 let options_str_t = '';
                 for (let i = 0; i < res.terms.length; i++) {
-                    options_str_t += '<option value="'+res.terms[i].term_id+'">'+res.terms[i].term_name+'</option>'; //from_schedule not required
+                    options_str_t += '<option value="'+res.terms[i].term_id+'">'+res.terms[i].term_name+'</option>'; 
                 }
                 $(mc+' .reg_term_id').html(options_str_t);
 
@@ -3384,7 +3275,6 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                     $(mc+' .reg_term_id').prop('disabled', true);
                 }
 
-                //adjust chevrons
                 if (true) {
                     let show_next = false;
                     let show_prev = false;
@@ -3396,8 +3286,8 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                         if (index > currentIndex) {
                             show_next = true;
                         }
-                        
-                        if (index < currentIndex) {
+
+                                                if (index < currentIndex) {
                             show_prev = true;
                         }
                     });
@@ -3414,7 +3304,6 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                     }
                 }
 
-                //schedule info
                 if (register_mode == 'schedule') {
                     $(mc+' .reg_schedule_id_li').removeClass('noshow');
 
@@ -3432,7 +3321,6 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
 
                     $(mc+' .reg_schedule_id').val(res.schedules.filter(item => item.selected_schedule)[0].schedule_id);
 
-                    //adjust chevrons
                     let show_next = false;
                     let show_prev = false;
                     let currentIndex = $(mc+' .reg_schedule_id').prop('selectedIndex');
@@ -3443,8 +3331,8 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                         if (index > currentIndex) {
                             show_next = true;
                         }
-                        
-                        if (index < currentIndex) {
+
+                                                if (index < currentIndex) {
                             show_prev = true;
                         }
                     });
@@ -3461,12 +3349,10 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                     }
                 }
 
-                //data
                 let data = res.data;
 
                 let html_str = '';
 
-                //prepare data_map
                 let data_map = [];
 
                 if (register_mode == 'class') {
@@ -3502,7 +3388,7 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                             $(mc+' .reg_hdr_ul').append('<li class="sched_items"><span>Comment:</span>'+s.schedule_comment+'</li>');
                         }
 
-                        let schedule_name = $(mc+' .reg_schedule_id option[value="'+s.schedule_id+'"]').text(); //should be same as $(mc+' .reg_schedule_id option:selected').text();
+                        let schedule_name = $(mc+' .reg_schedule_id option[value="'+s.schedule_id+'"]').text(); 
                         data_map.push({
                             header: schedule_name,
                             ids: s.class_id+'~'+s.program_id+'~'+s.schedule_id+'~0~0',
@@ -3526,12 +3412,10 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                     }
                 }
 
-                let empty_div = '<div class="empty_div noshow"></div>'; //pointer for alter_reg and prog_switch div blocks
+                let empty_div = '<div class="empty_div noshow"></div>'; 
 
-                //convert data_map to html
                 for (let j = 0; j < data_map.length; j++) {
 
-                    //header
                     let header_str = data_map[j].header ? (data_map[j].header+(data_map[j].sub_header ? '<br>'+data_map[j].sub_header : '')) : '';
 
                     html_str += '<div class="table-wrapper toggle_div"><table class="table table_th_top table_td_top se_div class_reg_hdr">\
@@ -3544,11 +3428,10 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                                     </thead>\
                                     <tbody>'
 
-                    //data
                     for (let i = 0; i < data_map[j].data.length; i++) {
                         let d = data_map[j].data[i];
-                        
-                        let age = (getAge(d.dob)) ? ' ('+getAge(d.dob)+')' : '';
+
+                                                let age = (getAge(d.dob)) ? ' ('+getAge(d.dob)+')' : '';
                         if (d.details && d.details.schoolyear) {
                             age = ' ('+d.details.schoolyear+')';
                         }
@@ -3575,42 +3458,37 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                                     </tr>';
                     }
 
-                    
 
-                    //count
-                    let qtys = data_map[j].data.reduce((sum, item) => sum + item.quantity, 0); //sum of all quantity
+
+                    let qtys = data_map[j].data.reduce((sum, item) => sum + item.quantity, 0); 
                     let regs = qtys > 0 ? qtys : data_map[j].data.length;
                     let absents = data_map[j].data.filter(item => item.absent).length;
 
                     let acts_str = '';
-                    
-                    let switch_prog_str = ((register_mode == 'program') && data_map[j].cur_term && $('#is_admin').val() && ($(mc+' .class_status').val() > 0)) ? '<li><a href="#" class="menu_item class_reg_ps">Switch Program</a></li>' : '';
+
+                                        let switch_prog_str = ((register_mode == 'program') && data_map[j].cur_term && $('#is_admin').val() && ($(mc+' .class_status').val() > 0)) ? '<li><a href="#" class="menu_item class_reg_ps">Switch Program</a></li>' : '';
                     acts_str += switch_prog_str;
 
                     if (($(mc+' .reg_capacity').val() > 0) && ((regs-absents) >= $(mc+' .reg_capacity').val()) && (['class','program','schedule'].includes(register_mode))) {
                         html_str += '<tr class="white_tr">\
                                         <td colspan="3"><b>Capacity Reached</b></td>\
                                     </tr>';
-                    	
-                    	acts_str += '<li><a href="#" class="menu_item sms_lnk">SMS</a></li>'; 
+
+                    	                    	acts_str += '<li><a href="#" class="menu_item sms_lnk">SMS</a></li>'; 
                     	acts_str += '<li><a href="#" class="menu_item email_lnk">Email</a></li>'; 
 
                     } else if ($(mc+' .class_status').val() > 0) {
 
-                        //register deeplink
                         if ((register_mode == 'competition') && (data_map[j].header.replace(data_map[j].pool,'').trim() == 'Bye')) {
-                            //don't show register link
                         } else {
                         	let reg_str_ = (register_mode == 'competition') ? 'Add player' : toTitleCase(class_enrolment_titles.verb || 'enrol')+' a new customer';
                             acts_str += '<li><a href="#" data-intrac="'+data_map[j].ids+'" class="menu_item reg_register_customer">'+reg_str_+'</a></li>';
                         }
 
-                        //reserve deeplink
                         if ((register_mode == 'program') || (register_mode == 'schedule'))  {
                             acts_str += '<li><a href="#" data-intrac="'+data_map[j].ids+'" class="menu_item reg_reserve">Reserve a place</a></li>'; 
                         }
 
-                        //sms & email
                         if (data_map[j].data.length) {
                         	acts_str += '<li><a href="#" class="menu_item sms_lnk">SMS</a></li>'; 
                         	acts_str += '<li><a href="#" class="menu_item email_lnk">Email</a></li>'; 
@@ -3629,10 +3507,8 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                     }
                     html_str = html_str.replace('menu_btn_str_'+j, acts_str);
 
-                    //close table
                     html_str += '</tbody></table></div>';
 
-                    //addons - shows in schedule_mode only (for programs - today's view will be schedule_mode), add as a separate table
                     if (data_map[j].addons && data_map[j].addons.length) {
                         html_str += '<div class="table-wrapper"><table class="table">\
                                         <thead>\
@@ -3641,10 +3517,9 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                                             </tr>\
                                         </thead>\
                                         <tbody>'                         
-                        
-                        for (let i = 0; i < data_map[j].addons.length; i++) {
+
+                                                for (let i = 0; i < data_map[j].addons.length; i++) {
                             let d = data_map[j].addons[i];
-                            /*note: d.customer_id here is purchase.customer_id*/
                             html_str += '<tr class="class_addon_item">\
                                             <td><span class="purchase_id noshow">'+d.purchase_id+'</span><span class="customer_id noshow">'+d.customer_id+'</span><span class="receipt_id noshow">'+d.receipt_id+'</span>'+(i+1)+'. '+d.first_name+' '+d.last_name+'</td>\
                                             <td>'+(d.quantity > 1 ? d.quantity+' x ' : '')+d.category+' '+d.product_name+'</td>\
@@ -3652,13 +3527,11 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                                         </tr>'; 
                         }
 
-                        //close table
                         html_str += '</tbody></table></div>';
                     }
-                    
-                }
 
-                //sms & email at top level
+                                    }
+
                 if ((html_str.includes('se_det')) && ((register_mode == 'program')  || (register_mode == 'competition'))) {
                 	$(mc+' .sms_lnk').removeClass('noshow');
                 	$(mc+' .email_lnk').removeClass('noshow');
@@ -3681,14 +3554,13 @@ async function get_class_registers({ class_id='', level_type='', term_id='', sch
                 	$(mc+' .recalc_class_amounts').remove();
                 }
 
-                //archived class
                 if ($(mc+' .class_status').val() === '0') {
                 	$(mc+' .btn-default').remove();
 	                $(mc+' .btn-edit').remove();
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -3714,7 +3586,6 @@ function set_prog_switch_register(el) {
     let program_id = $(el).find('.ids').text().split('~')[1];
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -3727,8 +3598,8 @@ function set_prog_switch_register(el) {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                let d = response.success.data[0];
+
+                                let d = response.success.data[0];
                 if (d) {
                     $(el).find('th:first div').after('<div class="ps_div margin_top_md margin_btm_sm">'+$(mc+' .reg_ps_view').html()+'</div>');
 
@@ -3748,11 +3619,11 @@ function set_prog_switch_register(el) {
                     }
 
                 } else {
-                    set_side_error('Unable to retrieve details'); //this should never show
+                    set_side_error('Unable to retrieve details'); 
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -3774,7 +3645,6 @@ function program_switch_register(class_id, cur_program_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
     if (!class_id) {
         errors.push('You must choose an option to proceed further');
     }
@@ -3796,23 +3666,20 @@ function program_switch_register(class_id, cur_program_id) {
                     set_side_error(response.info.join("<br>"), 'amber');
                 }
 
-                //refresh classes
                 if ($('#classes_main').is(":visible")) {
                 	get_api('getClasss');
                 }
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                 	get_class_grid(false);
                 }
 
-                //refresh grid
                 if ($('#rosters').is(":visible")) {
                 	get_roster_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -3839,7 +3706,6 @@ async function set_alter_register(el, creg=false) {
     let class_id = null;
     let register_mode = '';
 
-    //populate class_id and register_mode
     if (creg) {
         let ids = $(el).find('.register_details').text().split('~');
         class_id = ids[0];
@@ -3869,7 +3735,6 @@ async function set_alter_register(el, creg=false) {
     let register_id = $(el).find('.register_id').text();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -3882,14 +3747,14 @@ async function set_alter_register(el, creg=false) {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                let d = response.success.data[0];
+
+                                let d = response.success.data[0];
                 if (d) {
 
-                	let alt_html = $('#master_class_view .reg_alter_view').html(); //using master_class_view i/o mc here as creg will be in mc2 in customer modal
+                	let alt_html = $('#master_class_view .reg_alter_view').html(); 
                 	if (creg) {
                 		alt_html = alt_html.replace('regbtn_alter', 'custregisterbtn_alter');
-                		alt_html = alt_html.replace('static_form margin_top_md', ''); //customer alter will act as a default form/grid model
+                		alt_html = alt_html.replace('static_form margin_top_md', ''); 
                 	}
 
                     $(el).find('.empty_div:first').after('<div class="alter_div flex_new_row">'+alt_html+'</div>'); 
@@ -3897,18 +3762,18 @@ async function set_alter_register(el, creg=false) {
                     if (($(el).find('.reg_alter_quantity').is(":visible")) && (d.quantity > 0)) {
                         $(el).find('.reg_alter_quantity').val(d.quantity);
                         if ($('#is_admin').val()) {
-                            $(el).find('.reg_alter_quantity').prop('disabled', false); //allowed only for admins/admin privileges
+                            $(el).find('.reg_alter_quantity').prop('disabled', false); 
                         }
                     } else {
                         $(el).find('.reg_alter_quantity_div').hide();
                     }
-                    
-                    if (d.amount !== null) {
+
+                                        if (d.amount !== null) {
                         $(el).find('.reg_alter_amount_div').show();
                         $(el).find('.reg_alter_amount').val(d.amount);
                         if (d.receipt_type == 0 || d.receipt_type == 1) {
                             if ($('#is_admin').val()) {
-                                $(el).find('.reg_alter_amount').prop('disabled', false); //allowed only for admins/admin privileges
+                                $(el).find('.reg_alter_amount').prop('disabled', false); 
                             }
                         } else if (d.receipt_type == 2) {
                             $(el).find('.reg_alter_amount_status').text('Status: Paid');
@@ -3939,11 +3804,11 @@ async function set_alter_register(el, creg=false) {
                     }
 
                 } else {
-                    set_side_error('Unable to retrieve details'); //this should never show
+                    set_side_error('Unable to retrieve details'); 
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -3969,7 +3834,6 @@ function alter_register(el, creg=false) {
 
     let data = {register_id: register_id, customer_id: customer_id, location_id: location_id, action: 'alter'};
 
-    //populate alter data
     let alt_el = $(el).find('.alter_div');
 
     if ($(alt_el).find('.reg_alter_quantity').is(':visible'))  {
@@ -3994,7 +3858,6 @@ function alter_register(el, creg=false) {
     }
 
     let errors = [];
-    //validations
 
     if (!validator.isFloat(data.cost,{min: 0})) {
     	errors.push('Invalid amount')
@@ -4016,12 +3879,10 @@ function alter_register(el, creg=false) {
 
                     viewCustomer($(mc2+' .cust_edit_tab .cust_customer_id').val(), 'cust_registers');
 
-	                //refresh class enrolments
 	                if (($(mc).hasClass('modal-open')) && $(mc+' .tl_class_enrolments').hasClass('active')) {
-	                	get_class_registers({no_reset: true}); //no_reset of html to retain scroll position
+	                	get_class_registers({no_reset: true}); 
 	                }
 
-	                //refresh class attendance
 	                if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
 	                	get_class_attendance();
 	                }
@@ -4029,12 +3890,10 @@ function alter_register(el, creg=false) {
                 } else {
                     get_class_registers();
 
-	                //refresh classes
 	                if ($('#classes_main').is(":visible")) {
 	                	get_api('getClasss');
 	                }
 
-	                //refresh grid
 	                if ($('#classes').is(":visible")) {
 	                	get_class_grid(false);
 	                }
@@ -4045,7 +3904,7 @@ function alter_register(el, creg=false) {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -4065,9 +3924,8 @@ function reserve_register(class_id, program_id, schedule_id) {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
-        register_id: '',//$(mc+' .cregister_register_id').val(),
+        register_id: '',
         customer_id: 2,
         class_id: class_id,
         program_id: program_id,
@@ -4084,12 +3942,10 @@ function reserve_register(class_id, program_id, schedule_id) {
     if (schedule_id > 0) {
         data.schedule_ids = [schedule_id];
     }
-    
 
-    //console.log(data);
+
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -4104,21 +3960,18 @@ function reserve_register(class_id, program_id, schedule_id) {
 
                 $('#loader-wrapper').hide();
 
-                //refresh registers data
                 get_class_registers();
 
-                //refresh classes
                 if ($('#classes_main').is(":visible")) {
                 	get_api('getClasss');
                 }
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                 	get_class_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -4141,7 +3994,6 @@ function delete_register(register_id, customer_id, cancel_comment, creg=false) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -4159,12 +4011,10 @@ function delete_register(register_id, customer_id, cancel_comment, creg=false) {
 
                     viewCustomer($(mc2+' .cust_edit_tab .cust_customer_id').val(), response.success.startsWith('credit') ? 'account' : 'cust_registers');
 
-	                //refresh class enrolments
 	                if (($(mc).hasClass('modal-open')) && $(mc+' .tl_class_enrolments').hasClass('active')) {
-	                	get_class_registers({no_reset: true}); //no_reset of html to retain scroll position
+	                	get_class_registers({no_reset: true}); 
 	                }
 
-	                //refresh class attendance
 	                if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
 	                	get_class_attendance();
 	                }
@@ -4173,7 +4023,7 @@ function delete_register(register_id, customer_id, cancel_comment, creg=false) {
                 	if (response.success.startsWith('credit')) {
                 		viewCustomer(response.success.split('~')[1], 'account');
                 	}
-                    get_class_registers({no_reset: true}); //no_reset of html to retain scroll position
+                    get_class_registers({no_reset: true}); 
                 }
 
                 if (response.info.length) {
@@ -4181,7 +4031,7 @@ function delete_register(register_id, customer_id, cancel_comment, creg=false) {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -4198,7 +4048,6 @@ function delete_register(register_id, customer_id, cancel_comment, creg=false) {
 }
 
 function set_ps_space_id_defaults(el=mc) {
-    //set each ps_space_id_ sel with a value per index, so that selects don't look all blanks
     $(mc+' .ps_space_id_').each(function (i,e) {
         $(this).val($(this).find('option').eq(i+1).val());
     });
@@ -4212,17 +4061,14 @@ function get_class_programs(class_id) {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .programs_tab').html($('#master_class_view .programs_tab').html()); //reset
-    $(mc+' .schedules_tab').html(''); //reset to avoid ps_user_id ps_space_id interference
+    $(mc+' .programs_tab').html($('#master_class_view .programs_tab').html()); 
+    $(mc+' .schedules_tab').html(''); 
 
-    //archived class
     if ($(mc+' .class_status').val() === '0') {
     	$(mc+' .btn-default').remove();
     	$(mc+' .btn-edit').remove();
     }
 
-    //have to do these here than in master
-    //set each ps_space_id_ sel with a value per index, so that selects don't look all blanks
     set_ps_space_id_defaults();
 
     if (class_id) {
@@ -4239,15 +4085,12 @@ function get_class_programs(class_id) {
 
                 let res = response.success;
 
-                //data
                 let data = res.data;
 
                 let html_str = '';
 
-                //class info
                 $(mc+' .prog_class_id').val(res.class.class_id);
 
-                //header
                 html_str += '<div class="table-wrapper"><table class="table">\
                                 <thead>\
                                     <tr>\
@@ -4261,7 +4104,6 @@ function get_class_programs(class_id) {
                                 </thead>\
                                 <tbody>';
 
-                //data
                 for (let i = 0; i < data.length; i++) {
 
                     let usernames = data[i].usernames.split(',');
@@ -4289,13 +4131,12 @@ function get_class_programs(class_id) {
                                 </tr>';
                 }
 
-				//close table
                 html_str += '</tbody></table></div>';
 
                 $(mc+' .prog_list').html(html_str);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -4312,7 +4153,6 @@ function get_class_programs(class_id) {
 }
 
 function update_class_program(class_id, program_id, schedule_switch=false) {
-    /* fetch from api directly*/
     $('#loader-wrapper').show();
 
     $.ajax({
@@ -4325,7 +4165,7 @@ function update_class_program(class_id, program_id, schedule_switch=false) {
         if (response.success != undefined) {
 
             if (response.success.data.length) {
-                let itemobj = response.success.data[0]; //override itemobj
+                let itemobj = response.success.data[0]; 
 
                 $(mc+' .prog_class_id').val(itemobj.class_id);
                 $(mc+' .prog_program_id').val(itemobj.program_id);
@@ -4351,7 +4191,6 @@ function update_class_program(class_id, program_id, schedule_switch=false) {
                 let user_ids_unique = [...new Set(user_ids)];
                 let space_ids = itemobj.space_ids.split(',');
 
-                //spaces
                 if (space_ids.length == 1) {
                     $(mc+' .ps_space_id').val(space_ids[0]);
                 } else {
@@ -4364,13 +4203,12 @@ function update_class_program(class_id, program_id, schedule_switch=false) {
                     }
                 }
 
-                //users
                 if (user_ids_unique.length == 1) {
                     $(mc+' .ps_user_id').val(user_ids_unique[0]);
                 } else {
                     $(mc+' .ps_show_users_multiple').click();
 
-                    for (let i = 0; i < user_ids.length; i++) { //user_ids.length will be the same as space_ids.length
+                    for (let i = 0; i < user_ids.length; i++) { 
                         let el = $(mc+' .ps_user_id_').eq(i);
                         $(el).val(user_ids[i]);
                         $(el).closest('tr').find('.ps_su_sel').prop('checked', true);
@@ -4379,11 +4217,11 @@ function update_class_program(class_id, program_id, schedule_switch=false) {
 
                 $(mc+' .prog_incl_hols_div').addClass('noshow');
             }
-            
-            $('#loader-wrapper').hide();
+
+                        $('#loader-wrapper').hide();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();         
@@ -4399,7 +4237,6 @@ function saveClassProgram() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         class_id: $(mc+' .prog_class_id').val(),
         program_id: $(mc+' .prog_program_id').val(),
@@ -4413,22 +4250,19 @@ function saveClassProgram() {
         incl_hols: $(mc+' .prog_incl_hols:visible').is(":checked") ? 1 : 0
     };
 
-    //spaces and users
-    //multiple spaces visible
     if ($(mc+' .ps_space_multiple_div').is(":visible")) {
 
         $(mc+' .ps_su_sel').each(function () {
             if (this.checked) {
                 let s_id = 0;
                 let u_id = 0;
-                
-                s_id = $(this).closest('tr').find('.ps_space_id_').val();
-                
-                //multiple users visible
+
+                                s_id = $(this).closest('tr').find('.ps_space_id_').val();
+
                 let u_el = $(this).closest('tr').find('.ps_user_id_');
                 if ($(u_el).is(":visible")) {
                     u_id = $(u_el).val();
-                } else { //single user, assign only to first program_bookings element
+                } else { 
                     u_id = data.program_bookings.length ? '0' : $(mc+' .ps_user_id').val();
                 }
 
@@ -4448,7 +4282,7 @@ function saveClassProgram() {
             });        	
         }
 
-    } else { //single space
+    } else { 
         data.program_bookings.push({
             space_id: $(mc+' .ps_space_id').val() || '0',
             user_id: $(mc+' .ps_user_id').val() || '0'
@@ -4456,7 +4290,6 @@ function saveClassProgram() {
     }
 
     let errors = [];
-    //validations
 
     if (!['0All', '1Mon', '2Tue', '3Wed', '4Thu', '5Fri', '6Sat', '7Sun'].includes(data.day)) {
         errors.push('Invalid day'); 
@@ -4470,9 +4303,9 @@ function saveClassProgram() {
         errors.push('Invalid finish time');
     }
 
-    if (errors.length == 0) { //times are valid
-        
-        if (dayjs(data.program_start,'HH:mm:ss').isAfter(dayjs(data.program_finish,'HH:mm:ss'))) {
+    if (errors.length == 0) { 
+
+                if (dayjs(data.program_start,'HH:mm:ss').isAfter(dayjs(data.program_finish,'HH:mm:ss'))) {
             errors.push("Finish time cannot be after start time");
         }
     }
@@ -4490,18 +4323,16 @@ function saveClassProgram() {
                 $('#loader-wrapper').hide();
                 get_class_programs();
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                     get_class_grid(false);
                 }
 
-                //refresh grid
                 if ($('#rosters').is(":visible")) {
                     get_roster_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -4524,7 +4355,6 @@ function delete_class_program(program_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -4539,18 +4369,16 @@ function delete_class_program(program_id) {
                 $('#loader-wrapper').hide();
                 get_class_programs();
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                     get_class_grid(false);
                 }
 
-                //refresh grid
                 if ($('#rosters').is(":visible")) {
                     get_roster_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -4576,17 +4404,14 @@ function get_class_schedules(class_id,term_id='') {
 
 	    $('#loader-wrapper').show();
 
-	    $(mc+' .schedules_tab').html($('#master_class_view .schedules_tab').html()); //reset
-	    $(mc+' .programs_tab').html(''); //reset to avoid ps_user_id ps_space_id interference
+	    $(mc+' .schedules_tab').html($('#master_class_view .schedules_tab').html()); 
+	    $(mc+' .programs_tab').html(''); 
 
-	    //archived class
 	    if ($(mc+' .class_status').val() === '0') {
 			$(mc+' .btn-default').remove();
 		    $(mc+' .btn-edit').remove();
 	    }
 
-	    //have to do these here than in master
-	    //set each ps_space_id_ sel with a value per index, so that selects don't look all blanks
 	    set_ps_space_id_defaults();	
 
 	    if (class_id) {
@@ -4603,12 +4428,10 @@ function get_class_schedules(class_id,term_id='') {
 
 	                let res = response.success;
 
-	                //data
 	                let data = res.data;
 
 	                let html_str = '';
 
-	                //term info
 	                let options_str_t = '';
 	                for (let i = 0; i < res.terms.length; i++) {
 	                    options_str_t += '<option value="'+res.terms[i].term_id+'" data-intrac_from_schedule="'+res.terms[i].from_schedule+'">'+res.terms[i].term_name+'</option>';
@@ -4619,10 +4442,9 @@ function get_class_schedules(class_id,term_id='') {
 	                	$(mc+' .sched_term_id_ul').removeClass('noshow');
 	                }
 
-	                //class info
 	                $(mc+' .sched_class_id').val(res.class.class_id);
-	                
-	                if (term_id) {
+
+	                	                if (term_id) {
 	                    $(mc+' .sched_term_id').val(term_id);
 	                } else {
 	                    $(mc+' .sched_term_id').val(res.class.term_id);
@@ -4631,7 +4453,6 @@ function get_class_schedules(class_id,term_id='') {
 	                $(mc+' .sched_term_start').val(res.terms.filter(item => item.term_id == $(mc+' .sched_term_id').val())[0]?.term_start);
 	                $(mc+' .sched_term_finish').val(res.terms.filter(item => item.term_id == $(mc+' .sched_term_id').val())[0]?.term_finish);
 
-	                //adjust chevrons
 	                let show_next = false;
 	                let show_prev = false;
 	                let currentIndex = $(mc+' .sched_term_id').prop('selectedIndex');
@@ -4642,8 +4463,8 @@ function get_class_schedules(class_id,term_id='') {
 	                    if (index > currentIndex && from_schedule == 1) {
 	                        show_next = true;
 	                    }
-	                    
-	                    if (index < currentIndex && from_schedule == 1) {
+
+	                    	                    if (index < currentIndex && from_schedule == 1) {
 	                        show_prev = true;
 	                    }
 	                });
@@ -4659,7 +4480,6 @@ function get_class_schedules(class_id,term_id='') {
 	                    $(mc+' .sched_term_prev').hide();
 	                }
 
-	                //program info
 	                $(mc+' .sched_program_id option').not("[value='0']").remove();
 	                let options_str_p = '';
 	                for (let i = 0; i < res.programs.length; i++) {
@@ -4672,7 +4492,6 @@ function get_class_schedules(class_id,term_id='') {
 	                }
 	                $(mc+' .sched_program_id').append(options_str_p)
 
-	                //header
 	                html_str += '<div class="table-wrapper"><table class="table">\
 	                                <thead>\
 	                                    <tr>\
@@ -4686,7 +4505,6 @@ function get_class_schedules(class_id,term_id='') {
 	                                </thead>\
 	                                <tbody>';
 
-	                //data            
 	                for (let i = 0; i < data.length; i++) {
 
 	                    let usernames = data[i].usernames.split(',');
@@ -4707,16 +4525,14 @@ function get_class_schedules(class_id,term_id='') {
 	                                        </ul></td>\
 	                                </tr>';
 
-	                                //removed && !data[i].enrolments from class_sched_delete
 	                }
 
-					//close table
 	                html_str += '</tbody></table></div>';
 
 	                $(mc+' .sched_list').html(html_str);
 
 	            } else if (response.redirect != undefined) {
-	                mini_login_wizard(response.redirect); //session timeout case
+	                mini_login_wizard(response.redirect); 
 	            } else {    
 	                set_side_error(response.error.join("<br>"));
 	                $('#loader-wrapper').hide();
@@ -4738,7 +4554,6 @@ function get_class_schedules(class_id,term_id='') {
 function update_class_schedule(class_id, schedule_id) {
     let term_id = $(mc+' .sched_term_id').val();
 
-    /* fetch from api directly*/
     $('#loader-wrapper').show();
 
     $.ajax({
@@ -4752,7 +4567,7 @@ function update_class_schedule(class_id, schedule_id) {
 
             if (response.success.data.length) {
                 let res = response.success;
-                let itemobj = res.data[0]; //override itemobj
+                let itemobj = res.data[0]; 
 
                 $(mc+' .sched_class_id').val(itemobj.class_id);
                 $(mc+' .sched_schedule_id').val(itemobj.schedule_id);
@@ -4760,8 +4575,8 @@ function update_class_schedule(class_id, schedule_id) {
                 $(mc+' .sched_date').val(convert_date(dayjs(itemobj.schedule_start).format('YYYY-MM-DD')));
                 $(mc+' .sched_schedule_start').val(dayjs(itemobj.schedule_start).format('HH:mm'));
                 $(mc+' .sched_schedule_finish').val(dayjs(itemobj.schedule_finish).format('HH:mm'));
-                
-                if (itemobj.schedule_comment == 'Full') {
+
+                                if (itemobj.schedule_comment == 'Full') {
                     if ($(mc+' .sched_schedule_full').is(":visible")) {
                         $(mc+' .sched_schedule_full').prop('checked', true);    
                     }
@@ -4775,7 +4590,6 @@ function update_class_schedule(class_id, schedule_id) {
                 let user_ids_unique = [...new Set(user_ids)];
                 let space_ids = itemobj.space_ids.split(',');
 
-                //spaces
                 if (space_ids.length == 1) {
                     $(mc+' .ps_space_id').val(space_ids[0]);
                 } else {
@@ -4788,20 +4602,18 @@ function update_class_schedule(class_id, schedule_id) {
                     }
                 }
 
-                //users
                 if (user_ids_unique.length == 1) {
                     $(mc+' .ps_user_id').val(user_ids_unique[0]);
                 } else {
                     $(mc+' .ps_show_users_multiple').click();
 
-                    for (let i = 0; i < user_ids.length; i++) { //user_ids.length will be the same as space_ids.length
+                    for (let i = 0; i < user_ids.length; i++) { 
                         let el = $(mc+' .ps_user_id_').eq(i);
                         $(el).val(user_ids[i]);
                         $(el).closest('tr').find('.ps_su_sel').prop('checked', true);
                     }
                 }
 
-                //avails
                 let html_str_a = '';
                 if (res.avails && res.avails.length) {
                     html_str_a += '<div class="margin_top_md margin_bottom_sm"><b>Staff Availability on '+convert_date_time(res.avails[0].avail_start, 'D MMM YYYY')+'</b><br><br>';
@@ -4812,11 +4624,11 @@ function update_class_schedule(class_id, schedule_id) {
                 }
                 $(mc+' .sched_avails_list').html(html_str_a);
             }
-            
-            $('#loader-wrapper').hide();
+
+                        $('#loader-wrapper').hide();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();          
@@ -4833,10 +4645,9 @@ function saveClassSchedule() {
     let schedule_comment = $(mc+' .sched_schedule_comment').val();
 
     if ($(mc+' .sched_schedule_full').is(":checked")) {
-        schedule_comment = 'Full'; //overwrite
+        schedule_comment = 'Full'; 
     }
 
-    //prepare the data
     let data ={
         class_id: $(mc+' .sched_class_id').val(),
         schedule_id: $(mc+' .sched_schedule_id').val(),
@@ -4852,22 +4663,19 @@ function saveClassSchedule() {
         split_schedules: ''
     };
 
-    //spaces and users
-    //multiple spaces visible
     if ($(mc+' .ps_space_multiple_div').is(":visible")) {
 
         $(mc+' .ps_su_sel').each(function () {
             if (this.checked) {
                 let s_id = 0;
                 let u_id = 0;
-                
-                s_id = $(this).closest('tr').find('.ps_space_id_').val();
 
-                //multiple users visible
+                                s_id = $(this).closest('tr').find('.ps_space_id_').val();
+
                 let u_el = $(this).closest('tr').find('.ps_user_id_');
                 if ($(u_el).is(":visible")) {
                     u_id = $(u_el).val();
-                } else { //single user, assign only to first schedule_bookings element
+                } else { 
                     u_id = data.schedule_bookings.length ? '0' : $(mc+' .ps_user_id').val();
                 }
 
@@ -4887,7 +4695,7 @@ function saveClassSchedule() {
             });        	
         }        
 
-    } else { //single space
+    } else { 
         data.schedule_bookings.push({
             space_id: $(mc+' .ps_space_id').val() || '0',
             user_id: $(mc+' .ps_user_id').val() || '0'
@@ -4902,7 +4710,6 @@ function saveClassSchedule() {
             }
     }
 
-    //split bookings
     if ($(mc+' .sched_split_div').is(":visible")) {
 		if ($(mc+' .sched_split_time').is(":checked") || $(mc+' .sched_split_space').is(":checked")) {
 			data.split_schedules = {};
@@ -4919,7 +4726,6 @@ function saveClassSchedule() {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (!isvalidDate(data.date)) {
         errors.push('Invalid date');
@@ -4933,9 +4739,9 @@ function saveClassSchedule() {
         errors.push('Invalid finish time');
     }
 
-    if (errors.length == 0) { //times are valid
-        
-        if (dayjs(data.schedule_start,'HH:mm:ss').isAfter(dayjs(data.schedule_finish,'HH:mm:ss'))) {
+    if (errors.length == 0) { 
+
+                if (dayjs(data.schedule_start,'HH:mm:ss').isAfter(dayjs(data.schedule_finish,'HH:mm:ss'))) {
             errors.push("Finish time cannot be after start time");
         }
     }
@@ -4946,7 +4752,7 @@ function saveClassSchedule() {
 
     if (data.split_schedules) {
     	if (data.schedule_id > 0) {
-    		errors.push('Splitting is allowed only for new bookings'); //this should never show
+    		errors.push('Splitting is allowed only for new bookings'); 
     	}
 
     	if (data.program_id > 0) {
@@ -4985,18 +4791,16 @@ function saveClassSchedule() {
                 $('#loader-wrapper').hide();
                 get_class_schedules(data.class_id, $(mc+' .sched_term_id').val());
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                     get_class_grid(false);
                 }
 
-                //refresh grid
                 if ($('#rosters').is(":visible")) {
                     get_roster_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5019,7 +4823,6 @@ function delete_class_schedule(schedule_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -5034,18 +4837,16 @@ function delete_class_schedule(schedule_id) {
                 $('#loader-wrapper').hide();
                 get_class_schedules();
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                     get_class_grid(false);
                 }
 
-                //refresh grid
                 if ($('#rosters').is(":visible")) {
                     get_roster_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5065,7 +4866,7 @@ function get_class_payments(class_id) {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .cpayment_list').html($('#master_class_view .cpayment_list').html()); //reset
+    $(mc+' .cpayment_list').html($('#master_class_view .cpayment_list').html()); 
 
     let class_enrolment_titles = JSON.parse($('#class_enrolment_titles').text());
 
@@ -5082,7 +4883,6 @@ function get_class_payments(class_id) {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             let html_str = '';
@@ -5095,7 +4895,6 @@ function get_class_payments(class_id) {
                     let enrolments_amt = 0;
                     let payments_amt = 0;
 
-                    //combine registers amounts and team_payments
                     for (let i = 0; i < d.registers.length; i++) {
                         enrolments_amt += d.registers[i].amount;
                     }
@@ -5109,7 +4908,6 @@ function get_class_payments(class_id) {
 
                     let unpaid_list = [...d.registers.filter(item => item.receipt_type == 1), ...d.team_payments.filter(item => item.receipt_type == 1)];
 
-            		//header
             		html_str += '<div class="table-wrapper"><table class="table"><thead>';
 
                     html_str += '<tr>\
@@ -5133,7 +4931,7 @@ function get_class_payments(class_id) {
                                     </tr>';                    
                     }
 
-                    if (res.class.features.includes('t') && (balance > 0.05)) { //5c to cater for rounding
+                    if (res.class.features.includes('t') && (balance > 0.05)) { 
                         html_str += '<tr class="cpayment_team_item">\
                                         <td><span class="class_id noshow">'+d.class_id+'</span><span class="team_id noshow">'+d.team_id+'</span><span class="captain_id noshow">'+d.captain_id+'</span><span class="captain_name noshow">'+d.captain_first_name+' '+d.captain_last_name+'</span><span class="team_balance noshow">'+balance+'</span>Not yet invoiced:</td>\
                                         <td>'+numberformatccy(balance)+'</td>\
@@ -5155,7 +4953,6 @@ function get_class_payments(class_id) {
                         }
                     }
 
-		            //close table
 		            html_str += '</tbody></table></div>';
                 }
             }
@@ -5169,7 +4966,7 @@ function get_class_payments(class_id) {
 		    }, 500); 
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -5189,7 +4986,7 @@ function get_class_teams(class_id) {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .teams_tab').html($('#master_class_view .teams_tab').html()); //reset
+    $(mc+' .teams_tab').html($('#master_class_view .teams_tab').html()); 
 
     if (class_id) {
         $.ajax({
@@ -5205,15 +5002,12 @@ function get_class_teams(class_id) {
 
                 let res = response.success;
 
-                //data
                 let data = res.data;
 
                 let html_str = '';
 
-                //class info
                 $(mc+' .team_class_id').val(res.class.class_id);
 
-                //header
                 html_str += '<div class="table-wrapper"><table class="table table_td_top">\
                                 <thead>\
                                     <tr>\
@@ -5226,12 +5020,10 @@ function get_class_teams(class_id) {
                                 </thead>\
                                 <tbody>';				
 
-                let empty_div = '<div class="empty_div noshow"></div>'; //pointer for tmalter_div blocks
+                let empty_div = '<div class="empty_div noshow"></div>'; 
 
-                //data
                 for (let i = 0; i < data.length; i++) {
 
-	                //extras
 	                let extras_str = '';
 	                for (let g = 0; g < data[i].extras.length; g++) {
 	                    extras_str += data[i].extras[g].points+' points and '+data[i].extras[g].goals+' goals: '+data[i].extras[g].extra_comment+'<br>';
@@ -5257,16 +5049,13 @@ function get_class_teams(class_id) {
                                 </tr>';
                 }
 
-                //close table
                 html_str += '</tbody></table></div>';
 
                 $(mc+' .team_list').html(html_str);
 
-                let pools_list = res.pools.filter(item => item != ''); //unique pool names, excluding blanks
+                let pools_list = res.pools.filter(item => item != ''); 
                 $(mc+' .team_pools_list').text(pools_list.join('~'));
 
-                //actions & validation rules - start
-                //auto_pools - intentionally not doing all checks in f/end
                 let pools_n_max = Math.min(Math.floor(data.length/4),10);
                 if ((pools_n_max >= 2) && res.class.features.includes('p') && (!pools_list.length)) {
                     $(mc+' .team_auto_pools').removeClass('noshow');
@@ -5274,39 +5063,31 @@ function get_class_teams(class_id) {
                     $(mc+' .team_auto_pools').addClass('noshow');
                 }
 
-                //clear_pools - intentionally not doing all checks in f/end
                 if (pools_list.length && res.class.features.includes('p')) {
                     $(mc+' .team_clear_pools').removeClass('noshow');
                 }
-                
-                //add
+
                 if (((res.class.capacity == 0) || (data.length < res.class.capacity)) &&
                     (!res.class.future_class_fixtures) && 
                     (dates_diff(res.class.term_finish, dayjs().format('YYYY-MM-DD')) > 0)) {
-                    //valid to add team and bye
                 } else {
                     $(mc+' .team_add_team').addClass('noshow');
                     $(mc+' .team_add_bye').addClass('noshow');
                 }
 
-                //delete
                 if (dates_diff(res.class.term_finish, dayjs().format('YYYY-MM-DD')) > 0) {
-                    //valid to delete team
                 } else {
                     $(mc+' .class_team_delete').remove();
                 }
 
-                //remove
                 if ((!res.class.future_class_fixtures) && 
                     (dates_diff(res.class.term_finish, dayjs().format('YYYY-MM-DD')) > 0)) {
-                    //valid to remove bye
                 } else {
                     $(mc+' .team_remove_bye').remove();
                 }
-                //actions & validation rules - end
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5323,13 +5104,11 @@ function get_class_teams(class_id) {
 }
 
 function update_class_team(class_id, team_id, tmalter_call=false) {
-    //resets
     $(mc+' .team_captain_id option').remove();
     if (!tmalter_call) {
     	$(mc+' .tmalter_div').remove();	
     }
 
-    /* fetch from api directly*/
     $('#loader-wrapper').show();
 
     $.ajax({
@@ -5343,9 +5122,8 @@ function update_class_team(class_id, team_id, tmalter_call=false) {
 
             if (response.success.data.length) {
                 let res = response.success;
-                let itemobj = res.data[0]; //override itemobj
+                let itemobj = res.data[0]; 
 
-                //class info
                 if (res.class.features.includes('t')) {
                     $(mc+' .team_payments_div').show();
                 }
@@ -5372,8 +5150,6 @@ function update_class_team(class_id, team_id, tmalter_call=false) {
                 $(mc+' .team_team_name').val(itemobj.team_name);
                 $(mc+' .team_players').val(itemobj.players);
 
-                //validation rules of options are set at the end of each option
-                //captain
                 let options_str = '<option value="0">No Captain</option>';
                 if ((itemobj.captain_id > 0) && (!itemobj.registers.map(item => item.customer_id).includes(itemobj.captain_id))) {
                     options_str += '<option value="'+itemobj.captain_id+'">'+itemobj.captain_first_name+' '+itemobj.captain_last_name+'</option>';
@@ -5386,15 +5162,13 @@ function update_class_team(class_id, team_id, tmalter_call=false) {
                 $(mc+' .team_captain_id').val(itemobj.captain_id);
                 $(mc+' .team_captain_id_div').show();
 
-                //team_payments
                 if (res.class.features.includes('t')) {
 	                $(mc+' .team_payments_div').show();
-	                if ((itemobj.captain_id > 0) && (balance > 0.05)) { //5c to cater for rounding
+	                if ((itemobj.captain_id > 0) && (balance > 0.05)) { 
 	                    $(mc+' .team_add_team_payment').show();
 	                }
                 }
 
-                //move_class options
                 if (itemobj.moves.length) {
                     $(mc+' .team_move_new_class_id_div').show();
 
@@ -5409,13 +5183,12 @@ function update_class_team(class_id, team_id, tmalter_call=false) {
                     $(mc+' .teambtn_move_class').hide();
                 }
 
-                //swap_team options
                 if (itemobj.swaps.length) {
                     $(mc+' .team_swap_new_class_id_div').show();
                     $(mc+' .team_swap_new_team_id_div').show();
 
                     let sw_options_str = '';
-                    let sw_options_str_ = '<option value=""></option>'; //this blank option is needed for dynamic changes
+                    let sw_options_str_ = '<option value=""></option>'; 
                     for (let i = 0; i < itemobj.swaps.length; i++) {
                         let a = itemobj.swaps[i];
                         sw_options_str += '<option value="'+a.class_id+'">'+(res.class.location_id != a.location_id ? a.location_name+' ' : '')+a.class_name+'</option>';
@@ -5426,13 +5199,12 @@ function update_class_team(class_id, team_id, tmalter_call=false) {
                     }
                     $(mc+' .team_swap_new_class_id').html(sw_options_str);
                     $(mc+' .team_swap_new_team_id').html(sw_options_str_);
-                    $(mc+' .team_swap_new_class_id:visible').change(); //trigger change
+                    $(mc+' .team_swap_new_class_id:visible').change(); 
                 } else {
                     $(mc+' .team_swap_team_noids').show();
                     $(mc+' .teambtn_swap_team').hide();
                 }
 
-                //hide all except the team_name
                 if (itemobj.team_name == 'Bye') {
                     $(mc+' .team_pool').prop('disabled',true);
                     $(mc+' .team_captain_id').prop('disabled',true);
@@ -5443,13 +5215,12 @@ function update_class_team(class_id, team_id, tmalter_call=false) {
                     $(mc+' .team_players').prop('disabled',false);
                 }
 
-                //can't edit pool name if there are future fixtures
                 if (res.class.future_class_fixtures) {
                     $(mc+' .team_pool').prop('disabled',true);
                 }
             }
-            
-            $('#loader-wrapper').hide();
+
+                        $('#loader-wrapper').hide();
 
             if (!tmalter_call) {
             	if ($(mc+' .team_form').is(":visible")) {
@@ -5460,7 +5231,7 @@ function update_class_team(class_id, team_id, tmalter_call=false) {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();         
@@ -5476,7 +5247,6 @@ function saveClassTeam() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         class_id: $(mc+' .team_class_id').val(),
         team_id: $(mc+' .team_team_id').val(),
@@ -5488,7 +5258,6 @@ function saveClassTeam() {
     };
 
     let errors = [];
-    //validations
     if (isEmpty(data.team_name) || (data.team_name.trim().toLowerCase() == 'bye')) {
         errors.push('Invalid team name');
     }
@@ -5505,7 +5274,6 @@ function saveClassTeam() {
 
                 $('#loader-wrapper').hide();
 
-                //captain email feedback
                 if (response.info.length) {
                     set_side_error(response.info.join("<br>"), 'amber');
                 }
@@ -5513,7 +5281,7 @@ function saveClassTeam() {
                 get_class_teams();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5536,7 +5304,6 @@ function delete_class_team(team_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -5552,7 +5319,7 @@ function delete_class_team(team_id) {
                 get_class_teams();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5575,7 +5342,6 @@ function team_add_bye(pool='') {
     let class_id = $(mc+' .team_class_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -5592,7 +5358,7 @@ function team_add_bye(pool='') {
                 get_class_teams();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5615,7 +5381,6 @@ function team_remove_bye(team_id) {
     let class_id = $(mc+' .team_class_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -5632,7 +5397,7 @@ function team_remove_bye(team_id) {
                 get_class_teams();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5655,7 +5420,6 @@ function team_auto_pools(pools_n) {
     let class_id = $(mc+' .team_class_id').val();
 
     let errors = [];
-    //validations
     if ((pools_n < 2) || (pools_n > 10)) {
         errors.push('Number of pools selected must be between 2 and 10')
     }
@@ -5675,7 +5439,7 @@ function team_auto_pools(pools_n) {
                 get_class_teams();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5698,7 +5462,6 @@ function team_clear_pools() {
     let class_id = $(mc+' .team_class_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -5715,7 +5478,7 @@ function team_clear_pools() {
                 get_class_teams();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5740,7 +5503,6 @@ function team_resend_captain_email(team_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -5754,8 +5516,7 @@ function team_resend_captain_email(team_id) {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                //captain's email feedback
+
                 if (response.info.length) {
                     set_side_error(response.info.join("<br>"), 'amber');
                 } else {
@@ -5763,7 +5524,7 @@ function team_resend_captain_email(team_id) {
                 }                
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5784,7 +5545,6 @@ function save_team_extras(team_id) {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         team_id: team_id,
         location_id: $('#location_id').val(),
@@ -5794,7 +5554,6 @@ function save_team_extras(team_id) {
     };  
 
     let errors = [];
-    //validations
 
     if ((!isEmpty(data.points)) && (!validator.isInt(data.points))) {
         error_string.push("Invalid points");
@@ -5826,7 +5585,7 @@ function save_team_extras(team_id) {
                 get_class_teams();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5851,7 +5610,6 @@ function team_move_class(team_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
     if (!new_class_id) {
         errors.push('You must choose an option to proceed further');
     }
@@ -5870,7 +5628,7 @@ function team_move_class(team_id) {
                 get_class_teams();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5896,7 +5654,6 @@ function team_swap_team(team_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
     if ((!new_class_id) || (!new_team_id)) {
         errors.push('You must choose new options to proceed further');
     }
@@ -5915,7 +5672,7 @@ function team_swap_team(team_id) {
                 get_class_teams();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -5939,7 +5696,7 @@ function get_class_fixtures(class_id, rawcsv='') {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .fixtures_tab').html($('#master_class_view .fixtures_tab').html()); //reset
+    $(mc+' .fixtures_tab').html($('#master_class_view .fixtures_tab').html()); 
 
     if (class_id) {
         $.ajax({
@@ -5955,13 +5712,11 @@ function get_class_fixtures(class_id, rawcsv='') {
 
                 let res = response.success;
 
-                //data
                 let data = res.data;
 
                 let html_str = '';
                 let cf_html_str = '';
 
-                //class info
                 $(mc+' .fixt_class_id').val(res.class.class_id);
 
                 let gala_term = false;
@@ -5970,14 +5725,12 @@ function get_class_fixtures(class_id, rawcsv='') {
                     gala_term = true;
                     $(mc+' .fixt_gala').prop('checked', true);
                     $(mc+' .fixt_cf_gala_div').removeClass('noshow');
-                } //don't set it to false as fixtures_show_gala also controls this
+                } 
 
-                //fullfield can't be used with gala
                 if ($(mc+' .fixt_cf_gala').is(":visible")) {
                     $(mc+' .fixt_cf_fullfield_div').addClass('noshow');
                 }
 
-                //header
                 html_str += '<div class="table-wrapper"><table class="table table_td_top">\
                                 <thead>\
                                     <tr>\
@@ -5992,34 +5745,30 @@ function get_class_fixtures(class_id, rawcsv='') {
                                 <tbody>';
 
 
-                //first create rounds
                 let rounds = [];
                 let round_date = '';
 
                 let round_format = gala_term ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD';
 
                 for (let i = 0; i < data.length; i++) {
-                    //round
                     if (convert_date_time(data[i].schedule_start,round_format) != round_date) {
                         round_date = convert_date_time(data[i].schedule_start,round_format);
                     }
 
-                    //round about to change?
                     if ((!data[i+1]) || (convert_date_time(data[i+1].schedule_start,round_format) != round_date)) {
                         rounds.push({
-                            round_date: gala_term ? round_date+':00' : round_date, //:00 for seconds in gala format
+                            round_date: gala_term ? round_date+':00' : round_date, 
                             round_data: data.filter(item => convert_date_time(item.schedule_start,round_format) == round_date)
                         });
                     }
                 }
 
-                let empty_div = '<div class="empty_div noshow"></div>'; //pointer for fxtalter_div blocks
+                let empty_div = '<div class="empty_div noshow"></div>'; 
 
                 for (let n = 0; n < rounds.length; n++) {
 
                 	let which_tr = (n%2 == 0 ? ' white_tr' : ' purple_tr');
 
-                    //data
                     for (let i = 0; i < rounds[n].round_data.length; i++) {
 
                         let d = rounds[n].round_data[i];
@@ -6062,20 +5811,17 @@ function get_class_fixtures(class_id, rawcsv='') {
 
                     }
 
-                    //separator
                     if ((dates_diff(rounds[n].round_date, dayjs().format(round_format)) >= 0) && (!gala_term)) {
                         html_str += '<tr class="row_sep class_fixt_item'+which_tr+'">\
                                         <td class="noshow round_date">'+rounds[n].round_date+'</td>\
                                         <td colspan="6"><a href="#" class="btn-edit fixt_swap_round">Swap this round of fixtures</a>'+empty_div+'</td>\
                                     </tr>'; 
                     } else {
-                        //add a blank separator
                         html_str += '<tr class="row_sep class_fixt_item'+which_tr+'">\
                         				<td colspan="6"></td>\
                                     </tr>';                             
                     }
 
-                    //create fixtures option
                     let checkbox = '<input type="checkbox" class="checkbox-custom cf_round" value="'+rounds[n].round_date+'" checked>';
                     if (rounds[n].round_data.filter(item => item.fixture_id > 0).length) {
                         checkbox = '&nbsp; &nbsp; &nbsp;';
@@ -6088,12 +5834,10 @@ function get_class_fixtures(class_id, rawcsv='') {
                                     </div> '
                 }
 
-                //close table
                 html_str += '</tbody></table></div>';
 
                 $(mc+' .fixt_list').html(html_str);
 
-                //teams
                 let tm_options_str = '';
                 for (let i = 0; i < res.teams.length; i++) {
                     tm_options_str += '<option value="'+res.teams[i].team_id+'">'+res.teams[i].team_name+'</option>';
@@ -6102,7 +5846,6 @@ function get_class_fixtures(class_id, rawcsv='') {
                 $(mc+' .fixt_team2_id').html(tm_options_str);
                 $(mc+' .fixt_cf_r_team_id').html('<option value=""></option>'+tm_options_str);
 
-                //create fixtures 
                 $(mc+' .fixt_cf_rounds').html(cf_html_str);
                 $(mc+' .fixt_cf_team_count').text(res.teams.length+(res.teams.filter(item => item.team_name == 'Bye').length ? ' (includes a bye)' : ''));
                 let future_bookings = data.filter(item => dates_diff(dayjs(item.schedule_start).format('YYYY-MM-DD'), dayjs().format('YYYY-MM-DD')) > 0);
@@ -6114,7 +5857,6 @@ function get_class_fixtures(class_id, rawcsv='') {
                     $(mc+' .fixt_cf_alt_close').hide();
                 }
 
-                //manual fixture
                 $(mc+' .fixt_edit_items').hide();
 
                 if (rawcsv) {
@@ -6135,10 +5877,10 @@ function get_class_fixtures(class_id, rawcsv='') {
                         downloadCSV(dataArry);
                     }
                 }
-                
 
-            } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+
+                            } else if (response.redirect != undefined) {
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6154,7 +5896,6 @@ function get_class_fixtures(class_id, rawcsv='') {
 }
 
 function set_add_class_fixture(el) {
-    //resets
     $(mc+' .fixt_final').prop('checked', false);
     if ($(mc+' .class_term_id').prop('dataset')?.intrac_gala_term) {
     	$(mc+' .fixt_gala').prop('checked', true);
@@ -6181,7 +5922,6 @@ function saveClassFixture() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         class_id: $(mc+' .fixt_class_id').val(),
         fixture_id: '',
@@ -6195,7 +5935,6 @@ function saveClassFixture() {
     };
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -6211,7 +5950,7 @@ function saveClassFixture() {
                 get_class_fixtures(data.class_id);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6234,7 +5973,6 @@ function delete_class_fixture(fixture_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -6250,7 +5988,7 @@ function delete_class_fixture(fixture_id) {
                 get_class_fixtures(class_id);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6282,7 +6020,6 @@ function set_fixture_result(el, btn) {
 function save_fixture_result() {
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         class_id: $(mc+' .fixt_class_id').val(),
         fixture_id: $(mc+' .fixt_result_fixture_id').val(),
@@ -6293,7 +6030,6 @@ function save_fixture_result() {
     };  
 
     let errors = [];
-    //validations
 
     if ((!validator.isInt(data.result1)) || (Math.abs(parseInt(data.result1)) > 127) || (!validator.isInt(data.result2)) || (Math.abs(parseInt(data.result2)) > 127)) {
         errors.push('Please enter valid results and re-try');
@@ -6313,7 +6049,7 @@ function save_fixture_result() {
                 get_class_fixtures();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6336,7 +6072,6 @@ function fixture_remove_result(fixture_id) {
     let class_id = $(mc+' .fixt_class_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -6353,7 +6088,7 @@ function fixture_remove_result(fixture_id) {
                 get_class_fixtures();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6376,7 +6111,6 @@ function fixture_forfeit_result(fixture_id, forfeit) {
     let class_id = $(mc+' .fixt_class_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -6393,7 +6127,7 @@ function fixture_forfeit_result(fixture_id, forfeit) {
                 get_class_fixtures();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6416,7 +6150,6 @@ function fixture_delete_all() {
     let class_id = $(mc+' .fixt_class_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -6433,7 +6166,7 @@ function fixture_delete_all() {
                 get_class_fixtures();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6456,7 +6189,6 @@ function set_swap_fixture(el) {
     let fixture_id = $(el).find('.fixture_id').text();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -6469,8 +6201,8 @@ function set_swap_fixture(el) {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                let d = response.success.data[0];
+
+                                let d = response.success.data[0];
                 if (d) {
                     $(el).find('.empty_div:first').after('<div class="fxtalter_div flex_new_row margin_top_sm margin_bottom_sm">'+$(mc+' .fixt_swap_fixt_view').html()+'</div>');
 
@@ -6490,11 +6222,11 @@ function set_swap_fixture(el) {
                     }
 
                 } else {
-                    set_side_error('Unable to retrieve details'); //this should never show
+                    set_side_error('Unable to retrieve details'); 
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6517,7 +6249,6 @@ function fixture_swap_fixture(fixture_id, new_fixture_id) {
     let class_id = $(mc+' .fixt_class_id').val();
 
     let errors = [];
-    //validations
     if (!new_fixture_id) {
         errors.push('You must choose an option to proceed further');
     }
@@ -6535,7 +6266,7 @@ function fixture_swap_fixture(fixture_id, new_fixture_id) {
                 get_class_fixtures();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6560,7 +6291,6 @@ function set_swap_round(el) {
     let round_date = $(el).find('.round_date').text();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -6573,8 +6303,8 @@ function set_swap_round(el) {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                let d = response.success.data[0];
+
+                                let d = response.success.data[0];
                 if (d) {
                     $(el).find('.empty_div:first').after('<div class="fxtalter_div flex_new_row margin_top_sm margin_bottom_sm">'+$(mc+' .fixt_swap_round_view').html()+'</div>');
 
@@ -6594,11 +6324,11 @@ function set_swap_round(el) {
                     }
 
                 } else {
-                    set_side_error('Unable to retrieve details'); //this should never show
+                    set_side_error('Unable to retrieve details'); 
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6621,7 +6351,6 @@ function fixture_swap_round(cur_round_date, new_round_date) {
     let class_id = $(mc+' .fixt_class_id').val();
 
     let errors = [];
-    //validations
     if (!new_round_date) {
         errors.push('You must choose an option to proceed further');
     }
@@ -6639,7 +6368,7 @@ function fixture_swap_round(cur_round_date, new_round_date) {
                 get_class_fixtures();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6661,8 +6390,8 @@ function create_fixtures() {
     let location_id = $('#location_id').val();
     let class_id = $(mc+' .fixt_class_id').val();
     let round_dates = [];
-    
-    $(mc+' .cf_round').each(function() {
+
+        $(mc+' .cf_round').each(function() {
         if (this.checked) {
             round_dates.push($(this).val());
         }
@@ -6717,7 +6446,6 @@ function create_fixtures() {
         }
     });
 
-    //validations
     if (!round_dates.length) {
         errors.push('You must choose at least one option to proceed further');
     }
@@ -6739,14 +6467,13 @@ function create_fixtures() {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else { 
                 $('#loader-wrapper').hide();
-                //preference is to refresh. If cf_rules are involved, there won't be dummy schedules & we need to retain the cf_rules
                 if (data.cf_rules.length) {
                     set_side_error(response.error.join("<br>"));
                 } else {
-                    get_class_fixtures(); //must refresh to reflect any dummy schedules created
+                    get_class_fixtures(); 
                     set_side_error(response.error.join("<br>"));                    
                 }
             }
@@ -6769,7 +6496,7 @@ function get_class_ladder(class_id) {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .ladder_tab').html($('#master_class_view .ladder_tab').html()); //reset
+    $(mc+' .ladder_tab').html($('#master_class_view .ladder_tab').html()); 
 
     if (class_id) {
         $.ajax({
@@ -6785,16 +6512,13 @@ function get_class_ladder(class_id) {
 
                 let res = response.success;
 
-                //data
                 let data = res.data;
 
                 let html_str = '';
                 let html_str_h = '';
 
-                //class info
                 $(mc+' .fixt_class_id').val(res.class.class_id);
 
-                //header
                 if (res.options.score_model) {
 	                html_str_h += '<div class="table-wrapper"><table class="table">\
 	                                <thead>\
@@ -6826,19 +6550,16 @@ function get_class_ladder(class_id) {
 
                 for (let n = 0; n < data.length; n++) {
 
-                    //pool name
                     if (data[n].pool) {
                     	html_str += '<h4 class="text-xl leading-[130%]"'+(n>0 ? ' margin_top_lg' : '')+'>'+data[n].pool+'</h4>';
                     }
 
-                    //open table incl table header
                     html_str += html_str_h; 
 
-                	let comp = data[n].comp; //comp is JSON team_id: team_data
+                	let comp = data[n].comp; 
 
-                	let comp_arr = Object.entries(comp).sort(([, a], [, b]) => b.sort - a.sort).map(([key]) => key); //sort comp based on sort field in team_data. returns team_ids (key) in an array             	
+                	let comp_arr = Object.entries(comp).sort(([, a], [, b]) => b.sort - a.sort).map(([key]) => key); 
 
-                    //data
                     for (let i = 0; i < comp_arr.length; i++) {
 
                     	let t = comp_arr[i];
@@ -6867,15 +6588,14 @@ function get_class_ladder(class_id) {
 		                }
                     }
 
-	                //close table
 	                html_str += '</tbody></table></div>';
                 }
 
                 $(mc+' .ladd_list').html(html_str);
-                
 
-            } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+
+                            } else if (response.redirect != undefined) {
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -6896,18 +6616,17 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 
 	    $('#loader-wrapper').show();
 
-	    //grab inputs before reset
 	    if ($(mc).hasClass('modal-open') && ($(mc+' .att_class_id').val() > 0)) {
 	        class_id = $(mc+' .att_class_id').val();
 	        term_id = $(mc+' .att_term_id').val();
-	        if (!term_changed) { //this check is to ensure new term_id is not sent with old schedule_id
+	        if (!term_changed) { 
 	            schedule_id = $(mc+' .att_schedule_id').val();
 	        }
 	    }
 
-	    $(mc+' .attendance_tab').html($('#master_class_view .attendance_tab').html()); //reset	    
-	    
-	    let class_enrolment_titles = JSON.parse($('#class_enrolment_titles').text());
+	    $(mc+' .attendance_tab').html($('#master_class_view .attendance_tab').html()); 
+
+	    	    let class_enrolment_titles = JSON.parse($('#class_enrolment_titles').text());
 
 	    let register_mode = 'schedule';
 
@@ -6917,9 +6636,9 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
         }
 
 	    if (class_id) {
-	    	let querydata = {class_id: class_id, term_id: term_id, schedule_id: schedule_id, register_mode: 'schedule', roll_mode: true} //register_mode here is always schedule
-	        
-		    if ($('.instructor-page').length) {
+	    	let querydata = {class_id: class_id, term_id: term_id, schedule_id: schedule_id, register_mode: 'schedule', roll_mode: true} 
+
+	        		    if ($('.instructor-page').length) {
 		        querydata.from = 'instructor';
 		    }	    	
 
@@ -6936,14 +6655,12 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 
 	                let res = response.success;
 
-	                //class info
 	                $(mc+' .att_class_id').val(res.class.class_id);
 	                $(mc+' .att_capacity').val(res.class.capacity);
 
-	                //term info
 	                let options_str_t = '';
 	                for (let i = 0; i < res.terms.length; i++) {
-	                    options_str_t += '<option value="'+res.terms[i].term_id+'">'+res.terms[i].term_name+'</option>'; //from_schedule not required
+	                    options_str_t += '<option value="'+res.terms[i].term_id+'">'+res.terms[i].term_name+'</option>'; 
 	                }
 	                $(mc+' .att_term_id').html(options_str_t);
 
@@ -6953,7 +6670,6 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 	                    $(mc+' .att_term_id').val(res.class.term_id);
 	                }
 
-	                //adjust chevrons
 	                if (true) {
 	                    let show_next = false;
 	                    let show_prev = false;
@@ -6965,8 +6681,8 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 	                        if (index > currentIndex) {
 	                            show_next = true;
 	                        }
-	                        
-	                        if (index < currentIndex) {
+
+	                        	                        if (index < currentIndex) {
 	                            show_prev = true;
 	                        }
 	                    });
@@ -6983,7 +6699,6 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 	                    }
 	                }
 
-	                //schedule info
                     $(mc+' .att_schedule_id_li').removeClass('noshow');
 
                     let options_str_s = '';
@@ -7003,7 +6718,6 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
                     $(mc+' .att_schedule_id').val(res.schedules.filter(item => item.selected_schedule)[0].schedule_id);
                     $(mc+' .att_schedule_date').val(convert_date(res.schedules.filter(item => item.selected_schedule)[0].schedule_start, 'YYYY-MM-DD'));
 
-                    //adjust chevrons
                     let show_next = false;
                     let show_prev = false;
                     let currentIndex = $(mc+' .att_schedule_id').prop('selectedIndex');
@@ -7014,8 +6728,8 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
                         if (index > currentIndex) {
                             show_next = true;
                         }
-                        
-                        if (index < currentIndex) {
+
+                                                if (index < currentIndex) {
                             show_prev = true;
                         }
                     });
@@ -7031,13 +6745,11 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
                         $(mc+' .att_schedule_prev').hide();
                     }
 
-	                //data
 	                let data = res.data;
 
 	                let html_str = '';
 	                let html_str_a = '';
 
-	                //prepare data_map
 	                let data_map = [];
 
                     let s = res.schedules.filter(item => item.selected_schedule)[0];
@@ -7048,18 +6760,17 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
                         }
                         $(mc+' .att_schedule_comment').val(s.schedule_comment);
 
-                        let schedule_name = $(mc+' .att_schedule_id option[value="'+s.schedule_id+'"]').text(); //should be same as $(mc+' .att_schedule_id option:selected').text();
+                        let schedule_name = $(mc+' .att_schedule_id option[value="'+s.schedule_id+'"]').text(); 
 
                         if (register_mode == 'fixture') {
-	                        
-                        	let fixts = (res.fixtures||[]).filter(item => item.schedule_id == s.schedule_id);
+
+	                                                	let fixts = (res.fixtures||[]).filter(item => item.schedule_id == s.schedule_id);
 
                         	for (let i = 0; i < fixts.length; i++) {
 
 		                        let space_str = fixts[i].space_names.split(',')[0];
 		                        let user_str = fixts[i].usernames.split(',')[0];
 
-		                        //team 1
 		                        data_map.push({
 		                            header: schedule_name+' '+fixts[i].team1_name,
 		                            sub_header: space_str+' '+user_str,
@@ -7071,7 +6782,6 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 		                            fixture_team: 1
 		                        });
 
-		                        //team 2
 		                        data_map.push({
 		                            header: schedule_name+' '+fixts[i].team2_name,
 		                            sub_header: space_str+' '+user_str,
@@ -7097,10 +6807,8 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
                         }                                                 
                     }
 
-	                //convert data_map to html
 	                for (let j = 0; j < data_map.length; j++) {
 
-	                    //header
 	                    let header_str = data_map[j].header ? (data_map[j].header+(data_map[j].sub_header ? '<br>'+data_map[j].sub_header : '')) : '';
 
 	                    if ($('.instructor-page').length) {
@@ -7126,8 +6834,7 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 		                                    <tbody>'
 	                    }
 
-	                    //data
-	                    if (res.options.roll.includes('f')) { //sort by first_name
+	                    if (res.options.roll.includes('f')) { 
 	                    	data_map[j].data = data_map[j].data.sort((a, b) => a.first_name.localeCompare(b.first_name));
 	                    	if (data_map[j].addons) {
 	                    		data_map[j].addons = data_map[j].addons.sort((a, b) => a.first_name.localeCompare(b.first_name));	
@@ -7136,8 +6843,8 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 
 	                    for (let i = 0; i < data_map[j].data.length; i++) {
 	                        let d = data_map[j].data[i];
-	                        
-	                        let captain = '';
+
+	                        	                        let captain = '';
 	                        if (register_mode == 'fixture') {
 		                        if (data_map[j].captain_id == d.customer_id) {
 		                        	captain += ' (C)'
@@ -7229,8 +6936,7 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 							}
 	                    }
 
-	                    //count
-	                    let qtys = data_map[j].data.reduce((sum, item) => sum + item.quantity, 0); //sum of all quantity
+	                    let qtys = data_map[j].data.reduce((sum, item) => sum + item.quantity, 0); 
 	                    let regs = qtys > 0 ? qtys : data_map[j].data.length;
 	                    let absents = data_map[j].data.filter(item => item.absent).length;
 
@@ -7250,7 +6956,6 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 	                    	html_str += '</ul>';
 	                    } else {
 
-	                        //sms & email
 	                        if (data_map[j].data.length) {
 		                        html_str += '<tr class="white_tr">\
 		                                        <td colspan="3">\
@@ -7263,11 +6968,9 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 		                                    </tr>';                          	
 	                        }
 
-		                    //close table
 		                    html_str += '</tbody></table></div>'
 		                }
 
-	                    //addons - shows in schedule_mode only (for programs - today's view will be schedule_mode), add as a separate table
 	                    if (data_map[j].addons && data_map[j].addons.length) {
 	                        html_str_a += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
@@ -7276,10 +6979,9 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 	                                            </tr>\
 	                                        </thead>\
 	                                        <tbody>'                         
-	                        
-	                        for (let i = 0; i < data_map[j].addons.length; i++) {
+
+	                        	                        for (let i = 0; i < data_map[j].addons.length; i++) {
 	                            let d = data_map[j].addons[i];
-	                            /*note: d.customer_id here is purchase.customer_id*/
 	                            html_str_a += '<tr class="class_addon_item">\
 	                                            <td><span class="purchase_id noshow">'+d.purchase_id+'</span><span class="customer_id noshow">'+d.customer_id+'</span><span class="receipt_id noshow">'+d.receipt_id+'</span>'+(i+1)+'. '+d.first_name+' '+d.last_name+'</td>\
 	                                            <td>'+(d.quantity > 1 ? d.quantity+' x ' : '')+d.category+' '+d.product_name+'</td>\
@@ -7287,7 +6989,6 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 	                                        </tr>'; 
 	                        }
 
-	                        //close table
 	                        html_str_a += '</tbody></table></div>';
 	                    }
 	                }
@@ -7295,7 +6996,6 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 	                $(mc+' .att_list').html(html_str);
 	                $(mc+' .att_addons_list').html(html_str_a);
 
-	                //adjust buttons
 	                if (data.length > data.filter(item => item.roll_type).length) {
 	                	$(mc+' .att_rest_btn').removeClass('noshow');
 	                } else {
@@ -7322,9 +7022,8 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 	                	$(mc+' .att_report').remove();
 	                }
 
-	                //instructor
 	                if ($('.instructor-page').length) {
-	                	if (dayjs().format('YYYY-MM-DD') != $(mc+' .att_schedule_date').val()) { //not today
+	                	if (dayjs().format('YYYY-MM-DD') != $(mc+' .att_schedule_date').val()) { 
 	                		$(mc+' .btn_saveClassRoll').remove();
 	                		$(mc+' .att_mark_btn').remove();
 	                	}
@@ -7334,14 +7033,13 @@ async function get_class_attendance({ class_id='', term_id='', schedule_id='', t
 	                	$(mc+' .att_mark_all_washout').remove();
 	                }
 
-	                //archived class
 	                if ($(mc+' .class_status').val() === '0') {
 	                    $(mc+' .btn-default').remove();
 	                	$(mc+' .btn-edit').remove();
 	                }
 
 	            } else if (response.redirect != undefined) {
-	                mini_login_wizard(response.redirect); //session timeout case
+	                mini_login_wizard(response.redirect); 
 	            } else {    
 	                set_side_error(response.error.join("<br>"));
 	                $('#loader-wrapper').hide();
@@ -7364,7 +7062,6 @@ function saveClassRoll() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
 
     let rolls = [];
     $(mc+' .class_att_item').each(function () {
@@ -7391,7 +7088,6 @@ function saveClassRoll() {
     }
 
     let errors = [];
-    //validations
     if (!rolls.length) {
         errors.push('Please mark the attendance and try again'); 
     }
@@ -7409,20 +7105,19 @@ function saveClassRoll() {
                 $('#loader-wrapper').hide();
 
                 set_side_error('Attendance saved succesfully', 'green');
-                
-                if ($('.instructor-page').length) {
+
+                                if ($('.instructor-page').length) {
                 	close_modal();
                 } else {
                 	get_class_attendance();	
 
-	                //refresh grid
 	                if ($('#classes').is(":visible")) {
 	                    get_class_grid(false);
 	                }                	
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -7446,7 +7141,6 @@ function update_att_schedule_comment() {
     let schedule_comment = $(mc+' .att_schedule_comment').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -7464,13 +7158,12 @@ function update_att_schedule_comment() {
 
                 get_class_attendance();
 
-                //refresh grid
                 if ($('#classes').is(":visible") && $('#classes .is_detailed').length) {
                     get_class_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -7503,7 +7196,6 @@ function attendance_remove_present() {
     }
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -7519,10 +7211,9 @@ function attendance_remove_present() {
 
                 get_class_attendance();
 
-                //don't need to refresh grid as presents won't impact grid numbers
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -7557,12 +7248,10 @@ function get_class_waitlist(class_id) {
 
                 let res = response.success;
 
-                //data
                 let data = res.data;
 
                 let html_str = '';
 
-                //header
                 html_str += '<div class="table-wrapper"><table class="table class_att_hdr">\
                                 <thead>\
                                     <tr>\
@@ -7606,13 +7295,12 @@ function get_class_waitlist(class_id) {
                                 </tr>';
                 }
 
-                //close table
                 html_str += '</tbody></table></div>'
 
                 $(mc+' .wait_list').html(html_str);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -7633,7 +7321,6 @@ function delete_class_wait(wait_id, customer_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -7650,7 +7337,7 @@ function delete_class_wait(wait_id, customer_id) {
                 $(mc+' .tl_waitlist').click();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -7668,7 +7355,6 @@ function delete_class_wait(wait_id, customer_id) {
 
 function get_rollovers(class_id='') {
 
-    //step1
     if (!$(mc).hasClass('modal-open')) {
         $(mc).html($('#master_rollover_view').html());
     }
@@ -7709,15 +7395,13 @@ function get_rollovers(class_id='') {
 
             let res = response.success;
 
-            //data
             let data = res;
 
             let client_uses_levels = data.client_uses_levels;
 
-            //step 1
             if (!qry_data.new_term_id) {
-                
-                $(mc+' .rlvr_location_name').text(data.location.location_name);    
+
+                                $(mc+' .rlvr_location_name').text(data.location.location_name);    
 
                 if ((rollover_mode == 'location') &&  data.cur_term) {
                     $(mc+' .rlvr_cur_term_id').text(data.cur_term.term_id);
@@ -7732,7 +7416,6 @@ function get_rollovers(class_id='') {
                     $(mc+' .rlvr_class_name').text(data.classes[0].class_name);
                 }
 
-                //new_terms select list
                 let options_str = '';
                 for (let i = 0; i < data.new_terms.length; i++) {
                     if (data.new_terms[i].term_id != $(mc+' .rlvr_cur_term_id').text()) {
@@ -7741,7 +7424,6 @@ function get_rollovers(class_id='') {
                 }
                 $(mc+' .rlvr_new_term_id_sel').html(options_str);
 
-                //waitlist
                 let html_str = '';
                 for (let c = 0; c < data.classes.length; c++) {
                 	let class_row = data.classes[c];
@@ -7760,7 +7442,7 @@ function get_rollovers(class_id='') {
                 }
                 $(mc+' .rlvr_wait_list').html(html_str);
 
-            } else { //step 2
+            } else { 
                 $(mc+' .rlvr_step_1_items').addClass('noshow');
                 $(mc+' .rlvr_step_2_items').removeClass('noshow');
 
@@ -7783,10 +7465,8 @@ function get_rollovers(class_id='') {
                 let html_str = '';
                 let differ_str = '';
 
-                //loop through classes
                 for (let c = 0; c < data.classes.length; c++) {
                     let class_row = data.classes[c];
-                    //header
                     html_str += '<div class="rlvr_class_div">\
                                     <div class="margin_top_sm margin_btm_sm">\
                                         <div class="form-label heading"><label class="checkbox-container"><input type="checkbox" class="checkbox-custom rlvr_class_ids" value="'+class_row.class_id+'" checked> <b>'+class_row.class_name+'</b></label></div>\
@@ -7810,8 +7490,8 @@ function get_rollovers(class_id='') {
 
                         for (let i = 0; i < class_row.registers.length; i++) {
                             let d = class_row.registers[i];
-                            
-                            let checked = d.re_register ? ' checked' : '';
+
+                                                        let checked = d.re_register ? ' checked' : '';
                             let disabled = d.re_register_disabled ? ' disabled' : '';
 
                             let age = (getAge(d.dob)) ? ' ('+getAge(d.dob)+')' : '';
@@ -7859,8 +7539,8 @@ function get_rollovers(class_id='') {
 
                             for (let i = 0; i < program_row.registers.length; i++) {
                                 let d = program_row.registers[i];
-                                
-                                let checked = d.re_register ? ' checked' : '';
+
+                                                                let checked = d.re_register ? ' checked' : '';
                                 let disabled = d.re_register_disabled ? ' disabled' : '';
 
                                 let age = (getAge(d.dob)) ? ' ('+getAge(d.dob)+')' : '';
@@ -7898,11 +7578,10 @@ function get_rollovers(class_id='') {
                     	html_str += '<div class="padding_top_md"></div>';
                     }
 
-                    html_str += '</div>'; //close rlvr_class_div
+                    html_str += '</div>'; 
 
                 }
 
-                //location level rollover - customers with different levels list:
                 if ((rollover_mode == 'location') && differ_str) {
                     html_str += '<div class="margin_top_sm margin_btm_sm">\
                                     <b>Note: The following customers are assigned to a level that differs from their '+(class_enrolment_titles.title || 'enrolment')+':</b>\
@@ -7913,7 +7592,6 @@ function get_rollovers(class_id='') {
                                 </div>';                                                           
                 }
 
-                //disc list
                 if (data.discontinues && data.discontinues.length) {
                     html_str += '<div class="margin_top_sm margin_btm_sm">\
                                     <b>Unassign the levels of the following customers:<span><a href="#" class="btn-link label-link rlvr_disc_ids_chkall">Check/uncheck all</a></span></b>\
@@ -7922,8 +7600,8 @@ function get_rollovers(class_id='') {
                     let disc_str = '';
                     for (let i = 0; i < data.discontinues.length; i++) {
                         let d = data.discontinues[i];
-                        
-                        let checked = ' checked';
+
+                                                let checked = ' checked';
 
                         let age = (getAge(d.dob)) ? ' ('+getAge(d.dob)+')' : '';
                         if (d.details && d.details.schoolyear) {
@@ -7942,7 +7620,7 @@ function get_rollovers(class_id='') {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -7962,9 +7640,8 @@ function saveRollover() {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .rlvrbtn_rollover').hide(); //hide the rollover button
+    $(mc+' .rlvrbtn_rollover').hide(); 
 
-    //prepare the data
     let data ={
         location_id: $('#location_id').val(),
         rollover_mode: $(mc+' .rlvr_class_id').text() ? 'class' : 'location',
@@ -8022,7 +7699,6 @@ function saveRollover() {
     data.disc_customer_ids = disc_customer_ids;
 
     let errors = [];
-    //validations
 
     if (!data.class_ids.length) {
     	errors.push('Please select one or more '+($('#class_title').val() == 'class' ? 'classes' : $('#class_title').val()+'s')+' and re-try');
@@ -8045,7 +7721,7 @@ function saveRollover() {
                 close_modal();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -8055,12 +7731,10 @@ function saveRollover() {
         }).fail( function(xhr, textStatus, errorThrown) {
             set_side_error("Operation failed " + (xhr.responseText?xhr.responseText:''));
             $('#loader-wrapper').hide();
-            //$(mc+' .rlvrbtn_rollover').show();
 
             set_side_error("This process might be still running in the background, please refresh the page to check current status");
-            
-            close_modal();
-            //refresh classes
+
+                        close_modal();
             get_api('getClasss');
         });  
     }  else {
@@ -8103,16 +7777,14 @@ function getCustomersResults(res,refresh='full') {
         $(r+' .customers_table').DataTable({
             "deferRender": true,
         })
-    } else if (refresh == 'partial') { //not using partial currently
+    } else if (refresh == 'partial') { 
         $(r+' .customers_table').DataTable().clear();
     } else { 
-        //single refresh..no action needed, row will be updated below
     }
 
     let customers_table_data = [];
 
 	let customer_map = new Map();
-    //build names map first for parent details later. use map rather than json or filter for performance
     if ($('.child_items').length) {
     	if (refresh == 'single') {
     		if (data.length && (data[0].parent_id > 0) && data[0].parent) {
@@ -8125,7 +7797,6 @@ function getCustomersResults(res,refresh='full') {
     	}
     }
 
-    //now process data
     for (let i = 0; i < data.length; i++) {
 
         if (!data[i].details) {
@@ -8140,7 +7811,6 @@ function getCustomersResults(res,refresh='full') {
         row_obj.push(data[i].email || '');
         row_obj.push((data[i].phone || '').replace(/\s+/g, ''));
 
-        //push parent name into details
         if ($('.child_items').length && data[i].parent_id > 0) {
         	let parent = customer_map.get(data[i].parent_id);
         	if (parent) {
@@ -8148,9 +7818,8 @@ function getCustomersResults(res,refresh='full') {
         	}
         }
 
-        /*push rest of data into details*/
         for(const key in data[i]) {
-            if (!['client_id','customer_id','parent_id','level_id','first_name','last_name','dob','email','phone','details','medical_reused','rate_type','parent'].includes(key)) { //parent populated in single refresh only
+            if (!['client_id','customer_id','parent_id','level_id','first_name','last_name','dob','email','phone','details','medical_reused','rate_type','parent'].includes(key)) { 
                 if (data[i][key]) {
                     data[i].details[key] = data[i][key];
                 }
@@ -8162,7 +7831,6 @@ function getCustomersResults(res,refresh='full') {
             				<span class="parent_id">'+(data[i].parent_id || 0)+'</span>\
                         </div>';
 
-        //clean display names for some details
         if (data[i].details) {
         	let det_arr = ['grid_customer_rules'];
         	for (let k = 0; k < det_arr.length; k++) {
@@ -8192,24 +7860,23 @@ function getCustomersResults(res,refresh='full') {
 
         customers_table_data.push(row_obj);
     }
-    
-    if (refresh == 'single') {
+
+        if (refresh == 'single') {
         let dtrow = $(r+' .customers_table').DataTable()
         .row( function ( idx, data_, node ) {
             return data_[0] == data[0].customer_id ? true : false;
         })
 
-        if (dtrow[0].length) { //update single
+        if (dtrow[0].length) { 
             dtrow.data(customers_table_data[0]).draw();
-        } else { //insert single
+        } else { 
             $(r+' .customers_table').DataTable().rows.add(customers_table_data).draw();
         }
-        
-    } else { //full or partial
+
+            } else { 
         $(r+' .customers_table').DataTable().rows.add(customers_table_data).draw();    
     }
 
-    //update mc2 datatabale too if on
     if (is_datatable_on()) {
 	    if (refresh == 'single') {
 	        let dtrow = $(mc2+' .customers_table').DataTable()
@@ -8217,21 +7884,20 @@ function getCustomersResults(res,refresh='full') {
 	            return data_[0] == data[0].customer_id ? true : false;
 	        })
 
-	        if (dtrow[0].length) { //update single
+	        if (dtrow[0].length) { 
 	            dtrow.data(customers_table_data[0]).draw();
-	        } else { //insert single
+	        } else { 
 	            $(mc2+' .customers_table').DataTable().rows.add(customers_table_data).draw();
 	        }
-	        
-	    } else { //full or partial
+
+	        	    } else { 
 	        $(mc2+' .customers_table').DataTable().rows.add(customers_table_data).draw();    
 	    }
-    } else if ($(mc2).hasClass('modal-open')) { //mc2 datatabale not on, but mc2 is open (e.g. mc2 opened before initial customers are loaded, rare case) so clone 
+    } else if ($(mc2).hasClass('modal-open')) { 
     	if (refresh == 'single') {
-    		//do nothing, this scenario is not valid
-    	} else { //full or partial
+    	} else { 
     		clone_customers();
-    		$('#loader-wrapper').hide(); //hide spinner (customers not loaded - from clone_customers previously)
+    		$('#loader-wrapper').hide(); 
     	}
     }
 }
@@ -8254,12 +7920,11 @@ function refreshCustomerDatatable(customer_id) {
             let res = response.success;
 
             if (res.data && res.data.length) {
-                //refresh single row to update
                 getCustomersResults(res,'single');
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -8274,7 +7939,6 @@ function refreshCustomerDatatable(customer_id) {
 
 
 function refresh_customers(initial='') {
-    //destroy datatables first before removing html
     destroy_datatable('main');
     $('#main_customers_table').html($('#master_cust_search').html());
 
@@ -8282,7 +7946,7 @@ function refresh_customers(initial='') {
     $(mc2+' .customers_table_div').html($('#master_cust_search').html());
 
     if (initial) {
-    	get_api('getCustomers', true); //silent mode
+    	get_api('getCustomers', true); 
     } else {
     	get_api('getCustomers');
     }
@@ -8300,7 +7964,6 @@ function clone_customers() {
         }
     }
     if (is_datatable_on('main')) {
-    	//destroy any mc2 datatables first before removing html
     	destroy_datatable();
     	$(mc2+' .customers_table_div').html($('#master_cust_search').html());
 
@@ -8312,10 +7975,10 @@ function clone_customers() {
             "lengthChange": false,
             "info": false,
             "deferRender": true,       
-            "searchDelay": 400,  // Delay in milliseconds
+            "searchDelay": 400,  
             "columnDefs": [
             				{ visible: false, "target": 0 },
-                            { "width": "180px", "target": 3 }, //dob
+                            { "width": "180px", "target": 3 }, 
                           ],
             createdRow: function ( row, data, index ) {
                 $(row).addClass('customer_row');
@@ -8332,7 +7995,7 @@ function clone_customers() {
             data: data
         })
 
-        $(mc2+' .customers_table').css('width', ''); //clear inline style width=0, which will happen if we land on other tabs by default
+        $(mc2+' .customers_table').css('width', ''); 
     } else {
     	$('#loader-wrapper').hide();
     	if (!USE_CUSTOMERS_MOCKS) {
@@ -8366,7 +8029,7 @@ function reset_customer_data(keep_tabs=false) {
     	StripePaymentManager.unmount();
     }
 
-    if ($(mc2+' .tab-list li').length < 3) { //currently in add customer mode
+    if ($(mc2+' .tab-list li').length < 3) { 
     	if (!keep_tabs) {
     		$(mc2+' .tab-list').html($('#master_customer_view .tab-list').html());	
     	}
@@ -8379,7 +8042,7 @@ function reset_customer_data(keep_tabs=false) {
         }
     });
     $(mc2+' .modal_title_mc2').text('');
-    $('#sel_cust_data div').text(''); //clear any selected customer data
+    $('#sel_cust_data div').text(''); 
     $('.reverse_receipt_row').addClass('noshow');
 }
 
@@ -8387,14 +8050,12 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 
 	return new Promise((resolve, reject) => {
 
-		//open modal if required
 		if (goto_tab != 'silent') {
 			if (!$(mc2).hasClass('modal-open')) {
 				$('.modal_o_customers:first').click();	
 			}
 		}
 
-		//resets
 		reset_customer_data();
 
 	    if (goto_tab) {
@@ -8403,7 +8064,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	    	$(mc2+ ' .tl_cust_edit').click();
 	    }
 
-	    //tab switch after generate invoice
 	    let generate_invoice_r_id = '';
 	   	if ($('#cust_generate_invoice').text()) {
 	    	generate_invoice_r_id = $('#cust_generate_invoice').text().split('~')[1];
@@ -8415,7 +8075,7 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	    let class_enrolment_titles = JSON.parse($('#class_enrolment_titles').text());
 
 	    let scan = $('#cust_scan').val();
-	    $('#cust_scan').val('').focus(); //reset
+	    $('#cust_scan').val('').focus(); 
 
 	    let querydata = {show_prs: 'yes', location_id: $('#location_id').val()};
 
@@ -8423,7 +8083,7 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	        querydata.card = scan;
 	    } else {
 	    	querydata.customer_id = customer_id;
-	    	querydata.date = $('#main_date').val(); //for special_rates_usage
+	    	querydata.date = $('#main_date').val(); 
 	    }
 
 	    $(mc2+' .cust_welcome_tr').hide();
@@ -8442,26 +8102,23 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 
 	                let res = response.success;
 
-	                //data
 	                let data = res.data;
-					
-					if (data.length == 1) {
+
+										if (data.length == 1) {
 
 	                	let custobj = data[0];
 
 		                if (custobj.parent_id > 0) {
 		                	if (customer_id == 'scan') { 
-		                		viewCustomer(custobj.parent_id, 'checkin'); //fetch parent details
+		                		viewCustomer(custobj.parent_id, 'checkin'); 
 		                	} else {
-			                    set_side_error('Something went wrong! Please try again'); //this should never show up
+			                    set_side_error('Something went wrong! Please try again'); 
 		                	}
-		                	return false; //stop execution
+		                	return false; 
 		                }
 
 		                $('.modal_title_mc2').text(custobj.first_name+' '+custobj.last_name);
 
-		                //customer data
-		                //fixed elements
 		                $(mc2+' .cust_edit_tab .cust_customer_id').val(custobj.customer_id);
 		                $(mc2+' .cust_edit_tab .organisation').val(custobj.organisation);
 		                $(mc2+' .cust_edit_tab .first_name').val(custobj.first_name);
@@ -8513,10 +8170,8 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 		                	$(mc2+' .delete_customer').show();
 		                }
 
-		                //childs tab parent items
 		                $(mc2+' .childs_tab .cust_parent_id').val(custobj.customer_id);
 
-		                //variable elements
 		                if (!isEmptyJSON(custobj.details)) {
 		                    for(const key in custobj.details) {
 		                        if ($(mc2+' .cust_edit_tab .cust_details_tr [name='+key+']').is(':checkbox')) {
@@ -8529,20 +8184,17 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 		                    }
 		                }
 
-		                //get image if exists
 		                if ($(mc2+' .cust_edit_tab .cust_image_tr').hasClass('show_images')) {
 
 		                    $(mc2+' .cust_edit_tab .cust_image_tr').show();
-		                    
-		                    $(mc2+' .cust_edit_tab .cust_image_tr .display_img').hide();
+
+		                    		                    $(mc2+' .cust_edit_tab .cust_image_tr .display_img').hide();
 
 		                    get_cust_image([custobj.customer_id]);
 		                }
 
-		                //store selected customer data for bookings, registers, purchases etc
 		                $('#sel_customer_id').text(custobj.customer_id);
 
-		                //valid passes count
 		                let v_passes = 0;
 		                for (let i = 0; i < custobj.passes.length; i++) {
 		                    if ((dates_diff(custobj.passes[i].expires,dayjs().format('YYYY-MM-DD'))>=0) && (!isvalidDate(custobj.passes[i].hold))) {
@@ -8551,7 +8203,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 		                }
 		                $('#cust_valid_passes').text(v_passes);
 
-		                //special rates elements & side_modal booking - start
 		                $('#cust_direct').text(custobj.direct);
 		                $('#cust_organisation').text(custobj.organisation);
 		                $('#cust_rate').text(custobj.rate != 0 ? custobj.rate : '');
@@ -8563,19 +8214,15 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 		                let cust_details = {};
 		                cust_details[custobj.customer_id] = custobj.details || {};
 
-		                //repeat lesson next week - grab customer_id for post reset
 		                let lesson_customer_id = 0;
 		                if ($('#lesson_modal').hasClass('show-box')) {
 		                	lesson_customer_id = $('#lesson_modal .customers_list').val();
 		                }
 
-			        	//customer_selectors
 			        	let cust_str_ = '';
 
-			        	//parent
 			        	cust_str_ = '<option value="'+custobj.customer_id+'" data-intrac_parent_id="0">'+custobj.first_name+' '+custobj.last_name+'</option>';
 
-	                    //children
 	                    for (let i = 0; i < custobj.children.length; i++) {
 	                        let c = custobj.children[i];
 	                        cust_str_ += '<option value="'+c.customer_id+'" data-intrac_parent_id="'+custobj.customer_id+'">'+c.first_name+' '+c.last_name+'</option>';
@@ -8585,7 +8232,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 
 			        	$('.customers_list').html(cust_str_);
 
-			        	//repeat lesson next week
 			        	if (lesson_customer_id > 0) {
 			        		$('#lesson_modal .customers_list').val(lesson_customer_id).change();
 			        	}
@@ -8598,13 +8244,12 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 		                $('#cust_passes').text(encryptData(JSON.stringify(custobj.passes)));
 
 	                    let sr_usage = custobj.special_rates_usage;
-	                    $('#special_rates_usage').text(''); //We've switched customers, so total reset first
+	                    $('#special_rates_usage').text(''); 
                         $('#special_rates_usage').text(encryptData(JSON.stringify({
                             back_end: mergeJSONnums(JSON.parse(decryptData($('#special_rates_usage').text()) || '{}').back_end || {}, sr_usage),
                             front_end: mergeJSONnums(JSON.parse(decryptData($('#special_rates_usage').text()) || '{}').front_end || {}, sr_usage)
                         })));
 
-		                //customer_names
 		                let cust_names = {};
 		                cust_names[custobj.customer_id] = custobj.first_name+' '+custobj.last_name;
 		                if (custobj.parent) {
@@ -8615,10 +8260,9 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                	}
 	                	$('#cust_names').text(JSON.stringify(cust_names));
 
-	                    //space or lesson booking initiated customer search
 						if ($('#cbooking_deeplinks').text()) {
 
-							let action = $('#cbooking_deeplinks').text(); //space or space_id~xxx_HH-mm; lesson or user_id~xxx_HH-mm
+							let action = $('#cbooking_deeplinks').text(); 
 
 							if (action.includes('~')) {
 								$('#'+action.split('~')[1]).addClass('active');
@@ -8629,46 +8273,43 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 							} else if (action.includes('lesson')) {
 								init_lesson_booking();
 							} else if (action.includes('perm_booking')) {
-								$('#cbooking_deeplinks').text(''); //clear
+								$('#cbooking_deeplinks').text(''); 
 							} else if (action.includes('term_booking')) {
-								$('#cbooking_deeplinks').text(''); //clear
+								$('#cbooking_deeplinks').text(''); 
 							} else if (action.includes('single_booking')) {
-								$('#cbooking_deeplinks').text(''); //clear
+								$('#cbooking_deeplinks').text(''); 
 							} else if (action.includes('merge')) {
-								$('#cbooking_deeplinks').text(''); //clear
-								
-								let m_el = $(mc+' .change_cust[data-intrac="'+action+'"]').closest('div').find('.view_customer');
+								$('#cbooking_deeplinks').text(''); 
+
+																let m_el = $(mc+' .change_cust[data-intrac="'+action+'"]').closest('div').find('.view_customer');
 								$(m_el).prop('dataset').intrac_customer_id = creg_customer_id;
 								$(m_el).prop('dataset').intrac_parent_id = (creg_customer_id == customer_id ? 0 : customer_id);
 								$(m_el).prop('dataset').intrac_goto_tab = (creg_customer_id == customer_id ? '' : 'childs');
-							
-								let m_name = cust_names[creg_customer_id]+(creg_customer_id == customer_id ? ' (parent profile)' : ' (child profile)');
+
+															let m_name = cust_names[creg_customer_id]+(creg_customer_id == customer_id ? ' (parent profile)' : ' (child profile)');
 								if (action == 'merge_old') {
 									$(mc+' .old_cust_name').text(m_name);
 								} else {
 									$(mc+' .new_cust_name').text(m_name);
 								}								
 							} else if (action.includes('redeem_gift')) {
-								$('#cbooking_deeplinks').text(''); //clear
-								
-								let g_el = $(mc+' .gift_customer');
+								$('#cbooking_deeplinks').text(''); 
+
+																let g_el = $(mc+' .gift_customer');
 								$(g_el).prop('dataset').intrac_customer_id = creg_customer_id;
 								$(g_el).prop('dataset').intrac_parent_id = (creg_customer_id == customer_id ? 0 : customer_id);
 								$(g_el).prop('dataset').intrac_goto_tab = (creg_customer_id == customer_id ? '' : 'childs');
-							
-								let g_name = cust_names[creg_customer_id]+(creg_customer_id == customer_id ? ' ' : ' (child of '+cust_names[customer_id]+')');
+
+															let g_name = cust_names[creg_customer_id]+(creg_customer_id == customer_id ? ' ' : ' (child of '+cust_names[customer_id]+')');
 								$(mc+' .gift_cust_name').text(g_name);							
 							}
 
 							close_modal2();
-							return; //halt execution
+							return; 
 						}
-						//special rates elements & side_modal booking - end
 
-		                //children - start
 		                let html_str_c = '';
 
-		                //header
 		                html_str_c += '<div class="table-wrapper"><table class="table">\
 		                                <thead>\
 		                                    <tr>\
@@ -8701,17 +8342,13 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 
 	                    }
 
-		                //close table
 		                html_str_c += '</tbody></table></div>';
 
 	                    $(mc2+' .child_list').html(html_str_c);
-	                    //children - end
 
-	                    //history - start
 	                    let html_str_h = '';
 	                    if (custobj.passes.length) {
 	                        html_str_h += '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">'+($('#pass_title').val() == 'pass' ? 'Passes' : toTitleCase($('#pass_title').val())+'s')+'</h4>';
-	                        //header
 	                        html_str_h += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
 	                                            <tr>\
@@ -8728,14 +8365,12 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                            let rem_str = (d.number > 0 ? d.remaining : '' );
 	                            html_str_h += '<tr><td class="cust_cust_name">'+cust_names[d.customer_id]+'</td><td>'+d.passtype_name+'</td><td>'+exp_val_str+'</td><td>'+rem_str+'</td></tr>';
 	                        }
-	                        //close table
 	                        html_str_h += '</tbody></table></div>';                        
 	                    }
 
 	                    if (custobj.registers_program.length) {
 	                        let html_str_h_ = '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">'+(toTitleCase(class_enrolment_titles.title || 'enrolment')+'s - '+$('#class_title').val())+'</h4>';
 	                        let h_entries = false;
-	                        //header
 	                        html_str_h_ += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
 	                                            <tr>\
@@ -8753,7 +8388,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                            }
 	                        }
 
-	                        //close table
 	                        html_str_h_ += '</tbody></table></div>'; 
 
 	                        if (h_entries) {
@@ -8764,7 +8398,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    if (custobj.registers_program.length) {
 	                        let html_str_h_ = '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">'+(toTitleCase(class_enrolment_titles.title || 'enrolment')+'s - program')+'</h4>';
 	                        let h_entries = false;
-	                        //header
 	                        html_str_h_ += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
 	                                            <tr>\
@@ -8786,7 +8419,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                                h_entries = true;
 	                            }
 	                        }
-	                        //close table
 	                        html_str_h_ += '</tbody></table></div>';
 
 	                        if (h_entries) {
@@ -8796,7 +8428,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 
 	                    if (custobj.registers_schedule.length) {
 	                        html_str_h += '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">'+(toTitleCase(class_enrolment_titles.title || 'enrolment')+'s - booking')+'</h4>';
-	                        //header
 	                        html_str_h += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
 	                                            <tr>\
@@ -8816,14 +8447,12 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 
 	                            html_str_h += '<tr><td class="cust_cust_name">'+cust_names[d.customer_id]+'</td><td>'+d.class_name+'</td><td>'+sched_str+free_makeup+'</td></tr>';
 	                        }
-	                        //close table
 	                        html_str_h += '</tbody></table></div>';                          
 	                    }
 
 	                    if (custobj.registers_team.length) {
 	                        let html_str_h_ = '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">'+(toTitleCase(class_enrolment_titles.title || 'enrolment')+'s - team')+'</h4>';
 	                        let h_entries = false;
-	                        //header
 	                        html_str_h_ += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
 	                                            <tr>\
@@ -8841,7 +8470,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                                h_entries = true;
 	                            }
 	                        }
-	                        //close table
 	                        html_str_h_ += '</tbody></table></div>';
 
 	                        if (h_entries) {
@@ -8852,7 +8480,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    if (custobj.registers_team.length) {
 	                        let html_str_h_ = '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">'+(toTitleCase(class_enrolment_titles.title || 'enrolment')+'s - fixture')+'</h4>';
 	                        let h_entries = false;
-	                        //header
 	                        html_str_h_ += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
 	                                            <tr>\
@@ -8870,7 +8497,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                                h_entries = true;
 	                            }
 	                        }
-	                        //close table
 	                        html_str_h_ += '</tbody></table></div>';
 
 	                        if (h_entries) {
@@ -8882,7 +8508,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    if (custobj.term_bookings.length) {
 	                        let html_str_h_ = '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">'+(toTitleCase($('#term_title').val())+' bookings')+'</h4>';
 	                        let h_entries = false;
-	                        //header
 	                        html_str_h_ += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
 	                                            <tr>\
@@ -8901,7 +8526,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                                 html_str_h_ += '<tr><td class="cust_cust_name">'+cust_names[d.customer_id]+'</td><td>'+sched_str+'</td><td>'+d.term_name+'</td></tr>';
                                 h_entries = true;
 	                        }
-	                        //close table
 	                        html_str_h_ += '</tbody></table></div>'; 
 
 	                        if (h_entries) {
@@ -8913,7 +8537,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    if (custobj.perm_bookings.length) {
 	                        let html_str_h_ = '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">Permanent bookings</h4>';
 	                        let h_entries = false;
-	                        //header
 	                        html_str_h_ += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
 	                                            <tr>\
@@ -8932,7 +8555,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                                 html_str_h_ += '<tr><td class="cust_cust_name">'+cust_names[d.customer_id]+'</td><td>'+sched_str+'</td><td>'+d.term_name+'</td></tr>';
                                 h_entries = true;
 	                        }
-	                        //close table
 	                        html_str_h_ += '</tbody></table></div>'; 
 
 	                        if (h_entries) {
@@ -8943,7 +8565,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    if (custobj.space_bookings.length) {
 	                        let html_str_h_ = '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">'+(toTitleCase($('#space_title').val())+' bookings')+'</h4>';
 	                        let h_entries = false;
-	                        //header
 	                        html_str_h_ += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
 	                                            <tr>\
@@ -8965,7 +8586,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                                 html_str_h_ += '<tr><td class="cust_cust_name">'+cust_names[d.customer_id]+'</td><td>'+sched_str+'</td></tr>';
                                 h_entries = true;
 	                        }
-	                        //close table
 	                        html_str_h_ += '</tbody></table></div>';
 
 	                        if (h_entries) {
@@ -8976,7 +8596,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    if (custobj.lesson_bookings.length) {
 	                        let html_str_h_ = '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">Private Lessons</h4>';
 	                        let h_entries = false;
-	                        //header
 	                        html_str_h_ += '<div class="table-wrapper"><table class="table">\
 	                                        <thead>\
 	                                            <tr>\
@@ -8995,7 +8614,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                                 html_str_h_ += '<tr><td class="cust_cust_name">'+cust_names[d.customer_id]+'</td><td>'+sched_str+'</td></tr>';
                                 h_entries = true;
 	                        }
-	                        //close table
 	                        html_str_h_ += '</tbody></table></div>';
 
 	                        if (h_entries) {
@@ -9006,7 +8624,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                         if (custobj.rolls_passes.length) {
                             let html_str_h_ = '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">Casual '+$('#pass_title').val()+' visits</h4>';
                             let h_entries = false;
-                            //header
                             html_str_h_ += '<div class="table-wrapper"><table class="table">\
                                             <thead>\
                                                 <tr>\
@@ -9024,7 +8641,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                                 html_str_h_ += '<tr><td class="cust_cust_name">'+cust_names[d.customer_id]+'</td><td>'+pass_str+'</td><td>'+convert_date_time(d.roll_time)+'</td></tr>';
                                 h_entries = true;
                             }
-                            //close table
                             html_str_h_ += '</tbody></table></div>';
 
                             if (h_entries) {
@@ -9035,7 +8651,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                         if (custobj.gcards.length) {
                             let html_str_h_ = '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md hf_option">Player Bookings</h4>';
                             let h_entries = false;
-                            //header
                             html_str_h_ += '<div class="table-wrapper"><table class="table">\
                                             <thead>\
                                                 <tr>\
@@ -9054,7 +8669,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                                 html_str_h_ += '<tr><td class="cust_cust_name">'+cust_names[d.customer_id]+'</td><td>'+convert_date_time(d.card_time, 'D MMM YYYY')+'</td><td>'+card_type+'</td><td>'+d.card_comment+'</td></tr>';
                                 h_entries = true;
                             }
-                            //close table
                             html_str_h_ += '</tbody></table></div>';
 
                             if (h_entries) {
@@ -9063,9 +8677,7 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                         }
 
 	                    $(mc2+' .hist_list').html(html_str_h);
-	                    //history - end
 
-	                    //attendance - start
 	                    let html_str_at = '';
 
 	                    let roll_map = {1 : 'Present', 2: 'Absent', 3: 'No show', 4: 'Cancelled', 5: 'Left'};
@@ -9073,7 +8685,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    let at_term_ids = [];
 	                    let options_str_t = '';
 
-                        //header
                         html_str_at += '<div class="table-wrapper"><table class="table">\
                                         <thead>\
                                             <tr>\
@@ -9101,23 +8712,20 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                        	at_term_ids.push(d.term_id)
 	                        }				                                                   
 	                    }
-                        //close table
                         html_str_at += '</tbody></table></div>';	                    
 
 	                    $(mc2+' .cust_att_list').html(html_str_at); 
-	                    
-	                    if (options_str_t) {
+
+	                    	                    if (options_str_t) {
 	                    	$(mc2+' .cust_att_term_id').html(options_str_t);
 	                    	$(mc2+' .cust_att_term_id').closest('ul').removeClass('noshow');
 
-	                    	custobj.rolls = custobj.rolls.sort((a, b) => dayjs(b.term_start).diff(dayjs(a.term_start))); //sort by term_start desc
-	                    	let cur_term  = custobj.rolls.find(item => { return new Date(item.term_start) <= new Date() && new Date(item.term_finish) >= new Date()}); //first item where term_start <= now and now >= term_finish
-	                    	
-	                    	$(mc2+' .cust_att_term_id').val(cur_term ? cur_term.term_id : custobj.rolls[0].term_id).change(); //trigger change
-	                    }
-	                    //attendance - end
+	                    	custobj.rolls = custobj.rolls.sort((a, b) => dayjs(b.term_start).diff(dayjs(a.term_start))); 
+	                    	let cur_term  = custobj.rolls.find(item => { return new Date(item.term_start) <= new Date() && new Date(item.term_finish) >= new Date()}); 
 
-	                    //account - start
+	                    		                    	$(mc2+' .cust_att_term_id').val(cur_term ? cur_term.term_id : custobj.rolls[0].term_id).change(); 
+	                    }
+
 	                    let a_html_str = '';
 	                    for (let i = 0; i < custobj.accounts.length; i++) {
 	                        let d = custobj.accounts[i];
@@ -9186,7 +8794,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                             	a_type = (d.program_type == 1 ? toTitleCase($('#term_title').val()) : 'Permanent')+' Booking';
                             	a_desc = sched_str+' '+d.term_name;
 	                        }
-	                        //Private lessons covered in passes
 
 	                        a_html_str += '<tr class="acct_row">\
 	                        					<td><div class="form-label no_padding_left"><label class="checkbox-container"><input type="checkbox" class="checkbox-custom cust_acc_pay" data-intrac="'+d.receipt_id+'~'+(d.type == 'credit' ? (0-d.amount) : d.amount)+'" data-intrac_receipt_id="'+d.receipt_id+'">&nbsp;</label></div></td>\
@@ -9205,9 +8812,7 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    		$(mc2+' .acct_list .cust_acc_pay[data-intrac_receipt_id="'+nrs[i]+'"]').click();
 	                    	}
 	                    }
-	                    //account - end
 
-	                    //purchases
 	                    let pu_html_str = '';                       
 	                    for (let i = 0; i < custobj.purchases.length; i++) {
 	                        let d = custobj.purchases[i];
@@ -9232,15 +8837,13 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    }
 
 	                    $(mc2+' .purchs_list tbody').html(pu_html_str); 
-	                    //purchases - end
 
-	                    //receipts
 	                    let r_html_str = '';
 	                    for (let i = 0; i < custobj.receipts.length; i++) {
 	                        let d = custobj.receipts[i];
 	                        let status_str = '';
-	                        
-	                        let checkbox_str = '';
+
+	                        	                        let checkbox_str = '';
 	                        if (custobj.inv_receipts.includes(d.receipt_id)) {
 	                            checkbox_str = '<div class="form-label no_padding_left"><label class="checkbox-container"><input type="checkbox" class="checkbox-custom cust_rec_receipt" value="'+d.receipt_id+'" data-intrac_amount="'+(d.receipt_type == 3 ? 0-d.amount : d.amount)+'">&nbsp;</label></div>';
 	                        }
@@ -9283,8 +8886,8 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                            for (let n = 0; n < d.invoice_ids_users.length; n++) {
 	                            	let inv_ = d.invoice_ids_users[n].split('~');
 	                            	let accts_lnk = (d.receipt_type == 0 && d.receipt_id == inv_[0] && d.amount>0 && !d.receipt_comment.includes('cancelled')) ? '<a href="#" class="primary margin_left_sm show_invoice_accounts" data-intrac="'+inv_[0]+'">Accounts</a>' : '';
-	                                
-	                                r_html_str += '<a class="primary a_direct inv_lnk" href="api/printReceipt?customer_id='+custobj.customer_id+'&invoice_id='+inv_[0]+'" target="_blank" data-intrac="'+inv_[0]+'">'+inv_[0]+(inv_[1] ? ' ('+inv_[1]+')' : '')+'</a>'+accts_lnk+'<br>';
+
+	                                	                                r_html_str += '<a class="primary a_direct inv_lnk" href="api/printReceipt?customer_id='+custobj.customer_id+'&invoice_id='+inv_[0]+'" target="_blank" data-intrac="'+inv_[0]+'">'+inv_[0]+(inv_[1] ? ' ('+inv_[1]+')' : '')+'</a>'+accts_lnk+'<br>';
 	                            }
 	                            r_html_str += '</div>'
 	                        } else if (!checkbox_str && custobj.legacy_receipts.includes(d.receipt_id)) {
@@ -9299,19 +8902,16 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    if (generate_invoice_r_id && custobj.receipts.length) {
 	                    	let r0 = custobj.receipts[0];
 	                    	if ((r0.receipt_id > generate_invoice_r_id) && (r0.invoice_ids_users)) {
-	                    		//invoice sent successfully
 	                    		open_gif_popup('Great job on sending the invoice', 'cat_dancing.gif');
 	                    	}
 	                    }
 
-	                    //receipts - end
 
-	                    //comments - start
 	                    let c_html_str = '';
 	                    for (let i = 0; i < custobj.comments.length; i++) {
 	                        let d = custobj.comments[i];
-	                        
-	                        let archived = d.username && isvalidDate(d.close);
+
+	                        	                        let archived = d.username && isvalidDate(d.close);
 
 	                        c_html_str += '<tr class="'+(d.close == '0000-00-00' ? 'cust_comment_open' : 'cust_comment_archived noshow')+'">\
 	                        					<td class="cust_cust_name">'+cust_names[d.child_id ? d.child_id : d.customer_id]+'<span class="noshow comment_id">'+d.comment_id+'</span><span class="noshow child_id">'+d.child_id+'</span></td>\
@@ -9327,14 +8927,12 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                        				</tr>';
 	                    }
 	                    $(mc2+' .cust_comments_list tbody').html(c_html_str);
-	                    //comments - end                      
 
-	                    //files - start
 	                    let f_html_str = '';
 	                    for (let i = 0; i < custobj.files.length; i++) {
 	                        let d = custobj.files[i];
-	                        
-	                        f_html_str += '<tr>\
+
+	                        	                        f_html_str += '<tr>\
 	                        					<td>'+convert_date(d.date)+'</td>\
 	                        					<td><a class="a_file primary" href="#" data-intrac="api/getFile?filename='+d.s3_filename+'&location_id='+$('#location_id').val()+'&customer_id='+custobj.customer_id+'">'+d.filename+'</a><span class="file_id noshow">'+d.file_id+'</span></td>\
 	                        					<td>'+(d.opener || '')+'</td>\
@@ -9345,10 +8943,7 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                        				</tr>';
 	                    }
 	                    $(mc2+' .cust_files_list tbody').html(f_html_str);
-	                    //files - end 
 
-	                    //payment items - start
-	                    //refund_payments list
 	                    let rp_html_str = '';
 	                    for (let i = 0; i < custobj.refund_payments.length; i++) {
 	                        let d = custobj.refund_payments[i];
@@ -9356,7 +8951,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    }
 	                    $(mc2+' .refund_payments').html(rp_html_str); 
 
-                        //refund_payments_eftpos list
                         let rpe_html_str = '';
                         for (let i = 0; i < custobj.refund_payments_eftpos.length; i++) {
                             let d = custobj.refund_payments_eftpos[i];
@@ -9364,22 +8958,19 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                         }
                         $(mc2+' .refund_payments_eftpos').html(rpe_html_str);
 
-	                    //payment options
 	                    if (custobj.direct) {
 	                        $(mc2+' .cust_payment_cc_d').show();
 	                    }
-	                    //payment items - end
 
-	                    //checkin items - start
 	                    if ($('.checkin_items').length) {
 
-	                    	let chkin_passes = [...custobj.passes]; //create a copy
-	                    	chkin_passes = chkin_passes.reverse(); //order by expiry asc
+	                    	let chkin_passes = [...custobj.passes]; 
+	                    	chkin_passes = chkin_passes.reverse(); 
 
 	                    	if ($(mc2+' .cust_edit_tab .cust_image_tr').hasClass('show_images')) {
 	                    		let chkin_customer_ids = [];
-	                    		
-	                    		$(mc2+' .chkin_images').append('<img src="/images/company-logo.png" class="noshow img-w-h chkin_img_'+custobj.customer_id+'">');
+
+	                    			                    		$(mc2+' .chkin_images').append('<img src="/images/company-logo.png" class="noshow img-w-h chkin_img_'+custobj.customer_id+'">');
 	                    		chkin_customer_ids.push(custobj.customer_id)
 
 	                    		for (let i = 0; i < custobj.children.length; i++) {
@@ -9422,7 +9013,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 			                	$(mc2+' .chkin_hpasses').closest('div').show();
 			                }
 
-			                //upcoming (customer) data
 			                let html_str_c_up = '';
 		                    for (let i = 0; i < custobj.checkin_data.length; i++) {
 		                        let d = custobj.checkin_data[i];
@@ -9457,7 +9047,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 
 		                    $(mc2+' .chkin_upcoming_list tbody').html(html_str_c_up);
 
-			                //register with passes
 			                let html_str_c_rp = '';
                             for (let i = 0; i < custobj.checkin_pass_register.length; i++) {
                                 let d = custobj.checkin_pass_register[i];
@@ -9474,7 +9063,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                                 }
 
                                 let chkin_pass_opt = '';
-                                //passes - for both parent and children
                                 for (let n = 0; n < chkin_passes.length; n++) {
                                     let item = chkin_passes[n];
                                     let pass_name = item.passtype_name;
@@ -9501,18 +9089,17 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
                                                     </ul></td>\
                                                 </tr>';                                                                
                             }
-			                
-			                $(mc2+' .chkin_pass_register tbody').html(html_str_c_rp);
+
+			                			                $(mc2+' .chkin_pass_register tbody').html(html_str_c_rp);
 			                if (html_str_c_rp) {
 			                	$(mc2+' .chkin_pass_register_div').show();
 			                }
 
-			                //casual passes
 			                let html_str_c_cp = '';
 	                        for (let i = 0; i < chkin_passes.length; i++) {
 	                            let d = chkin_passes[i];
-	                            
-	                            if (d.show_actions?.deduct) {
+
+	                            	                            if (d.show_actions?.deduct) {
 		                            let exp_val_str = ((d.expires != '0000-00-00') && (d.expires != '2050-01-01')) ? ' valid until '+convert_date(d.expires) : '';
 		                            let rem_str = (d.number > 0 ? d.remaining : '' );
 		                            let roll_today = d.roll_today ? ' '+toTitleCase($('#pass_title').val())+' already used today' : '';
@@ -9533,12 +9120,9 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 			                	$(mc2+' .chkin_pass_casual_div').show();
 			                }
 	                    }
-	                    //checkin items - end
 
-	                    //passes - start
 	                    let html_str_pss = '';
 
-	                    //pass actions
 	                    function show_actions_pss(actions_obj) {
 	                        let actions = '';
 
@@ -9579,7 +9163,7 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                        return actions; 
 	                    } 
 
-	                    let empty_div = '<div class="empty_div noshow"></div>'; //pointer for expiry and switch blocks
+	                    let empty_div = '<div class="empty_div noshow"></div>'; 
 
 	                    html_str_pss += '<div class="cpass_cust_row toggle_div">\
 	                    					<button type="button" class="customer_accordion simple_block_toggle" data-toggle_target="customer_accordion_menu">\
@@ -9638,16 +9222,13 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    	$(mc2+' .cpass_cust_list [name="cpass_customer_id"]:first').prop("checked", true);
 	                    }
 
-	                    //passes - end 
 
-		                //registers - start
 		                let html_str_reg = '';
 		                let html_str_reg_passes = '';
 
-	                    //reg actions
 	                    function show_actions_reg(d) {
 	                        let actions = '';
-	                        let empty_div = '<div class="empty_div noshow"></div>'; //pointer for alter_reg block
+	                        let empty_div = '<div class="empty_div noshow"></div>'; 
 
 	                        let user_loc_passed = ($('#user_location_id').val() == 0) || (($('#user_location_id').val() > 0) && (d.location_id == $('#user_location_id').val()));
 
@@ -9672,7 +9253,6 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    } 
 
 	                    if (($('.cregister_cust_list').prop('dataset').intrac_child_only) && (custobj.level_id == 0)) {
-	                        //parent can't register
 	                    } else {
 	                        html_str_reg += '<div class="cregister_cust_row toggle_div">\
 	                        					<button type="button" class="customer_accordion simple_block_toggle" data-toggle_target="customer_accordion_menu">\
@@ -9801,8 +9381,7 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                        }
 	                    }
 
-	                    //passes - for both parent and children
-	                    custobj.passes = custobj.passes.reverse(); //order by expiry asc
+	                    custobj.passes = custobj.passes.reverse(); 
 	                    for (let n = 0; n < custobj.passes.length; n++) {
 	                        let pass_name = custobj.passes[n].passtype_name;
 	                        if (custobj.passes[n].expires != '2050-01-01') {
@@ -9816,18 +9395,16 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                        }
 	                    }
 
-	                    //outstanding fees related to passes
 	                    if (custobj.accounts.filter(item => (item.type == 'purchase') && (item.product_id == 14)).length) {
 	                        $(mc2+' .cregister_outstanding_tr').show();
 	                    }
 
-	                    //purchases_addons
 	                    $(mc2+' .cregister_purchases_addons').text(encryptData(JSON.stringify(custobj.purchases_addons)));
 
 	                    $(mc2+' .cregister_cust_list').html(html_str_reg);
 	                    $(mc2+' .cregister_cpass_list').html(html_str_reg_passes ? '<select class="form-control cregister_pass_id"><option value=""></option>'+html_str_reg_passes+'</select>' : 'No valid '+($('#pass_title').val() == 'pass' ? 'passes' : $('#pass_title').val()+'s')+' available');
-	                
-	                    if ($(mc2+' .tl_cust_registers').hasClass('active')) {
+
+	                	                    if ($(mc2+' .tl_cust_registers').hasClass('active')) {
 	                    	if (creg_customer_id) {
 	                    		$(mc2+' .cregister_cust_list [name="cregister_customer_id"][value="'+creg_customer_id+'"]').prop("checked", true).change();
 	                    	} else {
@@ -9837,19 +9414,16 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                    	$(mc2+' .cregister_cust_list [name="cregister_customer_id"]:first').prop("checked", true); 
 	                    }
 
-	                    //registers - end 
 
-	                    //show customer_accordion chevrons if any items are present
 	                    $('.customer_accordion_menu').each(function () {
 	                    	if ($(this).html().trim()) {
 	                    		$(this).closest('.toggle_div').find('.cust_chevron').removeClass('noshow');
 	                    	}
 	                    });
-	                
-	                } else {
+
+	                	                } else {
 
 						if (customer_id == 'scan') {
-							//send to search page
 							$(mc2+ ' .tl_cust_search').click();
 							$(mc2+' .cust_search_tab .customer-search').val(scan).trigger("input");
 						} else {
@@ -9858,7 +9432,7 @@ function viewCustomer(customer_id, goto_tab='',creg_customer_id,new_receipts) {
 	                }
 
 	            } else if (response.redirect != undefined) {
-	                mini_login_wizard(response.redirect); //session timeout case
+	                mini_login_wizard(response.redirect); 
 	            } else {    
 	                set_side_error(response.error.join("<br>"));
 	                $('#loader-wrapper').hide();
@@ -9900,7 +9474,6 @@ function update_cust_child(customer_id_ch) {
                 if (res.data && res.data.length) {
                     let custobj = res.data[0];
 
-                    //fixed elements
                     $(mc2+' .childs_tab .cust_parent_id').val(custobj.parent_id);
                     $(mc2+' .childs_tab .cust_customer_id').val(custobj.customer_id);
                     $(mc2+' .childs_tab .first_name').val(custobj.first_name);
@@ -9912,7 +9485,6 @@ function update_cust_child(customer_id_ch) {
                     $(mc2+' .childs_tab .medical').val(custobj.medical);
                     $(mc2+' .childs_tab .card').val(custobj.card);
 
-                    //variable elements
                     if (!isEmptyJSON(custobj.details)) {
                         for(const key in custobj.details) {
                             if ($(mc2+' .childs_tab .cust_details_tr [name='+key+']').is(':checkbox')) {
@@ -9925,19 +9497,18 @@ function update_cust_child(customer_id_ch) {
                         }
                     }
 
-                    //get image if exists
                     if ($(mc2+' .childs_tab .cust_image_child_tr').hasClass('show_images')) {
 
                         $(mc2+' .childs_tab .cust_image_child_tr').show();
-                        
-                        $(mc2+' .childs_tab .cust_image_child_tr .display_img').hide();
+
+                                                $(mc2+' .childs_tab .cust_image_child_tr .display_img').hide();
 
                         get_cust_image([custobj.customer_id]);
                     }
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -9957,7 +9528,6 @@ function saveCustomer(mode='parent') {
 
     let _mc = mc2+' .cust_edit_tab';
 
-    //prepare the data
     if (mode == 'child') {
         _mc = mc2+' .childs_tab';
     }
@@ -9984,13 +9554,12 @@ function saveCustomer(mode='parent') {
         mode: mode
     };
 
-    //variable data
     if ($(_mc+' .cust_details_tr').length) {
         data.details = {};
-        $(_mc+' .cust_details_el').each(function () { //custom details
+        $(_mc+' .cust_details_el').each(function () { 
             let key = $(this).prop('name');
             if ($(this).is(':checkbox')) {
-                 data.details[key] = $(this).is(":checked") ? 1 : ''; //not checked = empty & discard
+                 data.details[key] = $(this).is(":checked") ? 1 : ''; 
             } else if ($(this).is(':radio')) {
                 data.details[key] = $(_mc+' input:radio[name="'+key+'"]:checked').val()
             } else {
@@ -9999,7 +9568,6 @@ function saveCustomer(mode='parent') {
         });         
     }
 
-    //console.log(data);
     if (data.rate < 0) {
         let result = confirm('Are you sure? This value would work as a '+($(_mc+' .cust_rate_tr td:first').text().toLowerCase().includes('discount') ? 'premium' : 'discount'));
         if (!result) {
@@ -10010,9 +9578,7 @@ function saveCustomer(mode='parent') {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
-	//basic
 	$(_mc+' .form-group:visible').each(function () {
 		if ($(this).find('.mandatory').length && !$(this).find('.mandatory').hasClass('noshow')) {
 		    const labelText = $(this).find('.label').clone()
@@ -10079,24 +9645,22 @@ function saveCustomer(mode='parent') {
                 $('#loader-wrapper').hide();
 
 				if (mode == 'child') {
-	                viewCustomer(data.parent_id, 'childs'); //refresh data in modal tabs
+	                viewCustomer(data.parent_id, 'childs'); 
 	            } else {
 	            	set_side_error('Customer saved succesfully', 'green');
-	                if (data.customer_id) { //parent update
-	                	viewCustomer(data.customer_id); //refresh data in modal tabs
+	                if (data.customer_id) { 
+	                	viewCustomer(data.customer_id); 
 	                } else {
-	                	//new parent customer
-		                viewCustomer(response.success); //refresh data in modal tabs
+		                viewCustomer(response.success); 
 	                }
 	            }
 
                 if (is_datatable_on()) {
-                	//refresh datatable
                 	refreshCustomerDatatable(data.customer_id ? data.customer_id : response.success);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {
 
                 if (response.error[0].includes('profile already exists')) {
@@ -10115,8 +9679,8 @@ function saveCustomer(mode='parent') {
         set_side_error(errors.join("<br>"));
         $('#loader-wrapper').hide();             
     }  
-          
-}
+
+          }
 
 function deleteCustomer(customer_id, parent_id) {
 
@@ -10125,7 +9689,6 @@ function deleteCustomer(customer_id, parent_id) {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -10140,7 +9703,6 @@ function deleteCustomer(customer_id, parent_id) {
                 $('#loader-wrapper').hide(10);
 
             	if (is_datatable_on('main')) {
-                    //refresh datatable - main
                     let dtable = $('#main_customers_table .customers_table').DataTable();
 
                     dtable
@@ -10151,7 +9713,6 @@ function deleteCustomer(customer_id, parent_id) {
 
                 if (mode == 'child') {
                 	if (is_datatable_on()) {
-	                    //refresh datatable
 	                    let dtable = $(mc2+' .customers_table').DataTable();
 
 	                    dtable
@@ -10159,11 +9720,9 @@ function deleteCustomer(customer_id, parent_id) {
 	                        return data_[0] == customer_id ? true : false;
 	                    }).remove().draw();
 	                } 
-                                       
-                    //refresh data in modal tabs
+
                     viewCustomer(parent_id, 'childs');
                 } else {
-                    //close modal
                     if ($(mc2+' .ret-btn:visible').length) {
                         $(mc2+' .ret-btn:visible:first').click();
                     } else {
@@ -10174,7 +9733,7 @@ function deleteCustomer(customer_id, parent_id) {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();               
@@ -10203,7 +9762,6 @@ function get_cust_image(customer_ids, tgt='') {
 	let _mc = mc2+' .'+($(mc2+' .tl_childs').hasClass('active') ? 'cust_child_form' : 'cust_form');
 
 	if (!tgt) {
-	    //resets related to customer images
 	    $(_mc+' .cust_image_id').text('');
 	    $(_mc+' .cust_img_buttons').addClass('noshow');
 	    $(_mc+' .image_upload_div .display_img').attr('src','/images/avatar.png').hide();
@@ -10236,7 +9794,7 @@ function get_cust_image(customer_ids, tgt='') {
         	}
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -10257,7 +9815,6 @@ function delete_cust_image(image_id) {
     let customer_id = $(_mc+' .cust_customer_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -10272,13 +9829,12 @@ function delete_cust_image(image_id) {
                 $('#loader-wrapper').hide();
                 get_cust_image([customer_id]);
 
-                //refresh class attendance
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
                 	get_class_attendance();
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -10301,7 +9857,6 @@ function save_cust_indemnity() {
     let customer_id = $(mc2+' .cust_edit_tab .cust_customer_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -10315,14 +9870,13 @@ function save_cust_indemnity() {
 
                 $('#loader-wrapper').hide();
                 if (is_datatable_on()) {
-                    //refresh datatable
                     refreshCustomerDatatable(customer_id);
                 }
 
                 viewCustomer(customer_id);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -10345,7 +9899,6 @@ function delete_customer_direct() {
     let customer_id = $(mc2+' .cust_edit_tab .cust_customer_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -10359,14 +9912,13 @@ function delete_customer_direct() {
 
                 $('#loader-wrapper').hide();
                 if (is_datatable_on()) {
-                    //refresh datatable
                     refreshCustomerDatatable(customer_id);
                 }
 
                 viewCustomer(customer_id);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -10387,7 +9939,6 @@ function release_cust_child(customer_id) {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -10401,14 +9952,13 @@ function release_cust_child(customer_id) {
 
                 $('#loader-wrapper').hide();
                 if (is_datatable_on()) {
-                    //refresh datatable
                     refreshCustomerDatatable(customer_id);
                 }
 
                 viewCustomer(customer_id);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -10433,7 +9983,6 @@ function calc_customer_payment() {
        }
     });
 
-    //surcharge - start
     if ($(mc2+' .surcharge_rate').length) {
     	total_aud = numberformat(total_aud);
 
@@ -10453,7 +10002,6 @@ function calc_customer_payment() {
     		total_aud += surcharge_aud;	
     	}
     }
-    //surcharge - end
 
     total_aud = numberformat(total_aud);
     $(mc2+' .total_aud').val(total_aud);
@@ -10463,7 +10011,6 @@ function calc_customer_payment() {
     	StripePaymentManager.updateAmount(numberformat(total_aud*100,0));
     }
 
-    //resets
     $(mc2+' .cust_payment_options').addClass('noshow');
     $(mc2+' .refund_payments input:checked').prop('checked', false);
     $(mc2+' .refund_payments .amount_row').addClass('noshow');
@@ -10479,7 +10026,6 @@ function calc_customer_payment() {
         } else {
             $(mc2+' .cust_payment_process').removeClass('noshow');
             if ($(mc2+' .cust_acc_pay:checked').length == 1) {
-                //filter the cc input options first
                 let refund_amount = Math.abs($(mc2+' .cust_acc_pay:checked').prop('dataset').intrac.split('~')[1]);
                 $(mc2+' .refund_payments .amount_row, '+mc2+' .refund_payments_eftpos .amount_row').each(function () {
                     if ($(this).prop('dataset').intrac >= refund_amount) {
@@ -10514,7 +10060,6 @@ async function process_admin_payment() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         customer_id: $(mc2+' .cust_edit_tab .cust_customer_id').val(),
         receipt_ids: [],
@@ -10543,7 +10088,6 @@ async function process_admin_payment() {
     }
 
     let errors = [];
-    //validations
 
 	if ((data.total_aud > 0) && (data.mode != 'cash') && (data.mode != 'cc') && (data.mode != 'cc_d') && (data.mode != 'dd') && (data.mode != 'eftpos')) {
         errors.push("Please select a payment method and try again");
@@ -10555,7 +10099,6 @@ async function process_admin_payment() {
 
     	if ($('.stripe_items').length) {
 
-    		// Trigger form validation and wallet collection
     		if (errors.length == 0) {
     			const {error: submitError} = await StripePaymentManager.submit();
 
@@ -10564,7 +10107,6 @@ async function process_admin_payment() {
     			}
     		}
 
-    		//Create the ConfirmationToken
     		if (errors.length == 0) {
             	if (data.direct == '1') {
             		StripePaymentManager.updateDirect(true);
@@ -10640,46 +10182,39 @@ async function process_admin_payment() {
 
                 $('#loader-wrapper').hide();
 
-                //refresh data in modal tabs
                 await viewCustomer(data.customer_id, 'account');
 
-                //refresh view booking
                 if ($(mc+' .booking_schedule_data').text()) {
                 	let sd = JSON.parse($(mc+' .booking_schedule_data').text());
                 	get_booking_details(sd.schedule_id, sd.mode);
                 }
 
-                //refresh class enrolments
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tl_class_enrolments').hasClass('active')) {
-                	get_class_registers({no_reset: true}); //no_reset of html to retain scroll position
+                	get_class_registers({no_reset: true}); 
                 }
 
-                //refresh class attendance
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
                 	get_class_attendance();
                 }
 
-                //refresh term bookings
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tb_schedules_tab').hasClass('active')) {
                 	get_tb_schedules($(mc+' .tb_sched_program_id').val());
                 }
 
-                //refresh perm bookings
                 if (($(mc).hasClass('modal-open')) && $(mc+' .pb_schedules_tab').hasClass('active')) {
                 	get_pb_schedules($(mc+' .pb_sched_program_id').val());
                 }
 
-                //refresh grid
                 if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
                 	get_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
-                viewCustomer(data.customer_id, 'account'); //always refresh even in failure to get the up-to-date balances
+                viewCustomer(data.customer_id, 'account'); 
             }
 
         }).fail( function(xhr, textStatus, errorThrown) {
@@ -10690,8 +10225,8 @@ async function process_admin_payment() {
         set_side_error(errors.join("<br>"));
         $('#loader-wrapper').hide();        
     }  
-          
-}
+
+          }
 
 async function cust_save_direct() {
 
@@ -10699,7 +10234,6 @@ async function cust_save_direct() {
 
     let action = 'direct';
 
-    //prepare the data
     let data ={
         customer_id: $(mc2+' .cust_edit_tab .cust_customer_id').val(),
         card_number: ($(mc2+' .card_number').val() || '').replace(/ /g,''),
@@ -10710,16 +10244,13 @@ async function cust_save_direct() {
     };    
 
     let errors = [];
-    //validations
     if (action == 'direct') {
 
     	if ($('.stripe_items').length) {
 
-    		//switch mode
     		StripePaymentManager.updateMode('setup');
     		StripePaymentManager.updateAmount(0);
 
-    		// Trigger form validation and wallet collection
     		if (errors.length == 0) {
     			const {error: submitError} = await StripePaymentManager.submit();
 
@@ -10728,7 +10259,6 @@ async function cust_save_direct() {
     			}
     		}
 
-    		//Create the ConfirmationToken
     		if (errors.length == 0) {
 				const {error, confirmationToken} = await StripePaymentManager.createConfirmationToken();
 
@@ -10802,15 +10332,13 @@ async function cust_save_direct() {
                 $('#loader-wrapper').hide();
 
                 if (is_datatable_on()) {
-                    //refresh datatable
                     refreshCustomerDatatable(data.customer_id);
                 }
 
-                //refresh data in modal tabs
                 viewCustomer(data.customer_id);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -10824,8 +10352,8 @@ async function cust_save_direct() {
         set_side_error(errors.join("<br>"));
         $('#loader-wrapper').hide();        
     }  
-          
-}
+
+          }
 
 function createReceiptInvoice(inv_msg='') {
     $('#loader-wrapper').show();
@@ -10851,7 +10379,6 @@ function createReceiptInvoice(inv_msg='') {
     });
 
     let errors = [];
-    //validations
 
     if (credits_receipts > 1) {
         errors.push('Please select only one credit item, or combine credits by first processing a payment against just the credits');
@@ -10865,7 +10392,6 @@ function createReceiptInvoice(inv_msg='') {
     	errors.push("Maximum length of optional text is 25 characters");
     }
 
-    //prepare the data
     let data ={
         customer_id: customer_id,
         location_id: $('#location_id').val(),
@@ -10873,12 +10399,11 @@ function createReceiptInvoice(inv_msg='') {
         inv_msg: inv_msg
     };  
 
-    //console.log(data);
 
     if (errors.length == 0) {
         $('#loader-wrapper').hide();
 
-        $('#cust_generate_invoice').text(customer_id+'~'+$(mc2+' .rcpts_list .receipt_id:first').text()); //store
+        $('#cust_generate_invoice').text(customer_id+'~'+$(mc2+' .rcpts_list .receipt_id:first').text()); 
 
         let href = '/api/createReceiptInvoice?customer_id='+data.customer_id+'&location_id='+data.location_id+(data.inv_msg ? '&inv_msg='+data.inv_msg : '')+'&receipt_ids='+data.receipt_ids.join(',');
         window.open(href, '_blank');
@@ -10896,7 +10421,6 @@ function reverse_paid_receipt(receipt_id) {
     let customer_id = $(mc2+' .cust_edit_tab .cust_customer_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -10912,7 +10436,7 @@ function reverse_paid_receipt(receipt_id) {
                 viewCustomer(customer_id, 'receipts');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -10963,7 +10487,6 @@ function save_cust_comment() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
 
     let data ={
         comment_id: $(mc2+' .cust_comment_id').val(),
@@ -10992,7 +10515,6 @@ function save_cust_comment() {
     }
 
     let errors = [];
-    //validations
 
     if (isEmpty(data.comment_data)) {
         errors.push('Please enter a comment and re-try');
@@ -11016,13 +10538,12 @@ function save_cust_comment() {
 
                 viewCustomer(data.customer_id, 'cust_comments');
 
-                //refresh class attendance
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
                 	get_class_attendance();
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11050,7 +10571,6 @@ function archive_delete_cust_comment(comment_id,action='archive') {
     }
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -11066,13 +10586,12 @@ function archive_delete_cust_comment(comment_id,action='archive') {
 
                 viewCustomer(customer_id, 'cust_comments');
 
-                //refresh class attendance
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
                 	get_class_attendance();
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11092,7 +10611,6 @@ function save_cust_file() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let location_id = $('#location_id').val();
     let customer_id = $(mc2+' .cust_edit_tab .cust_customer_id').val();
 
@@ -11102,7 +10620,6 @@ function save_cust_file() {
     let max_size = $('#max_file_size').val();
 
     let errors = [];
-    //validations
 
     if (!file) {
         errors.push('Please select a file and re-try');
@@ -11115,13 +10632,13 @@ function save_cust_file() {
     if (errors.length == 0) {
         let formData = new FormData();
         formData.append('uploadfile', file);        
-        
-        $.ajax({
+
+                $.ajax({
             type: 'POST',
             url: '/api/saveFile?customer_id='+customer_id+'&location_id='+location_id,
             data: formData,
-            processData: false,  // tell jQuery not to process the data
-            contentType: false,  // tell jQuery not to set contentType
+            processData: false,  
+            contentType: false,  
             dataType: 'JSON'
         }).done(function( response ) {
 
@@ -11129,11 +10646,11 @@ function save_cust_file() {
 
                 $('#loader-wrapper').hide();
 
-                $(mc2+' .cust_upload_file').val(null); //empty any existing files
+                $(mc2+' .cust_upload_file').val(null); 
                 viewCustomer(customer_id, 'cust_files');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11156,7 +10673,6 @@ function rename_delete_cust_file(file_id,action='update',filename='') {
     let customer_id = $(mc2+' .cust_edit_tab .cust_customer_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -11173,7 +10689,7 @@ function rename_delete_cust_file(file_id,action='update',filename='') {
                 viewCustomer(customer_id, 'cust_files');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11193,7 +10709,6 @@ function checkin_present(el, data) {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     if (!data) {
 	    data = {
 	        class_id: $(el).prop('dataset').intrac_class_id,
@@ -11207,7 +10722,6 @@ function checkin_present(el, data) {
     } 
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -11223,13 +10737,12 @@ function checkin_present(el, data) {
 
                 close_modal2(); 
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                     get_class_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11249,7 +10762,6 @@ function checkin_register(el) {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         register_id: '',
         customer_id: $(el).closest('.checkin_register_item').find('.chkin_pass_id option:selected').prop('dataset').intrac_customer_id,
@@ -11268,7 +10780,6 @@ function checkin_register(el) {
     };
 
     let errors = [];
-    //validations
     if (!data.pass_id) {
     	errors.push('Invalid '+$('#pass_title').val()+' selected, please refresh the page and re-try');
     }
@@ -11285,7 +10796,6 @@ function checkin_register(el) {
 
                 close_modal2();
 
-            	//mark roll as well
 			    let roll_data = {
 			        class_id: data.class_id,
 			        schedule_id: data.schedule_ids[0],
@@ -11299,7 +10809,7 @@ function checkin_register(el) {
 			    checkin_present(null, roll_data);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11319,7 +10829,6 @@ function checkin_deductpass(el) {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         customer_id: $(el).prop('dataset').intrac_customer_id,
         pass_id: $(el).prop('dataset').intrac_pass_id,
@@ -11328,7 +10837,6 @@ function checkin_deductpass(el) {
     };  
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -11345,7 +10853,7 @@ function checkin_deductpass(el) {
                 close_modal2();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11383,7 +10891,6 @@ function get_cust_class_teams() {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             let html_str_ = '';
@@ -11405,31 +10912,29 @@ function get_cust_class_teams() {
                         html_str_ += '<option value="'+d.team_id+'" data-intrac="'+JSON.stringify(data_intrac).replace(/"/g, '&quot;')+'">'+d.team_name+' (Captain: '+captain_name+')</option>';    
                     }
                 }
-                
-                html_str_ += '</select>';
+
+                                html_str_ += '</select>';
             } else {
                 html_str_ += 'There are no teams available in the selected '+$('#class_title').val().toLowerCase();
             }
 
             $(mc2+' .cregister_team_list').html(html_str_);
 
-            //cregister_deeplinks
             if ($('#cregister_deeplinks').text()) {
                 let ids = $('#cregister_deeplinks').text().split('~');
                 if ($(mc2+' .cregister_team_id option[value="'+ids[3]+'"]').length) {
                     $(mc2+' .cregister_team_id').val(ids[3]);
                 }
-                
-                //clear
+
                 if (ids[4] == 0) {
                 	$('#cregister_deeplinks').text('');
                 }
             }
 
-            $(mc2+' .cregister_team_id').change(); //trigger change    
+            $(mc2+' .cregister_team_id').change(); 
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -11463,11 +10968,9 @@ function get_cust_class_team_data(team_id) {
 
             let res = response.success;
 
-            //data
             let data = res.data[0];
 
             let team_payments = 0;
-            //combine registers amounts and team_payments
             for (let i = 0; i < data.registers.length; i++) {
                 team_payments += data.registers[i].amount;
             }
@@ -11481,7 +10984,7 @@ function get_cust_class_team_data(team_id) {
             get_cust_class_fixtures();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -11515,7 +11018,6 @@ function get_cust_class_fixtures() {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             let html_str_ = '';
@@ -11526,7 +11028,7 @@ function get_cust_class_fixtures() {
 
                     let d = data[i];
 
-                    if (d.fixture_id) { //fixtures are driven by schedules
+                    if (d.fixture_id) { 
                         let data1_intrac = {
                             class_id: d.class_id,
                             team_id: d.team1_id
@@ -11541,8 +11043,8 @@ function get_cust_class_fixtures() {
                         html_str_ += '<option value="'+d.fixture_id+'" data-intrac="'+JSON.stringify(data2_intrac).replace(/"/g, '&quot;')+'">'+convert_date(d.schedule_start)+' '+convert_time(dayjs(d.schedule_start).format('HH:mm:ss'),'h:mma')+'-'+convert_time(dayjs(d.schedule_finish).format('HH:mm:ss'),'h:mma')+'</option>';
                     }
                 }
-                
-                html_str_ += '</select>';
+
+                                html_str_ += '</select>';
             }
 
             if (!html_str_) {
@@ -11551,28 +11053,26 @@ function get_cust_class_fixtures() {
 
             $(mc2+' .cregister_fixture_list').html(html_str_);
 
-            //cregister_deeplinks
             if ($('#cregister_deeplinks').text()) {
                 let ids = $('#cregister_deeplinks').text().split('~');
 		        $(mc2+' .cregister_fixture_id option[value="'+ids[4]+'"]').each(function() {
 		            let fixt_team_data = JSON.parse($(this).prop('dataset').intrac);
 		            if (fixt_team_data.team_id == $(mc2+' .cregister_team_id').val()) {
 		                $(this).prop('selected', true);
-		                return false; // Break the loop
+		                return false; 
 		            }
 		        });
-                //clear
                 $('#cregister_deeplinks').text('');
             }
 
             if ($(mc2+' .cregister_fixture_id option').length) {
-                $(mc2+' .cregister_fixture_id').change(); //trigger change
+                $(mc2+' .cregister_fixture_id').change(); 
             } else {
                 calcRegisterCost();
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -11588,7 +11088,6 @@ function saveRegister() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         customer_id: ($(mc2+' input:radio[name="cregister_customer_id"]:checked').length) ? $(mc2+' input:radio[name="cregister_customer_id"]:checked').val() : '',
         class_id: $(mc2+' .cregister_class_id').val() || '',
@@ -11628,12 +11127,10 @@ function saveRegister() {
 
     data.addons = addons;
 
-    //console.log(data);
 
     let errors = [];
-    //validations
 
-    if ($(mc2+' .cregister_quantity').is(":visible") && ((data.quantity < 1) || (data.quantity > parseInt($(mc2+' .cregister_quantity').prop('max'))))) { //without parseInt, this is giving false -ves
+    if ($(mc2+' .cregister_quantity').is(":visible") && ((data.quantity < 1) || (data.quantity > parseInt($(mc2+' .cregister_quantity').prop('max'))))) { 
         errors.push('Please enter a quantity of upto '+$(mc2+' .cregister_quantity').prop('max'))
     }
 
@@ -11650,40 +11147,34 @@ function saveRegister() {
 
                 $('#loader-wrapper').hide();
 
-                //captain's email feedback
                 if (response.info.length) {
                     set_side_error(response.info.join("<br>"), 'amber');
                 }
 
-                //go to account page
                 if (response.success == 'success') {
-                    viewCustomer(data.customer_id, 'account'); //normal customer
+                    viewCustomer(data.customer_id, 'account'); 
                 } else if (response.success.parent_id) {
-                    viewCustomer(response.success.parent_id, 'account'); //child customer -> parent account
+                    viewCustomer(response.success.parent_id, 'account'); 
                 }
 
-                //refresh classes
                 if ($('#classes_main').is(":visible")) {
                 	get_api('getClasss');
                 }
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                 	get_class_grid(false);
                 }
 
-                //refresh class enrolments
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tl_class_enrolments').hasClass('active')) {
-                	get_class_registers({no_reset: true}); //no_reset of html to retain scroll position
+                	get_class_registers({no_reset: true}); 
                 }
 
-                //refresh class attendance
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
                 	get_class_attendance();
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11709,7 +11200,6 @@ function team_assign_manager() {
     let customer_id = ($(mc2+' input:radio[name="cregister_customer_id"]:checked').length) ? $(mc2+' input:radio[name="cregister_customer_id"]:checked').val() : '';
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -11724,26 +11214,23 @@ function team_assign_manager() {
 
                 $('#loader-wrapper').hide();
 
-                //captain's email feedback
                 if (response.info.length) {
                     set_side_error(response.info.join("<br>"), 'amber');
                 }
 
                 set_side_error('Successfully assigned the customer as manager', 'green');
-                //close modal
                 if ($(mc2+' .ret-btn:visible').length) {
                     $(mc2+' .ret-btn:visible:first').click();
                 } else {
                     $(mc2+' .modal-close:first').click();
                 }
 
-                //refresh teams
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tl_teams').hasClass('active')) {
                 	$(mc+' .tl_teams').click();
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11763,7 +11250,6 @@ function saveWait(wait_comment='') {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         wait_id: '',
         customer_id: ($(mc2+' input:radio[name="cregister_customer_id"]:checked').length) ? $(mc2+' input:radio[name="cregister_customer_id"]:checked').val() : '',
@@ -11785,10 +11271,8 @@ function saveWait(wait_comment='') {
     	data.schedule_ids = schedule_ids;	
     }
 
-    //console.log(data);
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -11805,13 +11289,12 @@ function saveWait(wait_comment='') {
 
                 close_modal2();
 
-                //refresh class waitlist
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tl_waitlist').hasClass('active')) {
                 	$(mc+' .tl_waitlist').click();
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11831,7 +11314,7 @@ function getTermsResults(res, allterms=false) {
 
     let data = res.data;
 
-    $(mc+' .term_form').html($('#master_term_view .term_form').html()); //reset
+    $(mc+' .term_form').html($('#master_term_view .term_form').html()); 
     $(mc+' .term_form').hide();
 
     let html_str = '';                       
@@ -11884,7 +11367,7 @@ function show_term_holidays() {
                 return dayjsDate.isAfter(dayjs(term_start).subtract(1, 'day')) && dayjsDate.isBefore(dayjs(term_finish).add(1, 'day'));
             });
 
-            td_html += filteredDates.map(date => convert_date(date)).join('<br/>'); //present in readable format
+            td_html += filteredDates.map(date => convert_date(date)).join('<br/>'); 
         }
 
         $(mc+' .term_public_holidays').html(td_html);
@@ -11896,7 +11379,6 @@ function show_term_holidays() {
 
 function edit_term(el) {
 
-    //resets
     $(mc+' .term_term_id').val($(el).find('.term_id').text());
     $(mc+' .term_name').val($(el).find('.term_term_name').text());
     $(mc+' .term_start').val(convert_date($(el).find('.term_term_start').text()));
@@ -11907,7 +11389,6 @@ function saveTerm() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         term_id: $(mc+' .term_term_id').val(),
         term_name: $(mc+' .term_name').val(),
@@ -11917,7 +11398,6 @@ function saveTerm() {
     };  
 
     let errors = [];
-    //validations
     if (isEmpty(data.term_name)) {
         errors.push("Invalid "+$('#term_title').val()+" name");
     }
@@ -11950,12 +11430,11 @@ function saveTerm() {
 
                 get_api('getTerms');
 
-                //refresh terms in classes
                 let options = await get_client_options('class');
                 getClasssOptions(options.class || '', options);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -11997,7 +11476,7 @@ function get_terms_showall() {
             getTermsResults(res, true);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -12011,13 +11490,12 @@ function get_terms_showall() {
 
 function get_client_holidays() {
 
-    $(mc+' .holidays_tab').html($('#master_term_view .holidays_tab').html()); //reset
+    $(mc+' .holidays_tab').html($('#master_term_view .holidays_tab').html()); 
 
     let holidays_all = JSON.parse($(mc+' .public_holidays_all').html());
 
     let hol_html = '';
 
-    //first create html blocks per each state
     for(const key in holidays_all) {
         let title = key.substring(0, key.indexOf("hol")).toUpperCase()+ ' holidays:'; 
         hol_html += '<div style="margin: 20px" class="'+key+'"><span class="text-xl leading-[130%]">'+title+'</span><br/><br/>';
@@ -12027,7 +11505,6 @@ function get_client_holidays() {
 
     $(mc+' .clientholidays_list').html(hol_html);
 
-    //now insert dates
     for(const key in holidays_all) {
 
         let e = mc+' .'+key;
@@ -12046,8 +11523,7 @@ function save_client_holidays() {
     let holidays = {};
 
     let errors = [];
-    //validations and prepare data
-    $(mc+" div[class$='hol']").each(function () { //states loop
+    $(mc+" div[class$='hol']").each(function () { 
         let key = $(this).attr('class');
 
         let dates = [];
@@ -12082,16 +11558,14 @@ function save_client_holidays() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 set_side_error('Holidays updated succesfully', 'green');
-                
-                //refresh dates from db and reload
+
                 let options = await get_client_options('term');
                 getTermsOptions(options.term || '');
                 get_client_holidays();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -12120,14 +11594,13 @@ function reset_client_holidays() {
         if (response.success != undefined) {
 
             $('#loader-wrapper').hide();
-            
-            //refresh dates from db and reload
+
             let options = await get_client_options('term');
             getTermsOptions(options.term  || '');
             get_client_holidays();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -12141,7 +11614,7 @@ function reset_client_holidays() {
 
 function get_term_bookingdts() {
 
-    $(mc+' .bookingdts_tab').html($('#master_term_view .bookingdts_tab').html()); //reset
+    $(mc+' .bookingdts_tab').html($('#master_term_view .bookingdts_tab').html()); 
 
     $.ajax({
         type: 'GET',
@@ -12155,7 +11628,6 @@ function get_term_bookingdts() {
 
             let res = response.success;
 
-            //data
             let data = res.data;
             let html_str = '';
             if (data.length) {
@@ -12181,7 +11653,7 @@ function get_term_bookingdts() {
             $(mc+' .locationbookingdts_list tbody').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -12206,7 +11678,6 @@ function save_term_client_bookingdt() {
     let delay_time = delay ? parse_time($(mc+' .term_clientdelaytime').val()) : '';
 
     let errors = [];
-    //validations
 
     if (!isvalidDate(booking)) {
         errors.push("Invalid booking date");
@@ -12240,16 +11711,14 @@ function save_term_client_bookingdt() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 set_side_error('Date updated succesfully', 'green');
-                
-                //refresh dates from db and reload
+
                 let options = await get_client_options('term');
                 getTermsOptions(options.term || '');                
                 get_term_bookingdts()
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -12280,7 +11749,6 @@ function save_term_location_bookingdt() {
     let booking = parse_date($(mc+' .term_locationbookingdt').val());
 
     let errors = [];
-    //validations
 
     if (!isvalidDate(booking)) {
         errors.push("Invalid Booking Date");
@@ -12297,14 +11765,12 @@ function save_term_location_bookingdt() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 set_side_error('Date updated succesfully', 'green');
 
-                //no need to refresh options, just reload
                 get_term_bookingdts()
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -12327,7 +11793,6 @@ function clear_term_location_bookingdt(el) {
     let location_id = $(el).find('.location_id').text();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -12341,11 +11806,10 @@ function clear_term_location_bookingdt(el) {
 
                 $('#loader-wrapper').hide();
 
-                //no need to refresh options, just reload
                 get_term_bookingdts()
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -12365,7 +11829,7 @@ function getUsersResults(res) {
 
     let data = res.data;
 
-    $(mc+' .users_tab').html($('#master_user_view .users_tab').html()); //reset
+    $(mc+' .users_tab').html($('#master_user_view .users_tab').html()); 
 
     let html_str = '';
     let opts_str = '<option value="0"></option>';
@@ -12386,7 +11850,7 @@ function getUsersResults(res) {
     }
 
     $(mc+' .usrs_list tbody').html(html_str);
-    $('.qual_user_id, .qualsrch_user_id').html(opts_str); //updates master view as well
+    $('.qual_user_id, .qualsrch_user_id').html(opts_str); 
 
     if (data.filter(item => item.username == 'apiuser').length) {
         $(mc+' .btn_usr_apiuser').remove();
@@ -12399,7 +11863,6 @@ function reset_user_data(keep_tabs=false) {
         $(mc+' .tab-list').html($('#master_user_view .tab-list').html());   
     }
 
-    //reset tabs specific to a product
     $(mc+' .user_edit_tab').html($('#master_user_view .user_edit_tab').html());
     $(mc+' .user_comments_tab').html($('#master_user_view .user_comments_tab').html());
     $(mc+' .user_files_tab').html($('#master_user_view .user_files_tab').html());
@@ -12445,8 +11908,8 @@ function viewUser(user_id,goto_tab='') {
                     $(mc+' .usr_user_id').val(itemobj.user_id);
                     $(mc+' .usr_username').val(itemobj.username);
                     $(mc+' .usr_password').val('');
-                    
-                    if (itemobj.access.includes('p')) {$(mc+' .usr_pwdreset').prop("checked", true);}
+
+                                        if (itemobj.access.includes('p')) {$(mc+' .usr_pwdreset').prop("checked", true);}
                     if (itemobj.access.includes('c')) {$(mc+' .usr_instructor').prop("checked", true);}
                     if (itemobj.access.includes('l')) {$(mc+' .usr_login').prop("checked", true);}
                     if (itemobj.access.includes('a')) {$(mc+' .usr_admin').prop("checked", true);}
@@ -12458,14 +11921,14 @@ function viewUser(user_id,goto_tab='') {
                     $(mc+' .usr_location_id').val(itemobj.location_id);
                     $(mc+' .usr_comment').val(itemobj.user_comment);
                     $(mc+' .usr_business').val(itemobj.business);
-                    
-                    if (itemobj.payrate) {
+
+                                        if (itemobj.payrate) {
                         for(const key in itemobj.payrate) {
                             $(mc+' .usr_payrates[name="'+key+'"]').val(itemobj.payrate[key])
                         }
                     }
-                    
-                    if (itemobj.username == 'apiuser') {
+
+                                        if (itemobj.username == 'apiuser') {
                         $(mc+' .usr_key_tr').show();
                         $(mc+' .usr_pwd_tr').hide();
                         $(mc+' .btn_saveUser').hide();
@@ -12487,12 +11950,11 @@ function viewUser(user_id,goto_tab='') {
 	                	$(mc+' .se_det').text(itemobj.user_id+'~'+itemobj.username+'~'+itemobj.phone);
 	                }
 
-                    //comments - start
                     let c_html_str = '';
                     for (let i = 0; i < res.comments.length; i++) {
                         let d = res.comments[i];
-                        
-                        let archived = d.username && isvalidDate(d.close);
+
+                                                let archived = d.username && isvalidDate(d.close);
 
                         c_html_str += '<tr'+(d.close == '0000-00-00' ? '' : ' class="user_comment_archived noshow"')+'>\
                                             <td>'+convert_date(d.open)+'<span class="noshow comment_id">'+d.comment_id+'</span></td>\
@@ -12507,14 +11969,12 @@ function viewUser(user_id,goto_tab='') {
                                         </tr>';
                     }
                     $(mc+' .user_comments_list tbody').html(c_html_str);
-                    //comments - end
 
-                    //files - start
                     let f_html_str = '';
                     for (let i = 0; i < res.files.length; i++) {
                         let d = res.files[i];
-                        
-                        f_html_str += '<tr>\
+
+                                                f_html_str += '<tr>\
                                   <td>'+convert_date(d.date)+'</td>\
                                   <td><a class="a_file primary" href="#" data-intrac="api/getFile?filename='+d.s3_filename+'&location_id='+$('#location_id').val()+'&user_id='+itemobj.user_id+'" target="_blank">'+d.filename+'</a><span class="file_id noshow">'+d.file_id+'</span></td>\
                                   <td>'+(d.opener || '')+'</td>\
@@ -12525,21 +11985,19 @@ function viewUser(user_id,goto_tab='') {
                                 </tr>';
                     }
                     $(mc+' .user_files_list tbody').html(f_html_str);
-                    //files - end
 
-                    //get image if exists
                     if ($(mc+' .user_image_tr').hasClass('show_images')) {
 
                         $(mc+' .user_image_tr').show();
-                        
-                        $(mc+' .user_image_tr .display_img').hide();
+
+                                                $(mc+' .user_image_tr .display_img').hide();
 
                         get_user_image(itemobj.user_id);
                     }
                 }
-                
-            } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+
+                            } else if (response.redirect != undefined) {
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -12558,7 +12016,6 @@ function get_user_image(user_id) {
 
     let querydata = {user_id: user_id};
 
-    //resets related to user images
     $(mc+' .user_image_id').text('');
     $(mc+' .user_img_buttons').addClass('noshow');
     $(mc+' .image_upload_div .display_img').attr('src','/images/avatar.png').hide();
@@ -12586,7 +12043,7 @@ function get_user_image(user_id) {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -12602,9 +12059,8 @@ function delete_user_image(image_id) {
     $('#loader-wrapper').show();
 
     let user_id = $(mc+' .user_edit_tab .usr_user_id').val();
-    
-    let errors = [];
-    //validations
+
+        let errors = [];
 
     if (errors.length == 0) {
         $.ajax({
@@ -12620,23 +12076,20 @@ function delete_user_image(image_id) {
 
                 get_user_image(user_id);
 
-                //refresh grid
                 if ($('#lessons').is(":visible")) {
                     get_grid(false);
                 }
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                     get_class_grid(false);
                 }
 
-                //refresh grid
                 if ($('#rosters').is(":visible")) {
                     get_roster_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -12656,7 +12109,6 @@ function saveUser() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         user_id: $(mc+' .usr_user_id').val(),
         username: $(mc+' .usr_username').val(),
@@ -12674,25 +12126,21 @@ function saveUser() {
     	data.location_id = $('#user_location_id').val();
     }
 
-    //access
     $(mc+' .usr_access').each(function () {
         if (this.checked) {
             data.access += $(this).val();
         }
     });
 
-    //rates
     if ($(mc+' .usr_payrates').length) {
         data.payrate = {};
-        $(mc+' .usr_payrates').each(function () { //custom rates
+        $(mc+' .usr_payrates').each(function () { 
             data.payrate[$(this).prop('name')] = $(this).val()
         });         
     }     
 
-    //console.log(data);
 
     let errors = [];
-    //validations
 	if (isEmpty(data.username)) {
 		errors.push("Invalid username");
     }
@@ -12702,7 +12150,7 @@ function saveUser() {
             if (!validator.isStrongPassword(data.password, {minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1})) { 
                 errors.push("Invalid password, should be minimum 8 characters with 1 uppercase, 1 lowercase, 1 number and 1 special character");
             }
-        } else { //update, password could be blank
+        } else { 
             if ((!isEmpty(data.password)) && (!validator.isStrongPassword(data.password, {minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1}))) {
                 errors.push("Invalid password, should be minimum 8 characters with 1 uppercase, 1 lowercase, 1 number and 1 special character");
             }
@@ -12722,11 +12170,9 @@ function saveUser() {
                 $('#loader-wrapper').hide();
 
                 set_side_error('User saved succesfully', 'green');
-                
-                //refresh data
-                viewUser(data.user_id || response.success); //refresh data in modal tabs
 
-                //refresh users in other modules
+                viewUser(data.user_id || response.success); 
+
                 let options = await get_client_options(['user_change']);
                 getAvailsOptions(options.avail || '');
                 getClasssOptions(options.class || '', options);
@@ -12735,7 +12181,7 @@ function saveUser() {
                 getMessagesOptions(options.message || '');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -12757,7 +12203,6 @@ function deleteUser(user_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -12774,7 +12219,6 @@ function deleteUser(user_id) {
 
                 get_api('getUsers');
 
-                //refresh users in other modules
                 let options = await get_client_options(['user_change']);
                 getAvailsOptions(options.avail || '');
                 getClasssOptions(options.class || '', options);
@@ -12783,7 +12227,7 @@ function deleteUser(user_id) {
                 getMessagesOptions(options.message || '');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -12802,7 +12246,6 @@ function deleteUser(user_id) {
 function user_create_api_account() {
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         user_id: '',
         username: 'apiuser',
@@ -12830,7 +12273,7 @@ function user_create_api_account() {
             get_api('getUsers');
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();            
@@ -12875,7 +12318,6 @@ function save_user_comment() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
 
     let data ={
         comment_id: $(mc+' .user_comment_id').val(),
@@ -12898,7 +12340,6 @@ function save_user_comment() {
     }
 
     let errors = [];
-    //validations
 
     if (isEmpty(data.comment_data)) {
         errors.push('Please enter a comment and re-try');
@@ -12923,7 +12364,7 @@ function save_user_comment() {
                 viewUser(data.comment_user_id, 'user_comments');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -12946,7 +12387,6 @@ function archive_delete_user_comment(comment_id,action='archive') {
     let comment_user_id = $(mc+' .user_edit_tab .usr_user_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -12963,7 +12403,7 @@ function archive_delete_user_comment(comment_id,action='archive') {
                 viewUser(comment_user_id, 'user_comments');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -12983,7 +12423,6 @@ function save_user_file() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let location_id = $('#location_id').val();
     let user_id = $(mc+' .user_edit_tab .usr_user_id').val();
 
@@ -12993,7 +12432,6 @@ function save_user_file() {
     let max_size = $('#max_file_size').val();
 
     let errors = [];
-    //validations
 
     if (!file) {
         errors.push('Please select a file and re-try');
@@ -13006,13 +12444,13 @@ function save_user_file() {
     if (errors.length == 0) {
         let formData = new FormData();
         formData.append('uploadfile', file);        
-        
-        $.ajax({
+
+                $.ajax({
             type: 'POST',
             url: '/api/saveFile?user_id='+user_id+'&location_id='+location_id,
             data: formData,
-            processData: false,  // tell jQuery not to process the data
-            contentType: false,  // tell jQuery not to set contentType
+            processData: false,  
+            contentType: false,  
             dataType: 'JSON'
         }).done(function( response ) {
 
@@ -13020,11 +12458,11 @@ function save_user_file() {
 
                 $('#loader-wrapper').hide();
 
-                $(mc+' .user_upload_file').val(null); //empty any existing files
+                $(mc+' .user_upload_file').val(null); 
                 viewUser(user_id, 'user_files');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -13047,7 +12485,6 @@ function rename_delete_user_file(file_id,action='update',filename='') {
     let user_id = $(mc+' .user_edit_tab .usr_user_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -13064,7 +12501,7 @@ function rename_delete_user_file(file_id,action='update',filename='') {
                 viewUser(user_id, 'user_files');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -13085,7 +12522,7 @@ function getQualifysResults(res, keep_filters=false) {
     let data = res.data;
 
     if (!keep_filters) {
-    	$(mc+' .qualifys_tab').html($('#master_user_view .qualifys_tab').html()); //reset	
+    	$(mc+' .qualifys_tab').html($('#master_user_view .qualifys_tab').html()); 
     }
 
     let html_str = '';
@@ -13119,7 +12556,6 @@ function saveQualify() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         qualify_id: $(mc+' .qualify_id').val(),
         user_id: $(mc+' .qual_user_id').val(),
@@ -13129,7 +12565,6 @@ function saveQualify() {
     };
 
     let errors = [];
-    //validations
 	if (!validator.isInt(data.user_id,{min: 1})) {
     	errors.push('Please select a user');
     }
@@ -13153,7 +12588,7 @@ function saveQualify() {
                 get_api('getQualifys');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -13175,7 +12610,6 @@ function deleteQualify(qualify_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -13193,7 +12627,7 @@ function deleteQualify(qualify_id) {
                 get_api('getQualifys');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -13233,9 +12667,9 @@ function get_qualifications_filtered() {
             let res = response.success;
 
             getQualifysResults(res, true);
-            
-        } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+
+                    } else if (response.redirect != undefined) {
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -13291,9 +12725,9 @@ function get_usrdetails(mode='sms', usertype='') {
             } else {
                 set_emails({res: data});
             }
-            
-        } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+
+                    } else if (response.redirect != undefined) {
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -13341,7 +12775,6 @@ function reset_product_data(keep_tabs=false) {
 		$(mc3+' .tab-list').html($('#master_product_view .tab-list').html());	
 	}
 
-	//reset tabs specific to a product
     $(mc3+' .prod_edit_tab').html($('#master_product_view .prod_edit_tab').html());
     $(mc3+' .stock_manage_tab').html($('#master_product_view .stock_manage_tab').html());
 
@@ -13374,7 +12807,6 @@ function viewProduct(product_id, silent=false) {
 
                 let res = response.success;
 
-                //data
                 let data = res.data;
 
                 if (data.length == 1) {
@@ -13382,8 +12814,8 @@ function viewProduct(product_id, silent=false) {
 
                     $(mc3+' .prod_product_id').val(itemobj.product_id);
                     $(mc3+' .prod_inventory').text(itemobj.inventory);
-                    
-                    $('.modal_title_mc3').text((itemobj.category ? itemobj.category+': ' : '')+itemobj.product_name);
+
+                                        $('.modal_title_mc3').text((itemobj.category ? itemobj.category+': ' : '')+itemobj.product_name);
 
                     if (itemobj.unit_cost == undefined) {
                         $(mc3+' .prod_unitcost_tr').hide();
@@ -13408,12 +12840,11 @@ function viewProduct(product_id, silent=false) {
                         $(mc3+' .prod_display_tr').show();
                     }
 
-                    //get image if exists
                     if ($(mc3+' .prod_image_tr').hasClass('show_images')) {
 
                         $(mc3+' .prod_image_tr').show();
-                        
-                        $(mc3+' .prod_image_tr .display_img').hide();
+
+                                                $(mc3+' .prod_image_tr .display_img').hide();
 
                         get_prod_image(itemobj.product_id);
                     }
@@ -13421,7 +12852,7 @@ function viewProduct(product_id, silent=false) {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -13441,7 +12872,6 @@ function get_prod_image(product_id) {
 
     let querydata = {product_id: product_id};
 
-    //resets related to product images
     $(mc3+' .prod_image_id').text('');
     $(mc3+' .prod_img_buttons').addClass('noshow');
     $(mc3+' .image_upload_div .display_img').attr('src','/images/avatar.png').hide();
@@ -13469,7 +12899,7 @@ function get_prod_image(product_id) {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -13485,9 +12915,8 @@ function delete_prod_image(image_id) {
     $('#loader-wrapper').show();
 
     let product_id = $(mc3+' .prod_product_id').val();
-    
-    let errors = [];
-    //validations
+
+        let errors = [];
 
     if (errors.length == 0) {
         $.ajax({
@@ -13504,7 +12933,7 @@ function delete_prod_image(image_id) {
                 get_prod_image(product_id);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -13524,7 +12953,6 @@ function saveProduct() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         product_id: $(mc3+' .prod_product_id').val(),
         category: $(mc3+' .prod_category').val(),
@@ -13537,10 +12965,8 @@ function saveProduct() {
         location_id: $(mc3+' .prod_ho').is(":checked") ? 0 : $('#location_id').val()
     };
 
-    //console.log(data);
 
     let errors = [];
-    //validations
 	if (isEmpty(data.product_name)) {
 	    errors.push("Invalid product name");
 	}    
@@ -13562,12 +12988,11 @@ function saveProduct() {
 
                 $('#loader-wrapper').hide();
                 set_side_error('Product saved succesfully', 'green');
-                
-                //refresh data
-                viewProduct(data.product_id || response.success); //refresh data in modal tabs
+
+                viewProduct(data.product_id || response.success); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -13581,8 +13006,8 @@ function saveProduct() {
         set_side_error(errors.join("<br>"));
         $('#loader-wrapper').hide();        
     }  
-          
-}
+
+          }
 
 function deleteProduct(product_id) {
 
@@ -13591,7 +13016,6 @@ function deleteProduct(product_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -13605,7 +13029,6 @@ function deleteProduct(product_id) {
 
                 $('#loader-wrapper').hide(10);
 
-                    //close modal
                     if ($(mc3+' .ret-btn:visible').length) {
                         $(mc3+' .ret-btn:visible:first').click();
                     } else {
@@ -13614,11 +13037,10 @@ function deleteProduct(product_id) {
 
                     set_side_error('Product deleted succesfully', 'green');
 
-                    //open in search & add mode
                     $('.modal_o_products:first').click();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();               
@@ -13650,7 +13072,7 @@ function get_products_filtered(cash_sale=false) {
 	    let search = $(mc3+' .product_search').val().trim();
 
 	    if (search) {
-		    if (validator.isInt(search)) { //assume barcode
+		    if (validator.isInt(search)) { 
 		        data.barcode = search
 		    } else {
 		        data.search = search
@@ -13680,9 +13102,9 @@ function get_products_filtered(cash_sale=false) {
             } else {
             	getProductsResults(res);	
             }
-            
-        } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+
+                    } else if (response.redirect != undefined) {
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -13704,14 +13126,14 @@ function add_cust_prod_purchase(obj) {
 	    	$(mc3+' .product_purchase_tab').html($('#master_product_view .product_purchase_tab').html());	
 	    }
 
-	    reset_product_data(); //to adjust tabs
+	    reset_product_data(); 
 	    $(mc3+' .tl_prod_purchase').click();
 
         $(mc3+' .ppurch_location_id').val($('#location_id').val());
 
         $(mc3+' .prod_purchase_form').show();
 
-        if (obj.product_id == 7) { //team payment
+        if (obj.product_id == 7) { 
         	$(mc3+' .ppurch_cost').prop('disabled', false);
         }
 
@@ -13730,7 +13152,6 @@ function add_cust_prod_purchase(obj) {
 
                 let res = response.success;
 
-                //data
                 let data = res.data;
 
                 if (data.length) {
@@ -13759,7 +13180,6 @@ function add_cust_prod_purchase(obj) {
                         }                        
                     }
 
-                    //do after prices are set
                     if ($('#cust_valid_passes').text()>0) {
                         $(mc3+' .ppurch_customer_member').prop('checked', true).change();
                     }
@@ -13768,13 +13188,13 @@ function add_cust_prod_purchase(obj) {
                         $(mc3+' .ppurch_quantity_tr').hide();
                     }
 
-			        if (data[0].price == 0) { //no price for the product
+			        if (data[0].price == 0) { 
 			        	$(mc3+' .ppurch_cost').prop('disabled', false);
 			        }
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -13794,7 +13214,6 @@ function save_cust_prod_purchase() {
 
     let _mc = mc3+' .product_purchase_tab';
 
-    //prepare the data
     let data ={
         customer_id: $(_mc+' .ppurch_customer_id').val(),
         product_id: $(_mc+' .ppurch_product_id').val(),
@@ -13804,10 +13223,8 @@ function save_cust_prod_purchase() {
         cost: numberformat($(_mc+' .ppurch_cost').val())
     };    
 
-    //console.log(data);
 
     let errors = [];
-    //validations
     if (!validator.isInt(data.customer_id,{min: 1})) {
         errors.push('Please select a customer first from customers section and try again'); 
     }
@@ -13827,7 +13244,6 @@ function save_cust_prod_purchase() {
 
                 close_modal3();
 
-                //go to account
                 if (validator.isInt(response.success,{min: 0})) {
                 	viewCustomer(data.customer_id, 'account','',response.success);
                 } else {
@@ -13835,7 +13251,7 @@ function save_cust_prod_purchase() {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -13858,7 +13274,6 @@ function delete_cust_purchase(purchase_id) {
     let customer_id = $(mc2+' .cust_edit_tab .cust_customer_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -13874,7 +13289,7 @@ function delete_cust_purchase(purchase_id) {
                 viewCustomer(customer_id, 'purchases');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -13908,7 +13323,6 @@ function get_stock_levels() {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             let tr_html_str = '';
@@ -13919,7 +13333,7 @@ function get_stock_levels() {
             for (let i = 0; i < data.length; i++) {
 
                 if ((data[i].inventory != 0) || (data[i].restock != 0)) {
-                    if (!categories.includes(data[i].category)){ //new category
+                    if (!categories.includes(data[i].category)){ 
                         tr_html_str += '<tr>\
                                             <td colspan="4"><b>'+data[i].category+'</b></td>\
                                         </tr>';
@@ -13939,7 +13353,6 @@ function get_stock_levels() {
                 }
             }
 
-            //total
             tr_html_str += '<tr>\
                                 <td><b>Stock on hand</b></td>\
                                 <td></td>\
@@ -13948,9 +13361,9 @@ function get_stock_levels() {
                             </tr>';
 
             $(mc3+' .stock_levels_list tbody').html(tr_html_str);
-            
-        } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+
+                    } else if (response.redirect != undefined) {
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -13965,10 +13378,10 @@ function get_stock_levels() {
 function get_stock_history(mode='product') {
 
     $('#loader-wrapper').show();
-    
-    let querydata = {};
-    
-    if (mode == 'product') {
+
+        let querydata = {};
+
+        if (mode == 'product') {
         querydata.product_id = $(mc3+' .prod_product_id').val();
         querydata.incl_stocktakes = 'true';
     }
@@ -13995,7 +13408,6 @@ function get_stock_history(mode='product') {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             let tr_html_str = '';
@@ -14042,9 +13454,9 @@ function get_stock_history(mode='product') {
             } else if (mode == 'stocktake') {
                 $(mc3+' .stock_adj_list tbody').html(tr_html_str);    
             }
-            
-        } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+
+                    } else if (response.redirect != undefined) {
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -14081,7 +13493,6 @@ function set_prod_stock() {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             if (data.length) {
@@ -14093,9 +13504,9 @@ function set_prod_stock() {
 
                 $(mc3+' .stock_day').val(convert_date(dayjs().format('YYYY-MM-DD')));
             }
-            
-        } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+
+                    } else if (response.redirect != undefined) {
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -14120,7 +13531,6 @@ function save_prod_stock() {
     }
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -14135,10 +13545,10 @@ function save_prod_stock() {
                 $('#loader-wrapper').hide();
 
                 get_stock_manage();
-                viewProduct($(mc3+' .prod_product_id').val(), true); //refresh data in other tabs
+                viewProduct($(mc3+' .prod_product_id').val(), true); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -14163,7 +13573,6 @@ function delete_prod_stock(stock_id) {
     }
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -14178,10 +13587,10 @@ function delete_prod_stock(stock_id) {
                 $('#loader-wrapper').hide();
 
                 get_stock_manage();
-                viewProduct($(mc3+' .prod_product_id').val(), true); //refresh data in other tabs
+                viewProduct($(mc3+' .prod_product_id').val(), true); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -14218,7 +13627,6 @@ function set_prod_stocktake() {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             let tr_html_str = '';
@@ -14227,7 +13635,7 @@ function set_prod_stocktake() {
             for (let i = 0; i < data.length; i++) {
 
                 if ((data[i].inventory != 0) || (data[i].restock != 0)) {
-                    if (!categories.includes(data[i].category)){ //new category
+                    if (!categories.includes(data[i].category)){ 
                         tr_html_str += '<tr><td colspan="3"><b>'+data[i].category+'</b></td></tr>'; 
                         categories.push(data[i].category);
                     }                
@@ -14241,9 +13649,9 @@ function set_prod_stocktake() {
             }
 
             $(mc3+' .stocktake_list tbody').html(tr_html_str);
-            
-        } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+
+                    } else if (response.redirect != undefined) {
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -14275,7 +13683,6 @@ function save_prod_stocktake() {
     });
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -14292,7 +13699,7 @@ function save_prod_stocktake() {
                 $(mc3+' .tl_stock_levels').click();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -14312,7 +13719,7 @@ function getPasstypesResults(res) {
 
     let data = res.data;
 
-    $(mc+' .passtypes_tab').html($('#master_passtype_view .passtypes_tab').html()); //reset
+    $(mc+' .passtypes_tab').html($('#master_passtype_view .passtypes_tab').html()); 
 
     let html_str = '';
     let opts_str = '<option value="">All</option>';
@@ -14328,7 +13735,6 @@ function getPasstypesResults(res) {
                                     '+($('#is_admin').val() ? '<li><a href="#" class="btn-edit delete_passtype">Delete</a></li>' : '')+'\
                                 </ul></td>\
                         </tr>';
-                        //allowing edit for all users to see details of pass, save button will be admin_only
 
         opts_str += '<option value="'+d.passtype_id+'">'+d.passtype_name+'</option>';
     }
@@ -14358,7 +13764,6 @@ function edit_passtype(passtype_id) {
                 if (res.data && res.data.length) {
                     let itemobj = res.data[0];
 
-                    //data
                     $(mc+' .ptyp_passtype_id').val(itemobj.passtype_id);
                     $(mc+' .passtype_name').val(itemobj.passtype_name);
                     $('.modal_title_mc1').text(itemobj.passtype_name);
@@ -14380,7 +13785,6 @@ function edit_passtype(passtype_id) {
                     $(mc+' .ptyp_share').prop('disabled',true);
                     $(mc+' .ptyp_monthly').prop('disabled',true);
 
-	                //restrictions
 	                let restr_str = '';
 	                if (itemobj.restrictions) {
 	                    let restrictions = itemobj.restrictions;
@@ -14422,9 +13826,9 @@ function edit_passtype(passtype_id) {
 	                $(mc+' .ptyp_restrictions tbody').html(restr_str);
 	                $(mc+' .ptyp_restrictions_div').removeClass('noshow');
                 }
-                
-            } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+
+                            } else if (response.redirect != undefined) {
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -14444,7 +13848,6 @@ function savePasstype() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         passtype_id: $(mc+' .ptyp_passtype_id').val(),
         passtype_name: $(mc+' .passtype_name').val(),
@@ -14461,7 +13864,6 @@ function savePasstype() {
         location_id: $('#location_id').val()
     };
 
-    //features
     $(mc+' .ptyp_features').each(function () {
         if (this.checked) {
             data.features += $(this).val();
@@ -14471,7 +13873,6 @@ function savePasstype() {
     let level_type = $(mc+' .ptyp_level_id option:selected').prop('dataset').intrac;
 
     let errors = [];
-    //validations
     if (isEmpty(data.passtype_name)) {
         errors.push("Invalid name");
     }
@@ -14516,7 +13917,7 @@ function savePasstype() {
                 get_api('getPasstypes');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -14530,8 +13931,8 @@ function savePasstype() {
         set_side_error(errors.join("<br>"));
         $('#loader-wrapper').hide();        
     }  
-          
-}
+
+          }
 
 function deletePasstype(passtype_id) {
     $('#loader-wrapper').show();
@@ -14539,7 +13940,6 @@ function deletePasstype(passtype_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -14557,7 +13957,7 @@ function deletePasstype(passtype_id) {
                 get_api('getPasstypes');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -14581,7 +13981,6 @@ function save_client_memberday() {
     let memberday = parse_date($(mc+' .passtyp_memberday').val());
 
     let errors = [];
-    //validations
 
     if (!isvalidDate(memberday)) {
         errors.push("Invalid membership expiry date");
@@ -14598,18 +13997,15 @@ function save_client_memberday() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 set_side_error('Date updated succesfully', 'green');
-                
-                //refresh dates from db
+
                 let options = await get_client_options('passtype');
                 getPasstypesOptions(options.passtype || '');
 
-                //refresh passtypes as they might not have been loaded
                 get_api('getPasstypes');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -14655,9 +14051,8 @@ function save_ptyp_restriction() {
     };
 
     let errors = [];
-    //validations
-    
-    if (isEmpty(data.passtype_id)) {
+
+        if (isEmpty(data.passtype_id)) {
     	errors.push('Please edit a '+$('#pass_title').val()+' first to apply restrictions');
     }
 
@@ -14680,12 +14075,12 @@ function save_ptyp_restriction() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                edit_passtype($(mc+' .ptyp_passtype_id').val());
-                $(mc+' .ptyp_restr_form').html($('#master_passtype_view .ptyp_restr_form').html()); //reset
+
+                                edit_passtype($(mc+' .ptyp_passtype_id').val());
+                $(mc+' .ptyp_restr_form').html($('#master_passtype_view .ptyp_restr_form').html()); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -14705,7 +14100,6 @@ function delete_ptyp_restriction(restriction_id) {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -14719,10 +14113,10 @@ function delete_ptyp_restriction(restriction_id) {
 
                 $('#loader-wrapper').hide();
                 edit_passtype($(mc+' .ptyp_passtype_id').val());
-                $(mc+' .class_restr_form').html($('#master_class_view .class_restr_form').html()); //reset
+                $(mc+' .class_restr_form').html($('#master_class_view .class_restr_form').html()); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -14746,7 +14140,6 @@ function get_passs_report(mode,rawcsv='') {
 
     let querydata = {mode: mode, passtype_id: $(mc+' .prep_passtype').val(), orderby: $(mc+' .prep_orderby').val()};
 
-    //send hold as separate parameter
     let prep_expiry = $(mc+' .prep_expiry').val()
     if (prep_expiry == 'hold') {
         querydata.hold = 'yes';
@@ -14774,7 +14167,6 @@ function get_passs_report(mode,rawcsv='') {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             let html_str = '';
@@ -14783,11 +14175,7 @@ function get_passs_report(mode,rawcsv='') {
             if (mode == 'unused') {
                 last_col_hdr = 'Remaining';
             }
-            /* else if (month) {
-                last_col_hdr = 'Cost';
-            }*/
 
-            //header
             html_str += '<thead><tr>\
                             <th>Customer Name</th>\
                             <th>Bought</th>\
@@ -14796,16 +14184,12 @@ function get_passs_report(mode,rawcsv='') {
                             <th class="align-right">'+last_col_hdr+'</th>\
                         </tr></thead><tbody>';
 
-            //data            
             for (let i = 0; i < data.length; i++) {
 
                 let last_col_data = numberformatccy(data[i].cost)+(data[i].monthly == 1 ? '/month' : '');
                 if (mode == 'unused') {
                     last_col_data = data[i].remaining;
                 } 
-                /*else if (month) {
-                    last_col_data = numberformatccy(data[i].amount);
-                }*/
 
                 html_str += '<tr>\
                                 <td class="cursor primary view_customer"><span class="customer_id noshow">'+data[i].customer_id+'</span><span class="parent_id noshow">'+data[i].parent_id+'</span>'+data[i].first_name+' '+data[i].last_name+(data[i].monthly == 1 && data[i].direct == '' ? '*' : '')+'<span class="se_det noshow">'+(data[i].parent_id > 0 ? data[i].parent_id : data[i].customer_id)+'~'+data[i].first_name+' '+data[i].last_name+'~'+data[i].phone+'~'+data[i].email+'~'+data[i].altemail+'</span></td>\
@@ -14816,7 +14200,6 @@ function get_passs_report(mode,rawcsv='') {
                             </tr>';
             }                                                  
 
-            //totals row
             if ((mode == 'unused') && (data.length) && (res.unused_total != undefined) && (res.unused_total_cost != undefined)) {
                 html_str += '<tr>\
                                 <td><b>Total</b></td>\
@@ -14836,8 +14219,8 @@ function get_passs_report(mode,rawcsv='') {
             html_str += '</tbody>';
 
             $(mc+' .passreport_list').html(html_str);
-            
-            if (rawcsv) {
+
+                        if (rawcsv) {
                 if (data.length) {
                     let dataArry = [];
                     for (let i = 0; i < data.length; i++) {
@@ -14866,7 +14249,7 @@ function get_passs_report(mode,rawcsv='') {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -14882,7 +14265,6 @@ function savePass() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         customer_id: ($(mc2+' input:radio[name="cpass_customer_id"]:checked').length) ? $(mc2+' input:radio[name="cpass_customer_id"]:checked').val() : '',
         passtype_id: $(mc2+' .cpass_passtype_id').val() || '',
@@ -14890,10 +14272,8 @@ function savePass() {
         location_id: $('#location_id').val()
     };    
 
-    //console.log(data);
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -14908,18 +14288,17 @@ function savePass() {
 
                 $('#loader-wrapper').hide();
 
-                //go to account or product purchase page
                 if (response.success == 'success') {
-                    viewCustomer(data.customer_id, 'account'); //normal customer
+                    viewCustomer(data.customer_id, 'account'); 
                 } else if (response.success.parent_id) {
-                    viewCustomer(response.success.parent_id, 'account'); //child customer -> parent account
+                    viewCustomer(response.success.parent_id, 'account'); 
                 } else {
-                    await viewCustomer(response.success.customer_id, 'passes'); //refresh customer too, this is receipt customer_id. Using await as cust data required for prod purchase reset during viewCustomer
+                    await viewCustomer(response.success.customer_id, 'passes'); 
                     add_cust_prod_purchase(response.success);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -14939,7 +14318,6 @@ function updatePass(pass_id,action='') {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         customer_id: ($(mc2+' input:radio[name="cpass_customer_id"]:checked').length) ? $(mc2+' input:radio[name="cpass_customer_id"]:checked').val() : '',
         pass_id: pass_id,
@@ -14956,10 +14334,8 @@ function updatePass(pass_id,action='') {
     	data.location_id = $('#location_id').val();
     }
 
-    //console.log(data);
 
     let errors = [];
-    //validations
 
     if (action == 'expires') {
         data.expires = parse_date($(mc2+' .cpass_alter_div .cpass_exp_expires').val());
@@ -14988,11 +14364,10 @@ function updatePass(pass_id,action='') {
 
                 set_side_error(toTitleCase($('#pass_title').val())+' action completed successfully', 'green')
 
-                //refresh data
                 viewCustomer($(mc2+' .cust_edit_tab .cust_customer_id').val(), 'passes');               
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15043,7 +14418,6 @@ function get_switch_passtypes(el) {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             $(el).find('.empty_div:first').after('<div class="cpass_alter_div flex_new_row">'+$('#master_customer_view .cpass_switch_view').html()+'</div>');
@@ -15065,7 +14439,7 @@ function get_switch_passtypes(el) {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -15081,7 +14455,7 @@ function getGiftsResults(res) {
 
     let data = res.data;
 
-    $(mc+' .gifts_tab').html($('#master_gift_view .gifts_tab').html()); //reset
+    $(mc+' .gifts_tab').html($('#master_gift_view .gifts_tab').html()); 
 
     let html_str = '';
     for (let i = 0; i < data.length; i++) {
@@ -15114,7 +14488,6 @@ function saveGift(passtype_id, gift_name) {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         gift_id: '',
         passtype_id: passtype_id || '0',
@@ -15123,7 +14496,6 @@ function saveGift(passtype_id, gift_name) {
     };
 
     let errors = [];
-    //validations
     if (isEmpty(data.gift_name)) {
         errors.push("Invalid gift certificate name");
     }
@@ -15148,7 +14520,7 @@ function saveGift(passtype_id, gift_name) {
                 get_api('getGifts');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15162,8 +14534,8 @@ function saveGift(passtype_id, gift_name) {
         set_side_error(errors.join("<br>"));
         $('#loader-wrapper').hide();        
     }  
-          
-}
+
+          }
 
 function deleteGift(gift_id) {
     $('#loader-wrapper').show();
@@ -15171,7 +14543,6 @@ function deleteGift(gift_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -15189,7 +14560,7 @@ function deleteGift(gift_id) {
                 get_api('getGifts');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15220,7 +14591,6 @@ function redeem_gift() {
     }
 
     let errors = [];
-    //validations
 
     if (!data.voucher_id) {
     	errors.push('Please enter the voucher number from your gift certificate and try again');
@@ -15241,13 +14611,13 @@ function redeem_gift() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                set_side_error(response.success, 'green', 'keep');
+
+                                set_side_error(response.success, 'green', 'keep');
 
                 $(mc+' .tl_gift_redeem').click();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15267,7 +14637,7 @@ function getAvailsResults(res) {
 
     let data = res.data;
 
-    $(mc+' .avails_form').html($('#master_avail_view .avails_form').html()); //reset. not resetting the entire tab to retain avail_date
+    $(mc+' .avails_form').html($('#master_avail_view .avails_form').html()); 
     $(mc+' .avails_form').hide();
 
     let html_str = '';
@@ -15287,7 +14657,6 @@ function getAvailsResults(res) {
 
     $(mc+' .avails_list tbody').html(html_str);
 
-    //options
     let options = res.options;
 
     if (options.week_base && options.week_start) {
@@ -15339,7 +14708,7 @@ function get_instr_avails() {
             $('#instr_avail_list').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -15381,7 +14750,7 @@ function edit_avail(avail_id) {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15400,7 +14769,6 @@ function saveAvail() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         avail_id: $(mc+' .avail_avail_id').val(),
         location_id: $('#location_id').val(),
@@ -15412,7 +14780,6 @@ function saveAvail() {
         repeat_days: []
     };  
 
-    //repeat_days
     $(mc+' .avail_repeat_days').each(function () {
         if (this.checked) {
             data.repeat_days.push($(this).val());
@@ -15420,7 +14787,6 @@ function saveAvail() {
     });
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -15445,7 +14811,7 @@ function saveAvail() {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15467,7 +14833,6 @@ function deleteAvail(avail_id, user_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -15491,7 +14856,7 @@ function deleteAvail(avail_id, user_id) {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15520,7 +14885,6 @@ function save_avail_hours() {
     }
 
     let errors = [];
-    //validations
 
     if (!isvalidTime(data.hours_start)) {
         errors.push("Invalid open time");
@@ -15541,15 +14905,13 @@ function save_avail_hours() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 set_side_error('Times updated succesfully', 'green');
-                
-                //refresh dates from db
+
                 let options = await get_client_options('avail');
                 getAvailsOptions(options.avail || ''); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15578,7 +14940,6 @@ function save_avail_holiday() {
     }
 
     let errors = [];
-    //validations
 
     if (!isvalidDate(data.start)) {
         errors.push("Invalid start date");
@@ -15603,11 +14964,10 @@ function save_avail_holiday() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 set_side_error('Availability updated succesfully', 'green');
-                
-            } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+
+                            } else if (response.redirect != undefined) {
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15636,7 +14996,6 @@ function save_avail_week() {
     }
 
     let errors = [];
-    //validations
 
     if (!isvalidDate(data.week_finish)) {
         errors.push("Invalid finish date");
@@ -15653,14 +15012,13 @@ function save_avail_week() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 set_side_error('Weekly availability updated succesfully', 'green');
 
                 $(mc+' .tl_avails').click();
                 $(mc+' .avail_week_finish').val('');
-                
-            } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+
+                            } else if (response.redirect != undefined) {
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15679,8 +15037,8 @@ function save_avail_week() {
 function get_avail_raw() {
 
     $('#loader-wrapper').show();
-    
-    $.ajax({
+
+        $.ajax({
         type: 'GET',
         url: '/api/getAvails',
         data: {location_id: $('#location_id').val(), raw: 'yes'},
@@ -15698,7 +15056,7 @@ function get_avail_raw() {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -15714,7 +15072,7 @@ function getRostersResults(res) {
 
     let data = res.data;
 
-    $(mc+' .rosters_form').html($('#master_roster_view .rosters_form').html()); //reset. not resetting the entire tab to retain roster_date
+    $(mc+' .rosters_form').html($('#master_roster_view .rosters_form').html()); 
     $(mc+' .rosters_form').hide();
 
     let html_str = '';
@@ -15735,7 +15093,6 @@ function getRostersResults(res) {
 
     $(mc+' .rosters_list tbody').html(html_str);
 
-    //options
     let options = res.options;
 
     if (options.week_base && options.week_start) {
@@ -15790,7 +15147,7 @@ function get_instr_rosters() {
             $('#instr_roster_list').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -15834,7 +15191,7 @@ function edit_roster(schedule_id) {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15853,7 +15210,6 @@ function saveRoster() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         schedule_id: $(mc+' .roster_schedule_id').val(),
         location_id: $('#location_id').val(),
@@ -15867,7 +15223,6 @@ function saveRoster() {
         repeat_days: []
     };  
 
-    //repeat_days
     $(mc+' .roster_repeat_days').each(function () {
         if (this.checked) {
             data.repeat_days.push($(this).val());
@@ -15880,7 +15235,6 @@ function saveRoster() {
     }
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -15904,7 +15258,6 @@ function saveRoster() {
                     get_notes();
                 }
 
-                //refresh grid
                 if ($('#rosters').is(":visible")) {
                     get_roster_grid(false);    
                 }
@@ -15914,7 +15267,7 @@ function saveRoster() {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -15941,7 +15294,6 @@ function deleteRoster(schedule_id, user_id) {
     }
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -15964,7 +15316,6 @@ function deleteRoster(schedule_id, user_id) {
                     get_notes();
                 }
 
-                //refresh grid
                 if ($('#rosters').is(":visible")) {
                     get_roster_grid(false);    
                 }
@@ -15974,7 +15325,7 @@ function deleteRoster(schedule_id, user_id) {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16003,7 +15354,6 @@ function save_roster_holiday() {
     }
 
     let errors = [];
-    //validations
 
     if (!isvalidDate(data.start)) {
         errors.push("Invalid start date");
@@ -16028,11 +15378,10 @@ function save_roster_holiday() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 set_side_error('Roster updated succesfully', 'green');
-                
-            } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+
+                            } else if (response.redirect != undefined) {
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16059,7 +15408,6 @@ function get_roster_week() {
     }
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -16072,12 +15420,12 @@ function get_roster_week() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                let data = response.success;
+
+                                let data = response.success;
 
                 let html_str = '';
-				
-				for (let i = 0; i < data.length; i++) {
+
+								for (let i = 0; i < data.length; i++) {
 
 					let d = data[i];
 
@@ -16095,9 +15443,9 @@ function get_roster_week() {
 	            } else {
 	            	$(mc+' .rosterweekbtn_save').addClass('noshow');
 	            }
-                
-            } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+
+                            } else if (response.redirect != undefined) {
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16133,7 +15481,6 @@ function save_roster_week() {
     });    
 
     let errors = [];
-    //validations
 
     if (!data.schedule_ids.length) {
     	errors.push('Please select one or more items from the roster list above and re-try')
@@ -16154,14 +15501,12 @@ function save_roster_week() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 set_side_error('Weekly roster updated succesfully', 'green');
 
-                //refresh data
                 $(mc+' .tl_rosters').click();
-                
-            } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+
+                            } else if (response.redirect != undefined) {
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16180,8 +15525,8 @@ function save_roster_week() {
 function get_roster_raw() {
 
     $('#loader-wrapper').show();
-    
-    $.ajax({
+
+        $.ajax({
         type: 'GET',
         url: '/api/getRosters',
         data: {location_id: $('#location_id').val(), raw: 'yes'},
@@ -16199,7 +15544,7 @@ function get_roster_raw() {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -16214,8 +15559,8 @@ function get_roster_raw() {
 function roster_sms_users(date) {
 
     $('#loader-wrapper').show();
-    
-    $.ajax({
+
+        $.ajax({
         type: 'GET',
         url: '/api/getRosterGrid',
         data: {location_id: $('#location_id').val(), date: date, grid_view: 'daily'},
@@ -16245,13 +15590,13 @@ function roster_sms_users(date) {
             		}
             	}
 
-            	data = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()]; //remove duplicates in JSON array
+            	data = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()]; 
 
             	set_smss({res: data});
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {
             set_side_error((response.error.errors || response.error).join("<br>"));
             $('#loader-wrapper').hide();
@@ -16266,8 +15611,8 @@ function roster_sms_users(date) {
 function sms_weekly_rosters() {
 
     $('#loader-wrapper').show();
-    
-    $.ajax({
+
+        $.ajax({
         type: 'GET',
         url: '/api/getRosterGrid',
         data: {location_id: $('#location_id').val(), date: $('#main_date').val(), grid_view: 'weekly'},
@@ -16318,7 +15663,7 @@ function sms_weekly_rosters() {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {
             set_side_error((response.error.errors || response.error).join("<br>"));
             $('#loader-wrapper').hide();
@@ -16334,7 +15679,7 @@ function getLocationsResults(res) {
 
     let data = res.data;
 
-    $(mc+' .locations_tab').html($('#master_location_view .locations_tab').html()); //reset
+    $(mc+' .locations_tab').html($('#master_location_view .locations_tab').html()); 
 
     let html_str = '';
     let opts_str = '';
@@ -16366,7 +15711,7 @@ function getLocationsResults(res) {
                                 <td>'+numberformatccy(d.hours[j].rate)+'</td>\
                             </tr>';
             }
-            hours_str += '</tbody></table><div>'; //close table
+            hours_str += '</tbody></table><div>'; 
         }
 
         let spaces_str = '';
@@ -16386,7 +15731,7 @@ function getLocationsResults(res) {
                                 <td>'+(d.spaces[k].display == 0 ? 'No' : (d.spaces[k].display == 1 ? 'Yes' : 'Read-only'))+'</td>\
                             </tr>';                
             }
-            spaces_str += '</tbody></table></div>'; //close table
+            spaces_str += '</tbody></table></div>'; 
         }
 
         html_str += '<tr class="location_row">\
@@ -16404,7 +15749,7 @@ function getLocationsResults(res) {
     }
 
     $(mc+' .locations_list tbody').html(html_str);
-    $('.space_location_id, .hours_location_id').html(opts_str); //updates master view as well
+    $('.space_location_id, .hours_location_id').html(opts_str); 
 }
 
 function edit_location(location_id) {
@@ -16442,9 +15787,9 @@ function edit_location(location_id) {
                     $(mc+' .loc_hours').html(JSON.stringify(itemobj.hours, null, 4));
                     $(mc+' .loc_spaces').html(JSON.stringify(itemobj.spaces, null, 4));
                 }
-                
-            } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+
+                            } else if (response.redirect != undefined) {
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16464,7 +15809,6 @@ function saveLocation() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         location_id: $(mc+' .loc_location_id').val(),
         location_name: $(mc+' .loc_location_name').val(),
@@ -16477,9 +15821,8 @@ function saveLocation() {
         bsb: $(mc+' .loc_bsb').val(),
         account: $(mc+' .loc_account').val()
     };
-    
-    let errors = [];
-    //validations
+
+        let errors = [];
 
     if (errors.length == 0) {
 
@@ -16495,10 +15838,9 @@ function saveLocation() {
                 $('#loader-wrapper').hide();
                 get_api('getLocations');
 
-                //locations in menus are not refreshed intentionally
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16512,14 +15854,13 @@ function saveLocation() {
         set_side_error(errors.join("<br>"));
         $('#loader-wrapper').hide();        
     }  
-          
-}
+
+          }
 
 function deleteLocation(location_id) {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -16535,10 +15876,9 @@ function deleteLocation(location_id) {
                 $('#loader-wrapper').hide();
                 get_api('getLocations');
 
-				//locations in menus are not refreshed intentionally                
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16558,7 +15898,7 @@ function get_loc_hours() {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .hours_form').html($('#master_location_view .hours_form').html()); //reset. not resetting the entire tab to retain hours_location_id
+    $(mc+' .hours_form').html($('#master_location_view .hours_form').html()); 
 
     let querydata = {location_id: $(mc+ ' .hours_location_id').val()};
 
@@ -16575,7 +15915,6 @@ function get_loc_hours() {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             if (data.length) {
@@ -16607,12 +15946,12 @@ function get_loc_hours() {
                     weekrate = hours_week[0].rate;
                 }
 
-                if (hours_week.length > 1) { //peak rates exist
-                    if (dayjs(hours_week[1].hours_start,'HH:mm:ss').isAfter(dayjs(weekstart,'HH:mm:ss'))) { //right order
+                if (hours_week.length > 1) { 
+                    if (dayjs(hours_week[1].hours_start,'HH:mm:ss').isAfter(dayjs(weekstart,'HH:mm:ss'))) { 
                         peakstart = hours_week[1].hours_start;
                         peakrate = hours_week[1].rate;
                         weekfinish = hours_week[1].hours_finish;
-                    } else { //out of order
+                    } else { 
                         peakstart = weekstart;
                         peakrate = weekrate;
                         weekstart = hours_week[1].hours_start;
@@ -16635,9 +15974,9 @@ function get_loc_hours() {
                 $(mc+' .hours_weekendfinish').val(convert_time(weekendfinish));
                 $(mc+' .hours_weekendrate').val(weekendrate);
             }
-            
-        } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+
+                    } else if (response.redirect != undefined) {
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -16666,7 +16005,6 @@ function save_loc_hours() {
     }
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -16679,13 +16017,12 @@ function save_loc_hours() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 set_side_error('Hours data saved succesfully', 'green');
 
                 get_loc_hours();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16705,7 +16042,7 @@ function get_loc_spaces() {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .spaces_form').html($('#master_location_view .spaces_form').html()); //reset. not resetting the entire tab to retain space_location_id
+    $(mc+' .spaces_form').html($('#master_location_view .spaces_form').html()); 
     $(mc+' .spaces_form').hide();
 
     let querydata = {location_id: $(mc+ ' .space_location_id').val()};
@@ -16724,7 +16061,6 @@ function get_loc_spaces() {
 
                 let res = response.success;
 
-                //data
                 let data = res.data;
                 let options = res.options;
 
@@ -16767,12 +16103,12 @@ function get_loc_spaces() {
                     }               
                 }
 
-                html_str += '</tbody></table></div>'; //close table
+                html_str += '</tbody></table></div>'; 
 
                 $(mc+' .space_list').html(html_str);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16782,8 +16118,8 @@ function get_loc_spaces() {
             set_side_error("Operation failed " + (xhr.responseText?xhr.responseText:''));
             $('#loader-wrapper').hide();
         });
-    
-    } else {
+
+        } else {
         $('#loader-wrapper').hide();
     }
 }
@@ -16812,7 +16148,6 @@ function save_loc_space() {
     }
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -16827,12 +16162,11 @@ function save_loc_space() {
                 $('#loader-wrapper').hide();
                 get_loc_spaces();
 
-                //refresh spaces in other modules
                 let options = await get_client_options(['class']);
                 getClasssOptions(options.class || '', options);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16852,7 +16186,6 @@ function delete_loc_space(space_id) {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -16867,12 +16200,11 @@ function delete_loc_space(space_id) {
                 $('#loader-wrapper').hide();
                 get_loc_spaces();
 
-                //refresh spaces in other modules
                 let options = await get_client_options(['class']);
                 getClasssOptions(options.class || '', options);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16890,15 +16222,12 @@ function delete_loc_space(space_id) {
 
 function set_favs() {
 
-	$(mc+' .favs_tab').html($('#master_favs_view .favs_tab').html()); //reset
+	$(mc+' .favs_tab').html($('#master_favs_view .favs_tab').html()); 
 
-    //have to do these here than in master
-    //set each usr_favs_key sel with a value per index, so that selects don't look all blanks
     $(mc+' .usr_favs_key').each(function (i,e) {
         $(this).val($(this).find('option').eq(i).val());
     });
 
-    //setup selected favs now
     let favs = JSON.parse($(mc+' .user_options_favs').text());
 
     for (let i = 0; i < favs.length; i++) {
@@ -16916,7 +16245,6 @@ function save_favs() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data = {favourites: [], action: 'favs'};
 
     $(mc+' .usr_favs_row').each(function () {
@@ -16929,7 +16257,6 @@ function save_favs() {
     });
 
     let errors = [];
-    //validations
     if (!data.favourites.length) {
         errors.push("No favourites selected. Please select favourites or use reset button below to clear your favourites");
     }
@@ -16948,13 +16275,12 @@ function save_favs() {
 
                 set_side_error('Favourites saved succesfully', 'green');
 
-                //refresh favs
                 let options = await get_client_options('favs');
                 getFavsOptions(options.favs || '');
                 set_favs();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -16974,7 +16300,6 @@ function reset_favs() {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -16991,13 +16316,12 @@ function reset_favs() {
 
                 set_side_error('Favourites reset succesfully', 'green');
 
-                //refresh favs
                 let options = await get_client_options('favs');
                 getFavsOptions(options.favs || '');
                 set_favs();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -17014,34 +16338,30 @@ function reset_favs() {
 }
 
 function adjustFavs() {
-	//resets
 	$('.quick_favs').remove();
 	$('#quick_actions').html($('#quick_actions_opts').text());
 
 	let anchor = $('#quick_actions_div');
 
-    let maxWidth = 500; //px
+    let maxWidth = 500; 
     let availableWidth = maxWidth;
     let usedWidth = 0;
 
     let dropdownMenu = $('#quick_actions');
     let manageFavs = dropdownMenu.find('.manage_favs');
     let favButtons = dropdownMenu.children('li').not(manageFavs.closest('li'));
-    
-    // Reset: Move all buttons back to quick_favs
+
     favButtons.each(function () {
         $(this).insertBefore(anchor);
     });
 
-    // Check how many buttons fit within available width
     favButtons.each(function () {
         let btnWidth = $(this).outerWidth(true);
         if (usedWidth + btnWidth <= availableWidth) {
-            usedWidth += btnWidth+20; //20 for gaps
+            usedWidth += btnWidth+20; 
             $(this).addClass('quick_favs');
             $(this).find('a').addClass('header-btn').removeClass('menu_item');
         } else {
-            // Move to Quick Actions dropdown
             $(this).insertBefore(manageFavs.closest('li'));
         }
     });
@@ -17049,7 +16369,7 @@ function adjustFavs() {
 
 function toggle_switch_grid() {
 
-	let switch_grid = 'daily'; //defualt    
+	let switch_grid = 'daily'; 
 
 	if ($('.gview_detailed').hasClass('active')) {
 		switch_grid = 'daily_compressed_detailed';
@@ -17086,12 +16406,11 @@ function toggle_switch_grid() {
 			if (target) {
 				$(target).html('');
 
-	            //refresh grid					
 				get_class_grid();
 			}
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -17127,12 +16446,11 @@ function toggle_switch_grid_roster() {
 			if (target) {
 				$(target).html('');
 
-	            //refresh grid					
 				get_roster_grid();
 			}
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -17150,7 +16468,6 @@ function toggle_compressed_grid() {
 
     let mini_grid = '';
 
-    //current config
 	if ($('#spaces').hasClass('mini_grid')) {
 		mini_grid += 's';
 	}
@@ -17164,7 +16481,6 @@ function toggle_compressed_grid() {
 		mini_grid += 'r';
 	}
 
-	//note changes
 	let target = '';
 	if ($('#spaces').is(":visible")) {
 		target = '#spaces';
@@ -17214,7 +16530,6 @@ function toggle_compressed_grid() {
 
 				$(target).toggleClass('mini_grid');
 
-				//refresh grid
 				if ((target == '#spaces') || (target == '#lessons')) {		
 					get_grid();
 				} else if (target == '#classes') {
@@ -17225,7 +16540,7 @@ function toggle_compressed_grid() {
 			}
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -17274,9 +16589,9 @@ function get_cash_sale_products() {
 		    }
 
 		    $(mc3+' .cs_products_list tbody').html(html_str);
-            
-        } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+
+                    } else if (response.redirect != undefined) {
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -17311,7 +16626,6 @@ function calc_cash_sale_cost() {
     	}
     });
 
-    //surcharge - start
     if ($(mc3+' .surcharge_rate').length) {
     	total_aud = numberformat(total_aud);
 
@@ -17331,7 +16645,6 @@ function calc_cash_sale_cost() {
     		total_aud += surcharge_aud;	
     	}
     }
-    //surcharge - end
 
     total_aud = numberformat(total_aud);
     $(mc3+' .total_aud').val(total_aud);
@@ -17346,7 +16659,6 @@ async function process_cash_sale() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data ={
         purchases: [],
         total_aud: $(mc3+' .total_aud').val(),
@@ -17368,10 +16680,8 @@ async function process_cash_sale() {
         });
     });
 
-    //console.log(data);
 
     let errors = [];
-    //validations
 
     if (!data.purchases.length) {
     	errors.push("Please select a product and try again");
@@ -17385,7 +16695,6 @@ async function process_cash_sale() {
 
     	if ($('.stripe_items').length) {
 
-    		// Trigger form validation and wallet collection
     		if (errors.length == 0) {
     			const {error: submitError} = await StripePaymentManager.submit();
 
@@ -17394,7 +16703,6 @@ async function process_cash_sale() {
     			}
     		}
 
-    		//Create the ConfirmationToken
     		if (errors.length == 0) {
 				const {error, confirmationToken} = await StripePaymentManager.createConfirmationToken();
 
@@ -17473,10 +16781,10 @@ async function process_cash_sale() {
 			    	StripePaymentManager.unmount();
 			    }
 
-                $('.modal_o_cash_sale:first').click(); //reset
+                $('.modal_o_cash_sale:first').click(); 
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -17526,7 +16834,6 @@ function delete_cash_sale(purchase_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -17542,7 +16849,7 @@ function delete_cash_sale(purchase_id) {
                 get_api('getCashSales');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -17560,7 +16867,6 @@ function delete_cash_sale(purchase_id) {
 
 function get_swap_class_schedules() {
 
-    //resets
     $(mc+' .sched_swap_list').html('');
     $(mc+' .sched_swap_avails_list').html('');
 
@@ -17590,15 +16896,14 @@ function get_swap_class_schedules() {
 
             let res = response.success;
 
-            //data
-            let data = res.data.filter(item => item.class_id>0); //remove any term/perm bookings
+            let data = res.data.filter(item => item.class_id>0); 
             let html_str = '';
             if (data.length) {
             	html_str += '<ul class="swap-list">';
                 for (let i = 0; i < data.length; i++) {
                     let d = data[i];
-					
-					let user_str = d.usernames.split(',')[0];
+
+										let user_str = d.usernames.split(',')[0];
 					let space_str = d.space_names.split(',')[0];
                     let sched_str_ = convert_time(dayjs(d.schedule_start).format('HH:mm:ss'),'h:mma')+' - '+convert_time(dayjs(d.schedule_finish).format('HH:mm:ss'),'h:mma')+' '+(user_str ? ' '+user_str : '')+(space_str ? ' '+space_str : '');;
 
@@ -17622,7 +16927,6 @@ function get_swap_class_schedules() {
 
             $(mc+' .sched_swap_list').html(html_str);          
 
-            //avails
             let html_str_a = '';
             if (res.avails && res.avails.length) {
                 html_str_a += '<h4 class="text-xl leading-[130%] margin_top_md margin_btm_md">Staff availability today</h4>'
@@ -17635,10 +16939,10 @@ function get_swap_class_schedules() {
             $(mc+' .sched_swap_new_user_id').html($(mc+' .sched_swap_user_id').html());
             $(mc+' .sched_swap_new_user_id option[value=""]').remove();
             $(mc+' .sched_swap_new_user_id option[value="'+querydata.user_id+'"]').remove();
-            
 
-        } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+
+                    } else if (response.redirect != undefined) {
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -17674,7 +16978,6 @@ function save_swap_class_schedules() {
     }
 
     let errors = [];
-    //validations
     if (!data.cur_user_id) {
     	errors.push('Please apply the user filter first');
     }
@@ -17694,14 +16997,13 @@ function save_swap_class_schedules() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                close_modal();
 
-                //refresh data
+                                close_modal();
+
                 get_class_grid();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -17717,7 +17019,6 @@ function save_swap_class_schedules() {
     } 
 }
 
-//grid bookings - space and lesson
 function adjust_promo_comment(discountApplied, srDescription, promoApplied) {
     let el = $('.offcanvse:visible .promo_comment');
 
@@ -17734,12 +17035,11 @@ function adjust_promo_comment(discountApplied, srDescription, promoApplied) {
 }
 
 function add_booking_space() {
-    
-	$('#loader-wrapper').show();
+
+    	$('#loader-wrapper').show();
 
     let errors = [];
 
-    //prepare the data - same as hold_booking logic minus the irrelevant pieces
 	let space_ids = [];
 	let location_ids = [];
 	let user_ids = [];
@@ -17823,7 +17123,7 @@ function add_booking_space() {
 	});
 
     let location_id = $('#location_id').val();
-    if (location_ids.length) { //virtual locations in admin
+    if (location_ids.length) { 
         location_id = location_ids[0];
     }
 
@@ -17846,7 +17146,6 @@ function add_booking_space() {
 		booking_data.addon_guid = addon_guid;
 	}
 
-	//booking inputs
 	let booking_details = get_booking_details_data();
 	if (booking_details.length) {
 		booking_data.booking_details = booking_details;
@@ -17870,7 +17169,6 @@ function add_booking_space() {
     	data.cust_email = '';
     }
 
-    //validations
     if (!booking_data.space_ids.length) {
     	errors.push('Please select one or more '+$('#space_title').val()+'s from '+$('#space_modal .spaces_list_div .space-title').text()+' section');
     }
@@ -17925,11 +17223,11 @@ function add_booking_space() {
 
 	            let res = response.success;
 
-	            if ($('#space_modal .repeat_booking').is(":checked")) { //repeat booking
+	            if ($('#space_modal .repeat_booking').is(":checked")) { 
 	            	set_side_error("Booking created successfully, please continue with next booking", "green");
 
 	            	$('#space_modal .booking_date').prop('disabled', false);
-	            	$('#space_modal .calendar_booking')[0]._flatpickr.setDate(dayjs(booking_data.date).add(1, 'week').format('YYYY-MM-DD'), true); //trigger change as well
+	            	$('#space_modal .calendar_booking')[0]._flatpickr.setDate(dayjs(booking_data.date).add(1, 'week').format('YYYY-MM-DD'), true); 
 	            	$('#space_modal .booking_date:visible').addClass('show_border');
 
 				    $('#space_modal .new-modal-content').animate({
@@ -17940,7 +17238,6 @@ function add_booking_space() {
 		            close_side_modal();
 
 		            if (data.customer_id != 2) {
-			            //go to customer account
 			            if (res.new_receipts) {
 			            	await viewCustomer(data.customer_id, 'account','',res.new_receipts);
 			            } else {
@@ -17948,16 +17245,14 @@ function add_booking_space() {
 			            }
 			        }
 
-		            //refresh grid
 		            get_grid(false);
 	            }
 
 	        } else if (response.redirect != undefined) {
-	            mini_login_wizard(response.redirect); //session timeout case
+	            mini_login_wizard(response.redirect); 
 	        } else {
 	            set_side_error(response.error.join("<br>"));
 	            $('#loader-wrapper').hide();
-	           	//refresh grid without spinner...even in failure to get the up-to-date data - skip as it's overriding booking_details/addons
 	        }
 
 	    }).fail( function(xhr, textStatus, errorThrown) {
@@ -17971,12 +17266,11 @@ function add_booking_space() {
 }
 
 function add_booking_lesson() {
-    
-	$('#loader-wrapper').show();
+
+    	$('#loader-wrapper').show();
 
     let errors = [];
 
-    //prepare the data - same as hold_lesson logic minus the irrelevant pieces
     let user_ids = [];
     let space_ids = [];
     let location_ids = [];
@@ -18015,7 +17309,6 @@ function add_booking_lesson() {
 	let schedule_comment = $('#lesson_modal .schedule_comment').val();
 	let capacity = $('#lesson_modal .capacity').val();
 
-	//alter
 	let sd = '';
 	if ($('#lesson_modal .schedule_data').text()) {
 		sd = JSON.parse($('#lesson_modal .schedule_data').text());
@@ -18049,7 +17342,6 @@ function add_booking_lesson() {
         cust_email: $('#lesson_modal .customer_email:visible').is(":checked") ? 'true' : ''
     };
 
-    //validations
     if (lesson_data.user_ids.length != 1) {
     	errors.push('Please select an instructor from Select Instructor section');
     }
@@ -18097,14 +17389,14 @@ function add_booking_lesson() {
 
 	            let res = response.success;
 
-	            if ($('#lesson_modal .repeat_booking').is(":checked")) { //repeat booking
+	            if ($('#lesson_modal .repeat_booking').is(":checked")) { 
 
-	            	await viewCustomer(parent_id > 0 ? parent_id : customer_id, 'silent'); //refresh data in background to update passes
+	            	await viewCustomer(parent_id > 0 ? parent_id : customer_id, 'silent'); 
 
 	            	set_side_error("Booking created successfully, please continue with next booking", "green");
 
 	            	$('#lesson_modal .booking_date').prop('disabled', false);
-	            	$('#lesson_modal .calendar_booking')[0]._flatpickr.setDate(dayjs(lesson_data.date).add(1, 'week').format('YYYY-MM-DD'), true); //trigger change as well
+	            	$('#lesson_modal .calendar_booking')[0]._flatpickr.setDate(dayjs(lesson_data.date).add(1, 'week').format('YYYY-MM-DD'), true); 
 	            	$('#lesson_modal .booking_date:visible').addClass('show_border');
 
 				    $('#lesson_modal .new-modal-content').animate({
@@ -18119,23 +17411,20 @@ function add_booking_lesson() {
 		            	set_side_error('You have changed the '+$('#pass_title').val()+' that was used to make the current booking. If the previous '+$('#pass_title').val()+' is not required anymore, please delete it from customer\'s profile', 'amber');
 		            }
 
-		            //go to customer account
 		            if (res.new_receipts) {
 		            	await viewCustomer(data.customer_id, 'account','',res.new_receipts);
 		            } else {
 		            	await viewCustomer(data.customer_id, 'cust_hist');
 		            }
 
-		            //refresh grid
 		            get_grid(false);
 		        }
 
 	        } else if (response.redirect != undefined) {
-	            mini_login_wizard(response.redirect); //session timeout case
+	            mini_login_wizard(response.redirect); 
 	        } else {
 	            set_side_error(response.error.join("<br>"));
 	            $('#loader-wrapper').hide();
-	           	//refresh grid without spinner...even in failure to get the up-to-date data - skip as it's overriding booking_details/addons
 	        }
 
 	    }).fail( function(xhr, textStatus, errorThrown) {
@@ -18173,7 +17462,6 @@ function get_booking_details(id, mode, term_perm=false) {
 
             let res = response.success;
 
-            //data
             let data = res.data[0];
             let html_str = '';
             if (data) {
@@ -18240,7 +17528,6 @@ function get_booking_details(id, mode, term_perm=false) {
                     html_str += '<li><span class="booking-details-list-label"><img class="size-5" src="images/icons/bullet-list-text.svg" alt="">Details</span>'+data.schedule_comment+'</li>';
                 }
 
-                //adjust buttons
                 if (dates_diff(dayjs(data.schedule_start).format('YYYY-MM-DD'), dayjs().format('YYYY-MM-DD')) < 0) {
                     if (!$('.reports_only').length) {
                         $(mc+' .btn_alterBooking').remove();
@@ -18248,7 +17535,6 @@ function get_booking_details(id, mode, term_perm=false) {
                     }
                 }
 
-                //is the stid on the grid?
                 if (true) {
 					let space_id_ = (mode == 'lesson') ? data.user_ids.split(',')[0] : data.space_ids.split(',')[0];
 					let start_ = convert_date_time(data.schedule_start, 'HH-mm');
@@ -18265,15 +17551,15 @@ function get_booking_details(id, mode, term_perm=false) {
                 	$(mc+' .btn_alterBooking').remove();
                 }
 
-                if ((mode == 'space') && (!space_names.length)) { //single booking
+                if ((mode == 'space') && (!space_names.length)) { 
                 	$(mc+' .btn_alterBooking').remove();
                 }
 
-                if ((mode == 'space') && (!$('#spaces').is(":visible"))) { //called from classes grid
+                if ((mode == 'space') && (!$('#spaces').is(":visible"))) { 
                 	$(mc+' .btn_alterBooking').remove();
                 }
 
-                if ((mode == 'lesson') && (!$('#lessons').is(":visible"))) { //called from classes grid
+                if ((mode == 'lesson') && (!$('#lessons').is(":visible"))) { 
                 	$(mc+' .btn_alterBooking').remove();
                 }
 
@@ -18288,13 +17574,11 @@ function get_booking_details(id, mode, term_perm=false) {
                 	$(mc+' .btn_bookingEmail[data-intrac="emailconfirmbookingcombo"]').remove();
                 }
 
-                //same conditions in set_alter_booking, except for btn_alterBooking check
-                //must be done after adjusting buttons
                 if ((!$(mc+' .btn_alterBooking').length) &&
                 	(data.schedule_comment || data.allow_update_comment) &&
                 	(data.schedule_comment != 'Full field') && 
                 	(!$('#space_modal .booking_details_inp_rate[data-intrac_location_id="'+data.location_id+'"]').length) &&
-                	(!$('#space_modal .booking_details_inp[data-intrac_capacity][data-intrac_location_id="'+data.location_id+'"]').length)) { //booking details
+                	(!$('#space_modal .booking_details_inp[data-intrac_capacity][data-intrac_location_id="'+data.location_id+'"]').length)) { 
                 	$(mc+' .booking_comment').val(data.schedule_comment);
                 	$(mc+' .booking_comment_form').removeClass('noshow_imp');
                 } else {
@@ -18309,7 +17593,7 @@ function get_booking_details(id, mode, term_perm=false) {
             $(mc+' .booking_details').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -18332,7 +17616,6 @@ function cancel_booking(term_perm='') {
     let mode = sd.mode;
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -18349,30 +17632,26 @@ function cancel_booking(term_perm='') {
                 close_modal();
 
                 if (customer_id != 2) {
-	                //unpaid pass feedback
 	                if (response.unpaid_pass) {
 	                    set_side_error('An unpaid '+$('#pass_title').val()+' was used to make this booking, please delete it from customer\'s profile if not required anymore', 'amber');
 	                    viewCustomer(parent_id > 0 ? parent_id : customer_id, 'passes');
 	                } else if (mode == 'lesson') {
-	                	//do nothing, unpaid_pass already handled
 	                } else if (sd.receipt_type == 1) {
-	                	//unpaid booking, do nothing
 	                } else {
 	                	viewCustomer(parent_id > 0 ? parent_id : customer_id, 'account');
 	                }
 	            }
 
-	            //refresh grid
 	            if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
 	            	get_grid(false);
-	            } else if ($('#classes').is(":visible")) { //space bookings could be visible in classes page
+	            } else if ($('#classes').is(":visible")) { 
                 	get_class_grid(false);
-                } else if ($('#rosters').is(":visible")) { //space bookings could be visible in rosters page
+                } else if ($('#rosters').is(":visible")) { 
                 	get_roster_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -18397,7 +17676,6 @@ function resend_booking_email(filename) {
     let customer_id = sd.customer_id;
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -18416,7 +17694,7 @@ function resend_booking_email(filename) {
                 set_side_error('Email sent succesfully', 'green');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -18444,7 +17722,6 @@ function update_booking_comment() {
     let schedule_comment = $(mc+' .booking_comment').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -18463,7 +17740,7 @@ function update_booking_comment() {
                 set_side_error('Comment saved succesfully', 'green');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -18486,7 +17763,7 @@ function adjust_select_height(target) {
 
     if ($ul.length && $select.length) {
         let ulHeight = $ul.outerHeight(true);
-        $select.css('min-height', ulHeight + 16 + 'px'); // 16px = padding buffer
+        $select.css('min-height', ulHeight + 16 + 'px'); 
     }
 }
 
@@ -18494,16 +17771,15 @@ function saveHold() {
 
     let el = $('.section-box.active:first');
 
-    $(el).removeClass('active'); //clear active flag
+    $(el).removeClass('active'); 
 
     let space_id = $(el).prop('id').split('_')[0];
     let location_id = $(el).prop('dataset').intrac_location_id;
-    
-    let slot_duration = $('#spaces table').prop('dataset').intrac_interval;
+
+        let slot_duration = $('#spaces table').prop('dataset').intrac_interval;
     let hold_start = dayjs($(el).prop('id').split('_')[1], 'HH-mm').format('HH:mm:ss');
     let hold_finish = dayjs(hold_start, 'HH:mm:ss').add(slot_duration, 'minute').format('HH:mm:ss');
 
-    //prepare the data
     let data = {
     	hold_id: '',
         space_id: space_id,
@@ -18513,10 +17789,8 @@ function saveHold() {
         location_id: location_id
     };  
 
-    //console.log(data);
 
     let errors = [];
-    //validations
 
     if (!space_id || !location_id || (hold_start == hold_finish)) {
         errors.push('Unable to reserve this slot, please try again');
@@ -18528,7 +17802,7 @@ function saveHold() {
 
     if (errors.length == 0) {
 
-    	$('#hold_space').text(''); //reset
+    	$('#hold_space').text(''); 
 
         $('#loader-wrapper').show();
 
@@ -18546,7 +17820,7 @@ function saveHold() {
                 get_grid();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -18566,7 +17840,6 @@ function delete_hold(hold_id, location_id) {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -18583,7 +17856,7 @@ function delete_hold(hold_id, location_id) {
                 get_grid();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -18600,19 +17873,17 @@ function delete_hold(hold_id, location_id) {
 }
 
 function init_ps_booking_details(d) {
-    //reset
-    $('.ps_bd_div').html(''); //updates master too
+    $('.ps_bd_div').html(''); 
 
-    //booking details
     if (d.booking_details) {
         let div_str = '';
-        
-        for (let l = 0; l < d.booking_details.length; l++) { //locations loop
-        	
-        	let location_id = d.booking_details[l].location_id;
+
+                for (let l = 0; l < d.booking_details.length; l++) { 
+
+        	        	let location_id = d.booking_details[l].location_id;
         	let booking_details = d.booking_details[l].booking_details;
 
-	        for (let i = 0; i < (booking_details || []).length; i++) { //booking_details loop
+	        for (let i = 0; i < (booking_details || []).length; i++) { 
 	            let e = booking_details[i];
 
 	            let intrac_mandatory = e.mandatory?' data-intrac_mandatory="true" ':'';
@@ -18654,10 +17925,10 @@ function init_ps_booking_details(d) {
 	                                </select>\
 	                            </div>';
 	            }
-	        } //end of booking_details loop
-        } //end of locations loop
+	        } 
+        } 
 
-        $('.ps_bd_div').html(div_str); //updates master too
+        $('.ps_bd_div').html(div_str); 
     }
 }
 
@@ -18666,15 +17937,13 @@ function set_ps_booking_details_inp() {
         let space_ids = [];
         let location_ids = [];
 
-        //spaces
-        //multiple spaces visible
         if ($(mc+' .ps_space_multiple_div').is(":visible")) {
 
             $(mc+' .ps_su_sel').each(function () {
                 if (this.checked) {
                     let s_id = 0;
-                    
-                    s_id = $(this).closest('tr').find('.ps_space_id_').val();
+
+                                        s_id = $(this).closest('tr').find('.ps_space_id_').val();
 
                     if (s_id > 0) {
                         let loc_id = $(this).closest('tr').find('.ps_space_id_ option:selected').prop('dataset').intrac_location_id;
@@ -18685,7 +17954,7 @@ function set_ps_booking_details_inp() {
                 }
             });
 
-        } else { //single space
+        } else { 
             let s_id = $(mc+' .ps_space_id').val();
 
             if (s_id > 0) {
@@ -18697,21 +17966,19 @@ function set_ps_booking_details_inp() {
         }
 
         $(mc+' .ps_booking_details_inp').each(function() {
-            //location filter
             let bd_location_id = $(this).prop('dataset').intrac_location_id;
-            if (location_ids.includes(bd_location_id)) { //any bd_location_id is in location_ids
+            if (location_ids.includes(bd_location_id)) { 
                 $(this).closest('.ps_booking_details_div').show();
-            } else if (!space_ids.length && !$('.virtual_locations').length) { //no space is selected and there are no virtual locations
+            } else if (!space_ids.length && !$('.virtual_locations').length) { 
             	$(this).closest('.ps_booking_details_div').show();
             } else {
                 $(this).closest('.ps_booking_details_div').hide();
             }
 
-            //space filter
             if ($(this).prop('dataset').intrac_space_ids) {
                 let bd_space_ids = $(this).prop('dataset').intrac_space_ids.split('-');
 
-                if (space_ids.some(item => bd_space_ids.includes(item))) { //any items in space_ids are in bd_space_ids
+                if (space_ids.some(item => bd_space_ids.includes(item))) { 
                     $(this).closest('.ps_booking_details_div').show();
                 } else {
                     $(this).closest('.ps_booking_details_div').hide();
@@ -18722,7 +17989,7 @@ function set_ps_booking_details_inp() {
 }
 
 function set_alter_ps_booking_details(d) {
-    set_ps_booking_details_inp(); //depends on spaces selected
+    set_ps_booking_details_inp(); 
     let comment = d.program_comment != undefined ? d.program_comment : d.schedule_comment;
     let bds = comment.split('<br>');
     for (let i = 0; i < bds.length; i++) {
@@ -18774,9 +18041,8 @@ function get_ps_booking_details_data() {
 function reset_tb_data() {
     $(mc+' .tab-list').html($('#master_term_booking_view .tab-list').html());
     let el = $('<a>', {class: 'add-link', text: 'dummy link'});
-    open_modal(el); //to adjust tabs
+    open_modal(el); 
 
-    //reset
     $(mc+' .tb_prog_form').html($('#master_term_booking_view .tb_prog_form').html()).hide();
     $(mc+' .tb_schedules_tab').html('');
 
@@ -18808,12 +18074,10 @@ async function get_term_bookings(term_id='', reset=true) {
 
             init_ps_booking_details(res);
 
-            //data
             let data = res.data;
 
             let html_str = '';
 
-            //term info
             let options_str_t = '';
             for (let i = 0; i < res.terms.length; i++) {
                 options_str_t += '<option value="'+res.terms[i].term_id+'" data-intrac_from_program="'+res.terms[i].from_program+'">'+res.terms[i].term_name+'</option>';
@@ -18829,7 +18093,6 @@ async function get_term_bookings(term_id='', reset=true) {
             $(mc+' .tb_term_start').val(res.terms.filter(item => item.term_id == $(mc+' .tb_term_id').val())[0]?.term_start);
             $(mc+' .tb_term_finish').val(res.terms.filter(item => item.term_id == $(mc+' .tb_term_id').val())[0]?.term_finish);
 
-            //adjust chevrons
             let show_next = false;
             let show_prev = false;
             let currentIndex = $(mc+' .tb_term_id').prop('selectedIndex');
@@ -18840,8 +18103,8 @@ async function get_term_bookings(term_id='', reset=true) {
                 if (index > currentIndex && from_program == 1) {
                     show_next = true;
                 }
-                
-                if (index < currentIndex && from_program == 1) {
+
+                                if (index < currentIndex && from_program == 1) {
                     show_prev = true;
                 }
             });
@@ -18860,7 +18123,6 @@ async function get_term_bookings(term_id='', reset=true) {
             $(mc+' .tb_prog_term_id').text($(mc+' .tb_term_id').val());
             $(mc+' .tb_term_details').text($(mc+' .tb_term_id option:selected').text()+' '+convert_date($(mc+' .tb_term_start').val())+' - '+convert_date($(mc+' .tb_term_finish').val()));
 
-            //data
             for (let i = 0; i < data.length; i++) {
 
                 let usernames = data[i].usernames.split(',');
@@ -18886,7 +18148,7 @@ async function get_term_bookings(term_id='', reset=true) {
             $(mc+' .tb_programs_list tbody').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -18902,7 +18164,6 @@ async function get_term_bookings(term_id='', reset=true) {
 }
 
 function view_tb_program(program_id,schedule_id='') {
-    /* fetch from api directly*/
     $('#loader-wrapper').show();
 
     reset_tb_data();
@@ -18920,9 +18181,8 @@ function view_tb_program(program_id,schedule_id='') {
         	$('#loader-wrapper').hide();
 
             if (response.success.data.length) {
-                let itemobj = response.success.data[0]; //override itemobj
+                let itemobj = response.success.data[0]; 
 
-                //customer
                 $(mc+' .tb_prog_customer_id').html('<option value="'+itemobj.customer_id+'">'+itemobj.first_name+' '+itemobj.last_name+'</option>');
 
                 $(mc+' .tb_prog_program_id').val(itemobj.program_id);
@@ -18944,7 +18204,6 @@ function view_tb_program(program_id,schedule_id='') {
                 let user_ids_unique = [...new Set(user_ids)];
                 let space_ids = itemobj.space_ids.split(',');
 
-                //spaces
                 if (space_ids.length == 1) {
                     $(mc+' .ps_space_id').val(space_ids[0]);
                 } else {
@@ -18957,13 +18216,12 @@ function view_tb_program(program_id,schedule_id='') {
                     }
                 }
 
-                //users
                 if (user_ids_unique.length == 1) {
                     $(mc+' .ps_user_id').val(user_ids_unique[0]);
                 } else {
                     $(mc+' .ps_show_users_multiple').click();
 
-                    for (let i = 0; i < user_ids.length; i++) { //user_ids.length will be the same as space_ids.length
+                    for (let i = 0; i < user_ids.length; i++) { 
                         let el = $(mc+' .ps_user_id_').eq(i);
                         $(el).val(user_ids[i]);
                         $(el).closest('tr').find('.ps_su_sel').prop('checked', true);
@@ -18974,20 +18232,17 @@ function view_tb_program(program_id,schedule_id='') {
                 	set_alter_ps_booking_details(itemobj);
                 }
 
-                //cost
-                $(mc+' .tb_program_cost').val(itemobj.program_cost).trigger('input'); //trigger cost calc
+                $(mc+' .tb_program_cost').val(itemobj.program_cost).trigger('input'); 
 
                 $(mc+' .change_cust').addClass('noshow');
                 $(mc+' .tb_prog_incl_hols_div').addClass('noshow');
 
-                $(mc+' .tb_prog_form h4:first').text($(mc+' .tb_prog_form h4:first').text().replace('Add', 'Edit'));//required in case this function is called directly from the grid
+                $(mc+' .tb_prog_form h4:first').text($(mc+' .tb_prog_form h4:first').text().replace('Add', 'Edit'));
 
-	            //load term bookings if view_tb_program was called directly
 	            if (!$(mc+' .tb_term_id').val()) {
-	            	await get_term_bookings(itemobj.term_id, false); //load with out reset
+	            	await get_term_bookings(itemobj.term_id, false); 
 	            }
 
-	            //load schedules if schedule_id is passed e.g. called from grid
 	            if (schedule_id) {
 	    			$(mc+' .tab-list').html($('#master_term_booking_view .tab-list').html());
 	    			$(mc+' .tl_tb_schedules').click();	            	
@@ -18997,16 +18252,15 @@ function view_tb_program(program_id,schedule_id='') {
             } else {
             	close_modal();
             	set_side_error('Note: This '+$('#term_title').val()+' booking has already been deleted', 'amber');
-				
-				if (schedule_id) {
-					//show normal space booking popup
+
+								if (schedule_id) {
 	    			get_booking_details(schedule_id, 'space', true);
 	    			$('.modal_o_booking:first').click(); 
 	    		}           	
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();         
@@ -19024,7 +18278,6 @@ function save_tb_program() {
 
     let bd = get_ps_booking_details_data();
 
-    //prepare the data
     let data ={
         class_id: 0,
         program_id: $(mc+' .tb_prog_program_id').val(),
@@ -19043,22 +18296,19 @@ function save_tb_program() {
         day_type: $(mc+' .tb_prog_day_type').val()
     };
 
-    //spaces and users
-    //multiple spaces visible
     if ($(mc+' .ps_space_multiple_div').is(":visible")) {
 
         $(mc+' .ps_su_sel').each(function () {
             if (this.checked) {
                 let s_id = 0;
                 let u_id = 0;
-                
-                s_id = $(this).closest('tr').find('.ps_space_id_').val();
-                
-                //multiple users visible
+
+                                s_id = $(this).closest('tr').find('.ps_space_id_').val();
+
                 let u_el = $(this).closest('tr').find('.ps_user_id_');
                 if ($(u_el).is(":visible")) {
                     u_id = $(u_el).val();
-                } else { //single user, assign only to first program_bookings element
+                } else { 
                     u_id = data.program_bookings.length ? '0' : $(mc+' .ps_user_id').val();    
                 }
 
@@ -19078,7 +18328,7 @@ function save_tb_program() {
             });        	
         }
 
-    } else { //single space
+    } else { 
         data.program_bookings.push({
             space_id: $(mc+' .ps_space_id').val() || '0',
             user_id: $(mc+' .ps_user_id').val() || '0'
@@ -19086,7 +18336,6 @@ function save_tb_program() {
     }
 
     let errors = [];
-    //validations
 
     errors = [...errors, ...bd.errors];
 
@@ -19106,9 +18355,9 @@ function save_tb_program() {
         errors.push('Invalid finish time');
     }
 
-    if (errors.length == 0) { //times are valid
-        
-        if (dayjs(data.program_start,'HH:mm:ss').isAfter(dayjs(data.program_finish,'HH:mm:ss'))) {
+    if (errors.length == 0) { 
+
+                if (dayjs(data.program_start,'HH:mm:ss').isAfter(dayjs(data.program_finish,'HH:mm:ss'))) {
             errors.push("Finish time cannot be after start time");
         }
     }
@@ -19126,16 +18375,14 @@ function save_tb_program() {
                 $('#loader-wrapper').hide();
                 set_side_error('Booking saved succesfully', 'green');
 
-                //refresh data
                 get_term_bookings(data.term_id);
 
-                //refresh grid
                 if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
                 	get_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -19158,7 +18405,6 @@ function delete_tb_program(term_id, program_id, customer_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -19172,17 +18418,15 @@ function delete_tb_program(term_id, program_id, customer_id) {
 
                 $('#loader-wrapper').hide();
                 set_side_error('Booking deleted succesfully', 'green');
-                
-                //refresh data
+
                 get_term_bookings($(mc+' .tb_term_id').val() || '');
 
-                //refresh grid
                 if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
                 	get_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -19202,11 +18446,9 @@ function get_tb_schedules(program_id,schedule_id='') {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .tb_schedules_tab').html($('#master_term_booking_view .tb_schedules_tab').html()); //reset
-    $(mc+' .tb_prog_form').html(''); //reset to avoid ps_user_id ps_space_id interference
+    $(mc+' .tb_schedules_tab').html($('#master_term_booking_view .tb_schedules_tab').html()); 
+    $(mc+' .tb_prog_form').html(''); 
 
-    //have to do these here than in master
-    //set each ps_space_id_ sel with a value per index, so that selects don't look all blanks
     set_ps_space_id_defaults(); 
 
     if (program_id) {
@@ -19223,12 +18465,10 @@ function get_tb_schedules(program_id,schedule_id='') {
 
                 let res = response.success;
 
-                //data
                 let data = res.data;
 
                 let html_str = '';
 
-                //program info
                 $(mc+' .tb_sched_program_id').val(res.program.program_id);
                 $(mc+' .tb_schedules_tab .view_account').prop('dataset').intrac_customer_id = res.program.customer_id;
                 $(mc+' .tb_schedules_tab .view_account').prop('dataset').intrac_parent_id = res.program.parent_id;
@@ -19237,7 +18477,6 @@ function get_tb_schedules(program_id,schedule_id='') {
 
                 $('.modal_title_mc1').text(res.program.first_name+' '+res.program.last_name+' '+prog_str+' '+res.program.term_name);
 
-                //data            
                 for (let i = 0; i < data.length; i++) {
 
                     let usernames = data[i].usernames.split(',');
@@ -19257,18 +18496,16 @@ function get_tb_schedules(program_id,schedule_id='') {
                                         </ul></td>\
                                 </tr>';
 
-                                //removed && !data[i].enrolments from class_tb_sched_delete
                 }
 
                 $(mc+' .tb_sched_list tbody').html(html_str);
 
-	            //load schedule if schedule_id is passed e.g. called from grid
 	            if (schedule_id) {
 					$(mc+' .tb_sched_list .edit_tb_sched[data-intrac="'+schedule_id+'"]').click();
 	            }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -19286,7 +18523,6 @@ function get_tb_schedules(program_id,schedule_id='') {
 
 function view_tb_schedule(program_id, schedule_id) {
 
-    /* fetch from api directly*/
     $('#loader-wrapper').show();
 
     $.ajax({
@@ -19300,19 +18536,18 @@ function view_tb_schedule(program_id, schedule_id) {
 
             if (response.success.data.length) {
                 let res = response.success;
-                let itemobj = res.data[0]; //override itemobj
+                let itemobj = res.data[0]; 
 
                 $(mc+' .tb_sched_program_id').val(itemobj.program_id);
                 $(mc+' .tb_sched_schedule_id').val(itemobj.schedule_id);
                 $(mc+' .tb_sched_date').val(convert_date(dayjs(itemobj.schedule_start).format('YYYY-MM-DD')));
                 $(mc+' .tb_sched_schedule_start').val(dayjs(itemobj.schedule_start).format('HH:mm'));
                 $(mc+' .tb_sched_schedule_finish').val(dayjs(itemobj.schedule_finish).format('HH:mm'));
-                
-                let user_ids = itemobj.user_ids.split(',');
+
+                                let user_ids = itemobj.user_ids.split(',');
                 let user_ids_unique = [...new Set(user_ids)];
                 let space_ids = itemobj.space_ids.split(',');
 
-                //spaces
                 if (space_ids.length == 1) {
                     $(mc+' .ps_space_id').val(space_ids[0]);
                 } else {
@@ -19325,13 +18560,12 @@ function view_tb_schedule(program_id, schedule_id) {
                     }
                 }
 
-                //users
                 if (user_ids_unique.length == 1) {
                     $(mc+' .ps_user_id').val(user_ids_unique[0]);
                 } else {
                     $(mc+' .ps_show_users_multiple').click();
 
-                    for (let i = 0; i < user_ids.length; i++) { //user_ids.length will be the same as space_ids.length
+                    for (let i = 0; i < user_ids.length; i++) { 
                         let el = $(mc+' .ps_user_id_').eq(i);
                         $(el).val(user_ids[i]);
                         $(el).closest('tr').find('.ps_su_sel').prop('checked', true);
@@ -19342,7 +18576,6 @@ function view_tb_schedule(program_id, schedule_id) {
                 	set_alter_ps_booking_details(itemobj);
                 }
 
-                //avails
                 let html_str_a = '';
                 if (res.avails && res.avails.length) {
                     html_str_a += '<div class="margin_top_md margin_bottom_sm"><b>Staff Availability on '+convert_date_time(res.avails[0].avail_start, 'D MMM YYYY')+'</b><br><br>';
@@ -19355,11 +18588,11 @@ function view_tb_schedule(program_id, schedule_id) {
 
                 $(mc+' .tb_schedule_cost').val(itemobj.amount)
             }
-            
-            $('#loader-wrapper').hide();
+
+                        $('#loader-wrapper').hide();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();          
@@ -19375,7 +18608,6 @@ function save_tb_schedule() {
 
 	let bd = get_ps_booking_details_data();
 
-    //prepare the data
     let data ={
         class_id: 0,
         schedule_id: $(mc+' .tb_sched_schedule_id').val(),
@@ -19391,22 +18623,19 @@ function save_tb_schedule() {
         schedule_cost: $(mc+' .tb_schedule_cost').val()
     };
 
-    //spaces and users
-    //multiple spaces visible
     if ($(mc+' .ps_space_multiple_div').is(":visible")) {
 
         $(mc+' .ps_su_sel').each(function () {
             if (this.checked) {
                 let s_id = 0;
                 let u_id = 0;
-                
-                s_id = $(this).closest('tr').find('.ps_space_id_').val();
 
-                //multiple users visible
+                                s_id = $(this).closest('tr').find('.ps_space_id_').val();
+
                 let u_el = $(this).closest('tr').find('.ps_user_id_');
                 if ($(u_el).is(":visible")) {
                     u_id = $(u_el).val();
-                } else { //single user, assign only to first schedule_bookings element
+                } else { 
                     u_id = data.schedule_bookings.length ? '0' : $(mc+' .ps_user_id').val();    
                 }
 
@@ -19426,7 +18655,7 @@ function save_tb_schedule() {
             });        	
         }
 
-    } else { //single space
+    } else { 
         data.schedule_bookings.push({
             space_id: $(mc+' .ps_space_id').val() || '0',
             user_id: $(mc+' .ps_user_id').val() || '0'
@@ -19444,7 +18673,6 @@ function save_tb_schedule() {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     errors = [...errors, ...bd.errors];
 
@@ -19464,9 +18692,9 @@ function save_tb_schedule() {
         errors.push('Invalid finish time');
     }
 
-    if (errors.length == 0) { //times are valid
-        
-        if (dayjs(data.schedule_start,'HH:mm:ss').isAfter(dayjs(data.schedule_finish,'HH:mm:ss'))) {
+    if (errors.length == 0) { 
+
+                if (dayjs(data.schedule_start,'HH:mm:ss').isAfter(dayjs(data.schedule_finish,'HH:mm:ss'))) {
             errors.push("Finish time cannot be after start time");
         }
     }
@@ -19488,13 +18716,12 @@ function save_tb_schedule() {
                 $('#loader-wrapper').hide();
                 get_tb_schedules(data.program_id);
 
-                //refresh grid
                 if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
                 	get_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -19517,7 +18744,6 @@ function delete_tb_schedule(program_id,schedule_id) {
     let term_id = $(mc+' .tb_term_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -19532,13 +18758,12 @@ function delete_tb_schedule(program_id,schedule_id) {
                 $('#loader-wrapper').hide();
                 get_tb_schedules(program_id);
 
-                //refresh grid
                 if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
                 	get_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -19570,14 +18795,13 @@ function calc_tb_pb_sched_cost() {
             if (this.checked) {
                 let s_id = 0;
                 let u_id = 0;
-                
-                s_id = $(this).closest('tr').find('.ps_space_id_').val();
-                
-                //multiple users visible
+
+                                s_id = $(this).closest('tr').find('.ps_space_id_').val();
+
                 let u_el = $(this).closest('tr').find('.ps_user_id_');
                 if ($(u_el).is(":visible")) {
                     u_id = $(u_el).val();
-                } else { //single user, assign only to first program_bookings element
+                } else { 
                     u_id = program_bookings.length ? '0' : $(mc+' .ps_user_id').val();    
                 }
 
@@ -19597,7 +18821,7 @@ function calc_tb_pb_sched_cost() {
             });         
         }
 
-    } else { //single space
+    } else { 
         program_bookings.push({
             space_id: $(mc+' .ps_space_id').val() || '0',
             user_id: $(mc+' .ps_user_id').val() || '0'
@@ -19621,9 +18845,8 @@ function calc_tb_pb_sched_cost() {
 function reset_pb_data() {
     $(mc+' .tab-list').html($('#master_perm_booking_view .tab-list').html());
     let el = $('<a>', {class: 'add-link', text: 'dummy link'});
-    open_modal(el); //to adjust tabs
+    open_modal(el); 
 
-    //reset
     $(mc+' .pb_prog_form').html($('#master_perm_booking_view .pb_prog_form').html()).hide();
     $(mc+' .pb_schedules_tab').html('');
 
@@ -19655,12 +18878,10 @@ async function get_perm_bookings(term_id='', reset=true) {
 
             init_ps_booking_details(res);
 
-            //data
             let data = res.data;
 
             let html_str = '';
 
-            //term info
             let options_str_t = '';
             for (let i = 0; i < res.terms.length; i++) {
                 options_str_t += '<option value="'+res.terms[i].term_id+'" data-intrac_from_program="'+res.terms[i].from_program+'">'+res.terms[i].term_name+'</option>';
@@ -19683,7 +18904,6 @@ async function get_perm_bookings(term_id='', reset=true) {
             	$(mc+' .pb_add_program').removeClass('noshow');
             }
 
-            //adjust chevrons
             let show_next = false;
             let show_prev = false;
             let currentIndex = $(mc+' .pb_term_id').prop('selectedIndex');
@@ -19694,8 +18914,8 @@ async function get_perm_bookings(term_id='', reset=true) {
                 if (index > currentIndex && from_program == 1) {
                     show_next = true;
                 }
-                
-                if (index < currentIndex && from_program == 1) {
+
+                                if (index < currentIndex && from_program == 1) {
                     show_prev = true;
                 }
             });
@@ -19714,7 +18934,6 @@ async function get_perm_bookings(term_id='', reset=true) {
             $(mc+' .pb_prog_term_id').text($(mc+' .pb_term_id').val());
             $(mc+' .pb_term_details').text($(mc+' .pb_term_id option:selected').text()+' '+convert_date($(mc+' .pb_term_start').val())+' - '+convert_date($(mc+' .pb_term_finish').val()));
 
-            //data
             for (let i = 0; i < data.length; i++) {
 
                 let usernames = data[i].usernames.split(',');
@@ -19740,7 +18959,7 @@ async function get_perm_bookings(term_id='', reset=true) {
             $(mc+' .pb_programs_list tbody').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -19756,7 +18975,6 @@ async function get_perm_bookings(term_id='', reset=true) {
 }
 
 function view_pb_program(program_id,schedule_id='') {
-    /* fetch from api directly*/
     $('#loader-wrapper').show();
 
     reset_pb_data();
@@ -19774,9 +18992,8 @@ function view_pb_program(program_id,schedule_id='') {
         	$('#loader-wrapper').hide();
 
             if (response.success.data.length) {
-                let itemobj = response.success.data[0]; //override itemobj
+                let itemobj = response.success.data[0]; 
 
-                //customer
                 $(mc+' .pb_prog_customer_id').html('<option value="'+itemobj.customer_id+'">'+itemobj.first_name+' '+itemobj.last_name+'</option>');
 
                 $(mc+' .pb_prog_program_id').val(itemobj.program_id);
@@ -19798,7 +19015,6 @@ function view_pb_program(program_id,schedule_id='') {
                 let user_ids_unique = [...new Set(user_ids)];
                 let space_ids = itemobj.space_ids.split(',');
 
-                //spaces
                 if (space_ids.length == 1) {
                     $(mc+' .ps_space_id').val(space_ids[0]);
                 } else {
@@ -19811,13 +19027,12 @@ function view_pb_program(program_id,schedule_id='') {
                     }
                 }
 
-                //users
                 if (user_ids_unique.length == 1) {
                     $(mc+' .ps_user_id').val(user_ids_unique[0]);
                 } else {
                     $(mc+' .ps_show_users_multiple').click();
 
-                    for (let i = 0; i < user_ids.length; i++) { //user_ids.length will be the same as space_ids.length
+                    for (let i = 0; i < user_ids.length; i++) { 
                         let el = $(mc+' .ps_user_id_').eq(i);
                         $(el).val(user_ids[i]);
                         $(el).closest('tr').find('.ps_su_sel').prop('checked', true);
@@ -19828,12 +19043,11 @@ function view_pb_program(program_id,schedule_id='') {
                 	set_alter_ps_booking_details(itemobj);
                 }
 
-                //cost
-                $(mc+' .pb_program_cost').val(itemobj.program_cost).trigger('input'); //trigger cost calc
+                $(mc+' .pb_program_cost').val(itemobj.program_cost).trigger('input'); 
 
                 $(mc+' .change_cust').addClass('noshow');
 
-                $(mc+' .pb_prog_form h4:first').text($(mc+' .pb_prog_form h4:first').text().replace('Add', 'Edit'));//required in case this function is called directly from the grid
+                $(mc+' .pb_prog_form h4:first').text($(mc+' .pb_prog_form h4:first').text().replace('Add', 'Edit'));
 
 	            let past_term = dayjs($(mc+' .pb_term_finish').val()).isBefore(dayjs());
 	            if (past_term) {
@@ -19842,12 +19056,10 @@ function view_pb_program(program_id,schedule_id='') {
 	            	$(mc+' .pb_progbtn_save').removeClass('noshow');            	
 	            }
 
-	            //load perm bookings if view_pb_program was called directly
 	            if (!$(mc+' .pb_term_id').val()) {
-	            	await get_perm_bookings(itemobj.term_id, false); //load with out reset
+	            	await get_perm_bookings(itemobj.term_id, false); 
 	            }
 
-	            //load schedules if schedule_id is passed e.g. called from grid
 	            if (schedule_id) {
 	    			$(mc+' .tab-list').html($('#master_perm_booking_view .tab-list').html());
 	    			$(mc+' .tl_pb_schedules').click();	            	
@@ -19857,16 +19069,15 @@ function view_pb_program(program_id,schedule_id='') {
             } else {
             	close_modal();
             	set_side_error('Note: This permanent booking has already been deleted', 'amber');
-				
-				if (schedule_id) {
-					//show normal space booking popup
+
+								if (schedule_id) {
 	    			get_booking_details(schedule_id, 'space', true);
 	    			$('.modal_o_booking:first').click(); 
 	    		}           	
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();         
@@ -19884,7 +19095,6 @@ function save_pb_program() {
 
     let bd = get_ps_booking_details_data();
 
-    //prepare the data
     let data ={
         class_id: 0,
         program_id: $(mc+' .pb_prog_program_id').val(),
@@ -19904,22 +19114,19 @@ function save_pb_program() {
         skip_schedules: 1
     };
 
-    //spaces and users
-    //multiple spaces visible
     if ($(mc+' .ps_space_multiple_div').is(":visible")) {
 
         $(mc+' .ps_su_sel').each(function () {
             if (this.checked) {
                 let s_id = 0;
                 let u_id = 0;
-                
-                s_id = $(this).closest('tr').find('.ps_space_id_').val();
-                
-                //multiple users visible
+
+                                s_id = $(this).closest('tr').find('.ps_space_id_').val();
+
                 let u_el = $(this).closest('tr').find('.ps_user_id_');
                 if ($(u_el).is(":visible")) {
                     u_id = $(u_el).val();
-                } else { //single user, assign only to first program_bookings element
+                } else { 
                     u_id = data.program_bookings.length ? '0' : $(mc+' .ps_user_id').val();    
                 }
 
@@ -19939,7 +19146,7 @@ function save_pb_program() {
             });        	
         }
 
-    } else { //single space
+    } else { 
         data.program_bookings.push({
             space_id: $(mc+' .ps_space_id').val() || '0',
             user_id: $(mc+' .ps_user_id').val() || '0'
@@ -19947,7 +19154,6 @@ function save_pb_program() {
     }
 
     let errors = [];
-    //validations
 
     errors = [...errors, ...bd.errors];
 
@@ -19967,9 +19173,9 @@ function save_pb_program() {
         errors.push('Invalid finish time');
     }
 
-    if (errors.length == 0) { //times are valid
-        
-        if (dayjs(data.program_start,'HH:mm:ss').isAfter(dayjs(data.program_finish,'HH:mm:ss'))) {
+    if (errors.length == 0) { 
+
+                if (dayjs(data.program_start,'HH:mm:ss').isAfter(dayjs(data.program_finish,'HH:mm:ss'))) {
             errors.push("Finish time cannot be after start time");
         }
     }
@@ -19987,16 +19193,14 @@ function save_pb_program() {
                 $('#loader-wrapper').hide();
                 set_side_error('Booking saved succesfully', 'green');
 
-                //refresh data
                 get_perm_bookings(data.term_id);
 
-                //refresh grid
                 if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
                 	get_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -20019,7 +19223,6 @@ function delete_pb_program(term_id, program_id, customer_id) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -20033,17 +19236,15 @@ function delete_pb_program(term_id, program_id, customer_id) {
 
                 $('#loader-wrapper').hide();
                 set_side_error('Booking deleted succesfully', 'green');
-                
-                //refresh data
+
                 get_perm_bookings($(mc+' .pb_term_id').val() || '');
 
-                //refresh grid
                 if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
                 	get_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -20063,11 +19264,9 @@ function get_pb_schedules(program_id,schedule_id='') {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .pb_schedules_tab').html($('#master_perm_booking_view .pb_schedules_tab').html()); //reset
-    $(mc+' .pb_prog_form').html(''); //reset to avoid ps_user_id ps_space_id interference
+    $(mc+' .pb_schedules_tab').html($('#master_perm_booking_view .pb_schedules_tab').html()); 
+    $(mc+' .pb_prog_form').html(''); 
 
-    //have to do these here than in master
-    //set each ps_space_id_ sel with a value per index, so that selects don't look all blanks
     set_ps_space_id_defaults(); 
 
     if (program_id) {
@@ -20084,12 +19283,10 @@ function get_pb_schedules(program_id,schedule_id='') {
 
                 let res = response.success;
 
-                //data
                 let data = res.data;
 
                 let html_str = '';
 
-                //program info
                 $(mc+' .pb_sched_program_id').val(res.program.program_id);
                 $(mc+' .pb_schedules_tab .view_account').prop('dataset').intrac_customer_id = res.program.customer_id;
                 $(mc+' .pb_schedules_tab .view_account').prop('dataset').intrac_parent_id = res.program.parent_id;
@@ -20098,7 +19295,6 @@ function get_pb_schedules(program_id,schedule_id='') {
 
                 $('.modal_title_mc1').text(res.program.first_name+' '+res.program.last_name+' '+prog_str+' '+res.program.term_name);
 
-                //data            
                 for (let i = 0; i < data.length; i++) {
 
                     let usernames = data[i].usernames.split(',');
@@ -20118,18 +19314,16 @@ function get_pb_schedules(program_id,schedule_id='') {
                                         </ul></td>\
                                 </tr>';
 
-                                //removed && !data[i].enrolments from class_pb_sched_delete
                 }
 
                 $(mc+' .pb_sched_list tbody').html(html_str);
 
-	            //load schedule if schedule_id is passed e.g. called from grid
 	            if (schedule_id) {
 					$(mc+' .pb_sched_list .edit_pb_sched[data-intrac="'+schedule_id+'"]').click();
 	            }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -20147,7 +19341,6 @@ function get_pb_schedules(program_id,schedule_id='') {
 
 function view_pb_schedule(program_id, schedule_id) {
 
-    /* fetch from api directly*/
     $('#loader-wrapper').show();
 
     $.ajax({
@@ -20161,19 +19354,18 @@ function view_pb_schedule(program_id, schedule_id) {
 
             if (response.success.data.length) {
                 let res = response.success;
-                let itemobj = res.data[0]; //override itemobj
+                let itemobj = res.data[0]; 
 
                 $(mc+' .pb_sched_program_id').val(itemobj.program_id);
                 $(mc+' .pb_sched_schedule_id').val(itemobj.schedule_id);
                 $(mc+' .pb_sched_date').val(convert_date(dayjs(itemobj.schedule_start).format('YYYY-MM-DD')));
                 $(mc+' .pb_sched_schedule_start').val(dayjs(itemobj.schedule_start).format('HH:mm'));
                 $(mc+' .pb_sched_schedule_finish').val(dayjs(itemobj.schedule_finish).format('HH:mm'));
-                
-                let user_ids = itemobj.user_ids.split(',');
+
+                                let user_ids = itemobj.user_ids.split(',');
                 let user_ids_unique = [...new Set(user_ids)];
                 let space_ids = itemobj.space_ids.split(',');
 
-                //spaces
                 if (space_ids.length == 1) {
                     $(mc+' .ps_space_id').val(space_ids[0]);
                 } else {
@@ -20186,13 +19378,12 @@ function view_pb_schedule(program_id, schedule_id) {
                     }
                 }
 
-                //users
                 if (user_ids_unique.length == 1) {
                     $(mc+' .ps_user_id').val(user_ids_unique[0]);
                 } else {
                     $(mc+' .ps_show_users_multiple').click();
 
-                    for (let i = 0; i < user_ids.length; i++) { //user_ids.length will be the same as space_ids.length
+                    for (let i = 0; i < user_ids.length; i++) { 
                         let el = $(mc+' .ps_user_id_').eq(i);
                         $(el).val(user_ids[i]);
                         $(el).closest('tr').find('.ps_su_sel').prop('checked', true);
@@ -20203,7 +19394,6 @@ function view_pb_schedule(program_id, schedule_id) {
                 	set_alter_ps_booking_details(itemobj);
                 }
 
-                //avails
                 let html_str_a = '';
                 if (res.avails && res.avails.length) {
                     html_str_a += '<div class="margin_top_md margin_bottom_sm"><b>Staff Availability on '+convert_date_time(res.avails[0].avail_start, 'D MMM YYYY')+'</b><br><br>';
@@ -20216,11 +19406,11 @@ function view_pb_schedule(program_id, schedule_id) {
 
                 $(mc+' .pb_schedule_cost').val(itemobj.amount)
             }
-            
-            $('#loader-wrapper').hide();
+
+                        $('#loader-wrapper').hide();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();          
@@ -20236,7 +19426,6 @@ function save_pb_schedule() {
 
 	let bd = get_ps_booking_details_data();
 
-    //prepare the data
     let data ={
         class_id: 0,
         schedule_id: $(mc+' .pb_sched_schedule_id').val(),
@@ -20252,22 +19441,19 @@ function save_pb_schedule() {
         schedule_cost: $(mc+' .pb_schedule_cost').val()
     };
 
-    //spaces and users
-    //multiple spaces visible
     if ($(mc+' .ps_space_multiple_div').is(":visible")) {
 
         $(mc+' .ps_su_sel').each(function () {
             if (this.checked) {
                 let s_id = 0;
                 let u_id = 0;
-                
-                s_id = $(this).closest('tr').find('.ps_space_id_').val();
 
-                //multiple users visible
+                                s_id = $(this).closest('tr').find('.ps_space_id_').val();
+
                 let u_el = $(this).closest('tr').find('.ps_user_id_');
                 if ($(u_el).is(":visible")) {
                     u_id = $(u_el).val();
-                } else { //single user, assign only to first schedule_bookings element
+                } else { 
                     u_id = data.schedule_bookings.length ? '0' : $(mc+' .ps_user_id').val();    
                 }
 
@@ -20287,7 +19473,7 @@ function save_pb_schedule() {
             });        	
         }
 
-    } else { //single space
+    } else { 
         data.schedule_bookings.push({
             space_id: $(mc+' .ps_space_id').val() || '0',
             user_id: $(mc+' .ps_user_id').val() || '0'
@@ -20305,7 +19491,6 @@ function save_pb_schedule() {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     errors = [...errors, ...bd.errors];
 
@@ -20325,9 +19510,9 @@ function save_pb_schedule() {
         errors.push('Invalid finish time');
     }
 
-    if (errors.length == 0) { //times are valid
-        
-        if (dayjs(data.schedule_start,'HH:mm:ss').isAfter(dayjs(data.schedule_finish,'HH:mm:ss'))) {
+    if (errors.length == 0) { 
+
+                if (dayjs(data.schedule_start,'HH:mm:ss').isAfter(dayjs(data.schedule_finish,'HH:mm:ss'))) {
             errors.push("Finish time cannot be after start time");
         }
     }
@@ -20349,13 +19534,12 @@ function save_pb_schedule() {
                 $('#loader-wrapper').hide();
                 get_pb_schedules(data.program_id);
 
-                //refresh grid
                 if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
                 	get_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -20378,7 +19562,6 @@ function delete_pb_schedule(program_id,schedule_id) {
     let term_id = $(mc+' .pb_term_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -20393,13 +19576,12 @@ function delete_pb_schedule(program_id,schedule_id) {
                 $('#loader-wrapper').hide();
                 get_pb_schedules(program_id);
 
-                //refresh grid
                 if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
                 	get_grid(false);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -20421,7 +19603,6 @@ function save_sb_booking() {
 
     let bd = get_ps_booking_details_data();
 
-    //prepare the data
     let booking_data = {
         location_id: $('#location_id').val(),
         space_ids: [],
@@ -20439,22 +19620,19 @@ function save_sb_booking() {
         single_booking: true 
     };
 
-    //spaces and users
-    //multiple spaces visible
     if ($(mc+' .ps_space_multiple_div').is(":visible")) {
 
         $(mc+' .ps_su_sel').each(function () {
             if (this.checked) {
                 let s_id = 0;
                 let u_id = 0;
-                
-                s_id = $(this).closest('tr').find('.ps_space_id_').val();
-                
-                //multiple users visible
+
+                                s_id = $(this).closest('tr').find('.ps_space_id_').val();
+
                 let u_el = $(this).closest('tr').find('.ps_user_id_');
                 if ($(u_el).is(":visible")) {
                     u_id = $(u_el).val();
-                } else { //single user, assign only to first schedule_bookings element
+                } else { 
                     u_id = booking_data.schedule_bookings.length ? '0' : $(mc+' .ps_user_id').val();
                 }
 
@@ -20474,7 +19652,7 @@ function save_sb_booking() {
             });        	
         }
 
-    } else { //single space
+    } else { 
 
         booking_data.schedule_bookings.push({
             space_id: $(mc+' .ps_space_id').val() || '0',
@@ -20501,11 +19679,9 @@ function save_sb_booking() {
     };
 
     let errors = [];
-    //validations
 
     errors = [...errors, ...bd.errors];
 
-    //set correct location_id for virtual_locations
     if ($('.virtual_locations').length) {
     	if (booking_data.space_ids[0] > 0) {
     		booking_data.location_id = $(mc+' .ps_space_id option[value="'+booking_data.space_ids[0]+'"]').prop('dataset').intrac_location_id;
@@ -20540,9 +19716,9 @@ function save_sb_booking() {
         errors.push('Please select either an instructor or a '+$('#space_title').val());
     }
 
-    if (errors.length == 0) { //times are valid
-        
-        if (dayjs(booking_data.start,'HH:mm:ss').isAfter(dayjs(booking_data.finish,'HH:mm:ss'))) {
+    if (errors.length == 0) { 
+
+                if (dayjs(booking_data.start,'HH:mm:ss').isAfter(dayjs(booking_data.finish,'HH:mm:ss'))) {
             errors.push("Finish time cannot be after start time");
         }
     }
@@ -20564,14 +19740,12 @@ function save_sb_booking() {
 
                 close_modal();
 
-                //go to customer account
                 if (res.new_receipts) {
                     await viewCustomer(data.customer_id, 'account','',res.new_receipts);
                 } else {
                     await viewCustomer(data.customer_id, 'cust_hist');
                 }
 
-                //refresh grid               
                 if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
                     get_grid(false);    
                 }
@@ -20583,7 +19757,7 @@ function save_sb_booking() {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -20600,12 +19774,10 @@ function save_sb_booking() {
 }
 
 function init_report_fields(el,main_report=true) {
-	//reset selects
     $('#sh_reports .rep_groupby').val('');
     $('#sh_reports .rep_orderby').val('');
     $('#sh_reports .rep_location').val('');
 
-	//dates
     let default_dates = $(el).prop('dataset').intrac_default_dates || '';
     if (default_dates) {
     	default_dates = default_dates.split('-');
@@ -20632,26 +19804,23 @@ function init_report_fields(el,main_report=true) {
 
   	$('#sh_reports .rep_start_date')[0]._flatpickr.setDate(start);
     $('#sh_reports .rep_finish_date')[0]._flatpickr.setDate(finish);
-    
-    if ((start != today) || (finish != today)) {
+
+        if ((start != today) || (finish != today)) {
 		$('#sh_reports .rep_dates_tr').removeClass('noshow');
 		$('#sh_reports .rep_finish_date').closest('li').removeClass('noshow');
     }
 
     $('#sh_reports .rep_start_date').prop('dataset').intrac_max_days = $(el).prop('dataset').intrac_max_days;
 
-    //terms
     $('#sh_reports .rep_term_id').html('');
     $('#sh_reports .rep_term_id').closest('.toggle_div').addClass('noshow');
     $('#sh_reports .rep_last_term_id').html('');
     $('#sh_reports .rep_last_term_id').closest('.toggle_div').addClass('noshow');
 
-    //month
     $('#sh_reports .rep_month').val('');
     $('#sh_reports .rep_month')[0]._flatpickr.setDate(start);
     $('#sh_reports .rep_month').closest('li').addClass('noshow');
 
-    //payperiods
     $('#sh_reports .rep_payperiod').html('');
     $('#sh_reports .rep_payperiod').closest('.toggle_div').addClass('noshow');
 
@@ -20660,21 +19829,17 @@ function init_report_fields(el,main_report=true) {
     	$('#sh_reports .rep_dates_tr').addClass('noshow');
     }
 
-    //tabs
 	$('#sh_reports .view_rep_data').click();
 
     if (main_report) {
-	   	//sub reports
 	    let sub_reports = JSON.parse($(el).prop('dataset').intrac_sub_reports || '[]');
 	    let li_str = '';
 	    let opts_str = '';
 	    if (sub_reports.length) {
-		    //loop 1 - adjust names and sort
 		    for (let i = 0; i < sub_reports.length; i++) {
 		    	sub_reports[i].report_display = replaceTitles(sub_reports[i].report);
 		    }
 		    sub_reports = sub_reports.sort((a, b) => a.report_display.localeCompare(b.report_display));
-		    //loop 2 - options string
 		    for (let i = 0; i < sub_reports.length; i++) {
 		    	let d = sub_reports[i];
 		    	opts_str += '<option value="'+d.report+'" data-intrac_report_description="'+d.report_description+'" data-intrac_default_dates="'+d.default_dates+'" data-intrac_max_days="'+d.max_days+'" data-intrac_navigation="'+d.navigation+'">'+d.report_display+'</option>';
@@ -20781,9 +19946,8 @@ async function run_report(report,use_local=false,rawcsv='',lists_data) {
 
     let location_id = $('#location_id').val();
 
-    $('#reports .rep_report').val(report); //store for rawcsv
+    $('#reports .rep_report').val(report); 
 
-    //store groupby, orderby, filter values
     let _options = {
     	_groupby: $('#sh_reports .rep_groupby').val(),
     	_orderby: $('#sh_reports .rep_orderby').val(),
@@ -20791,7 +19955,6 @@ async function run_report(report,use_local=false,rawcsv='',lists_data) {
     	_term_id: $('#sh_reports .rep_term_id').val()
     }
 
-    //resets
     $('#report_result').html('');
     $('#report_chart').html('');
     destroy_charts();
@@ -20860,7 +20023,7 @@ async function run_report(report,use_local=false,rawcsv='',lists_data) {
     }
 
     if ($('#report_summary_title .rep_sub_name').prop('dataset').intrac_term_id) {
-    	if (!querydata.term_id) { //priority given to rep_term_id, this is used only for attendance where rep_term_id is not visible
+    	if (!querydata.term_id) { 
     		querydata.term_id = $('#report_summary_title .rep_sub_name').prop('dataset').intrac_term_id;
     	}
     }
@@ -20894,11 +20057,10 @@ async function run_report(report,use_local=false,rawcsv='',lists_data) {
 
             format_report(res,rawcsv,_options);
 
-            //store for later
             saveItem_iDB(res);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -20915,11 +20077,10 @@ function format_report(res,rawcsv,_options) {
 	let sms_links = false;
 	let email_links = false;
 
-    //grouping options
     let opts_str_g = res.options.grouping.length ? '' : '<option value="">Default</option>';
     let opts_str_g_li = res.options.grouping.length ? '' : '<li><a href="#" class="menu_item" data-intrac="">Default</a></li>';
-    
-    for (let i = 0; i < res.options.grouping.length; i++) {
+
+        for (let i = 0; i < res.options.grouping.length; i++) {
         let s = res.options.grouping[i];
         if (s.display) {
         	opts_str_g += '<option value="'+s.value+'">'+s.display+'</option>'
@@ -20943,12 +20104,11 @@ function format_report(res,rawcsv,_options) {
     if (wordCount(opts_str_g, '</option>') == 1) {
         $('#sh_reports .rep_groupby').closest('.toggle_div').addClass('noshow');
     }
-    
-    //sorting options
+
     let opts_str_s = res.options.sorting.length ? '' : '<option value="">Default</option>';
     let opts_str_s_li = res.options.sorting.length ? '' : '<li><a href="#" class="menu_item" data-intrac="">Default</a></li>';
-    
-    for (let i = 0; i < res.options.sorting.length; i++) {
+
+        for (let i = 0; i < res.options.sorting.length; i++) {
         let s = res.options.sorting[i];
         if (s.display) {
         	opts_str_s += '<option value="'+s.value+'">'+s.display+'</option>'
@@ -20988,7 +20148,6 @@ function format_report(res,rawcsv,_options) {
         $('#sh_reports .rep_orderby').closest('.toggle_div').addClass('noshow');
     }
 
-    //Dates
     if (res.options.filtering.includes('Dates')) {
         $('#sh_reports .rep_dates_tr').removeClass('noshow');
         $('#sh_reports .rep_finish_date').closest('li').removeClass('noshow');
@@ -20999,8 +20158,6 @@ function format_report(res,rawcsv,_options) {
         $('#sh_reports .rep_dates_tr').addClass('noshow');
     }
 
-    //Navigation
-    //Terms
     let opts_str_t = '';
     let opts_str_t_li = '';
     if (res.options.navigation.includes('Term')) {
@@ -21033,22 +20190,19 @@ function format_report(res,rawcsv,_options) {
         	if ($('#sh_reports .rep_last_term_id option[value="'+res.options.last_term_id+'"]').length) {
             	$('#sh_reports .rep_last_term_id').val(res.options.last_term_id);
             }
-            //don't set any default
         }
     } else {
         $('#sh_reports .rep_term_id').closest('.toggle_div').addClass('noshow');
         $('#sh_reports .rep_last_term_id').closest('.toggle_div').addClass('noshow');
     }
 
-    //Month
     if (res.options.navigation == 'Month') {
     	$('#sh_reports .rep_month').closest('li').removeClass('noshow');
-    	$('#sh_reports .rep_dates_tr').addClass('noshow'); //hide dates when showing month
+    	$('#sh_reports .rep_dates_tr').addClass('noshow'); 
     } else {
     	$('#sh_reports .rep_month').closest('li').addClass('noshow');
     }
 
-    //Payperiods
     let opts_str_pp = '';
     let opts_str_pp_li = '';
     if (res.options.navigation.includes('Payperiod') || res.options.navigation.includes('Comsperiod')) {
@@ -21068,14 +20222,13 @@ function format_report(res,rawcsv,_options) {
         $('#sh_reports .rep_payperiod').closest('.toggle_div').addClass('noshow');
     }
 
-    //charts
     let chart_rules = res.options.charts;
     if (chart_rules.master) {
     	chart_rules.master.colors = chart_rules.master.colors || {};	
     }
-    
-	let chart_obj_master = {
-		type: 'doughnut', //default
+
+    	let chart_obj_master = {
+		type: 'doughnut', 
         data: {
 	        labels: [],
 	        datasets: [{
@@ -21124,7 +20277,6 @@ function format_report(res,rawcsv,_options) {
     let float_steps = ['Payroll'];
     let perc_array = ['Percentage'];
 
-    //loop 1 - check for multiple locations and prepare final_data
     let locations = [];
     for (let a = 0; a < res.items.length; a++) {
         let data = res.items[a].data;
@@ -21136,7 +20288,7 @@ function format_report(res,rawcsv,_options) {
 
     locations = locations.sort();
 
-    let opts_str_l = ''; //for locations filter
+    let opts_str_l = ''; 
     let opts_str_l_li = '';
 
     if (res.options.is_multilocation && locations.length) {
@@ -21144,16 +20296,15 @@ function format_report(res,rawcsv,_options) {
             let loc_str = locations[a] || $('#ho_title').val();
             final_data.push({
                 location: loc_str,
-                loc_items: filterStepsByLocation(res.items, locations[a]) //is same as res.items filtered by location
+                loc_items: filterStepsByLocation(res.items, locations[a]) 
             })
             opts_str_l += '<option value="'+loc_str+'">'+loc_str+'</option>';
             opts_str_l_li += '<li><a href="#" class="menu_item" data-intrac="'+loc_str+'">'+loc_str+'</a></li>';
         }
 
         if ((final_data.length > 1) && chart_rules.master) {
-        	chart_data.push(structuredClone(chart_obj_master)); //first object is always location level split at the top most level
+        	chart_data.push(structuredClone(chart_obj_master)); 
         	chart_data[0].extras.title = 'Summary';
-        	//top chart is always doughnut, no need to set type
         	if (ccy_array.includes(chart_rules.master.y)) {
         		chart_data[0].extras.ccy = true;
         	}
@@ -21164,11 +20315,10 @@ function format_report(res,rawcsv,_options) {
     } else {
         final_data.push({
             location: '',
-            loc_items: res.items //full res.items
+            loc_items: res.items 
         })                  
     }
 
-    //location filter
     if (opts_str_l && final_data.length > 1) {
     	$('#sh_reports .rep_location').html('<option value="">All</option>'+opts_str_l);
         $('#sh_reports .rep_location_menu').html('<li><a href="#" class="menu_item" data-intrac="">All</a></li>'+opts_str_l_li);
@@ -21184,7 +20334,6 @@ function format_report(res,rawcsv,_options) {
         $('#sh_reports .rep_location').closest('.toggle_div').addClass('noshow');
     }
 
-    //report filters summary
     set_report_filters_summary();
 
     let html_str_all_l = '';
@@ -21192,26 +20341,23 @@ function format_report(res,rawcsv,_options) {
     let grandTotal = null;
     let gstGrandTotal = null;
     let gstFreeGrandTotal = null;
-    let summary_fields = res.options.summary_fields; //other summary fields
+    let summary_fields = res.options.summary_fields; 
 
-    //loop 2 - prepare html
-    for (let a = 0; a < final_data.length; a++) { //final data is [{location, loc_items}] where loc_items is same as res.items filtered by location
+    for (let a = 0; a < final_data.length; a++) { 
         let loc_items = final_data[a].loc_items;
 
-        //data per each location
-        let html_str_l = ''; //html for all items in this location
-        let chart_data_l = []; //chart data for all items in this location
+        let html_str_l = ''; 
+        let chart_data_l = []; 
 
         let grandTotal_l = null;
         let gstGrandTotal_l = null;
         let gstFreeGrandTotal_l = null;
 
-        //location level chart of all loc_items
         let chart_obj_ = null;
         if (chart_rules.master) {
         	chart_obj_ = structuredClone(chart_obj_master);
 
-        	chart_obj_.extras.title = final_data[a].location || 'Summary'; //non multilocation clients
+        	chart_obj_.extras.title = final_data[a].location || 'Summary'; 
         	if (chart_rules.master.type) {
         		chart_obj_.type = chart_rules.master.type
         	}
@@ -21230,8 +20376,8 @@ function format_report(res,rawcsv,_options) {
             let data = structuredClone(loc_items[x].data);
 
             let loc_items_title = (final_data[a].location ? final_data[a].location+' - ' : '')+loc_items[x].step_name;
-            if (!/^[A-Z]/.test(loc_items[x].step_name)) { //first letter is not uppercase?	
-            	loc_items_title = ''; //don't show the title, there won't be any data to display e.g. _credits_summary
+            if (!/^[A-Z]/.test(loc_items[x].step_name)) { 
+            	loc_items_title = ''; 
             }
 
             if (data.length) {
@@ -21240,7 +20386,6 @@ function format_report(res,rawcsv,_options) {
                 let gstTotal = null;
                 let gstFreeTotal = null;
 
-                //chart object setup
                 let chart_obj = null;
                 let c_step = chart_rules[loc_items[x].step_id] || structuredClone(chart_rules.master);
                 if (c_step && !c_step.nochart) {
@@ -21262,31 +20407,28 @@ function format_report(res,rawcsv,_options) {
 		        		chart_obj = null;
 		        	}
 		        	if (['stackedbar', 'stackedline'].includes(c_step.type)) {
-		        		chart_obj.data.datasets = []; //more then one items in datasets.data, more data conversion needed further below
+		        		chart_obj.data.datasets = []; 
 		        		chart_obj.options.scales = {x: {stacked: true}, y: {stacked: true}};
 		        	}                	
                 }
 
-                //add separate table for each result element in res.items, which is now in loc_items i.e. filtered by location
 
                 let groupBy = $('#sh_reports .rep_groupby').val();
                 let orderBy = $('#sh_reports .rep_orderby').val();
 
                 let groupByAmount = (data[0]['Amount'] != undefined) ? true : false;
 
-                //if rep_groupby is set
                 if (groupBy) {
 
-                	if (groupBy.includes('~')) { //2d data transformation
+                	if (groupBy.includes('~')) { 
                 		let opts = groupBy.split('~');
                 		if (opts.length == 4) {
-                			data = dataTransform2DStrings(data, opts[0], opts[1], opts[2], opts[3]); //x, x1, y, P
+                			data = dataTransform2DStrings(data, opts[0], opts[1], opts[2], opts[3]); 
                 		} else {
-                			data = dataTransform2D(data, opts[0], opts[1], opts[2]); //x, x1, y	
+                			data = dataTransform2D(data, opts[0], opts[1], opts[2]); 
                 		}
-                		
-                	} else { //normal groupby
-	                    //fallback for groupBy, mostly the first option is 'Default' with a blank value
+
+                		                	} else { 
 	                    if (data[0][groupBy] === undefined) {
 	                        groupBy = $('#sh_reports .rep_groupby option:first').val();
 	                    }
@@ -21294,15 +20436,15 @@ function format_report(res,rawcsv,_options) {
 	                    if (groupByAmount) {
 		                    let sbg = summarizeByGroup(data, groupBy, orderBy);
 
-		                    data = sbg.grouped.filter(item => item.Amount === undefined || item.Amount > 0 || item.Amount < 0); //remove $0 Amount grouped entries e.g. credits -ve and +ve resulting to 0
+		                    data = sbg.grouped.filter(item => item.Amount === undefined || item.Amount > 0 || item.Amount < 0); 
 		                    groupTotal = sbg.groupTotal;
 		                    gstTotal = sbg.gstTotal;
 		                    gstFreeTotal = sbg.gstFreeTotal;
-	                    } else if (/^[A-Z]/.test(loc_items[x].step_name)) { //first letter is uppercase?
+	                    } else if (/^[A-Z]/.test(loc_items[x].step_name)) { 
 
 	                    	let consol_data = consolidateByGroup(data, groupBy, orderBy);
 
-	                    	if ($('.instructor-page').length && (consol_data.length == 2) && data[0] && (data[0]['Type'] != undefined) && (consol_data[0]['User'] != undefined) && (consol_data[0]['Commission'] != undefined)) { //length = 2 is user and totals rows e.g. comms report
+	                    	if ($('.instructor-page').length && (consol_data.length == 2) && data[0] && (data[0]['Type'] != undefined) && (consol_data[0]['User'] != undefined) && (consol_data[0]['Commission'] != undefined)) { 
 	                    		data = dataTransform2D(data, 'Type', 'User', 'Commission');
 	                    		data.forEach(o => delete o['Commission']);
 	                    	} else {
@@ -21319,11 +20461,10 @@ function format_report(res,rawcsv,_options) {
                     });
                 }
 
-                //construct header based on first object in data
                 let header = [];
                 if (data[0]) {
                     for (const key in data[0]) {
-                        if (/^[A-Z]/.test(key)) { //first letter is uppercase?
+                        if (/^[A-Z]/.test(key)) { 
                             header.push({
                                 field: key,
                                 ralign: typeof data[0][key] === 'number' || data[0][key].includes('CALC') ? true : false
@@ -21338,19 +20479,16 @@ function format_report(res,rawcsv,_options) {
                     }
                 }
 
-                //title for each table - if there are multiple loc_items and no grouping and not multilocation
                 if ((loc_items.length > 1) && (!groupBy))  {
                 	html_str_l += '<h4 class="text-xl leading-[130%] margin_btm_sm">'+loc_items_title+'</h4>';	
                 }
 
-                //header
                 html_str_l += '<div class="table-wrapper rep-table"><table class="table margin_btm_table rep_loc_data" data-intrac_rep_loc_data="'+final_data[a].location+'"><thead><tr>'
                 for (let n = 0; n < header.length; n++) {
                     html_str_l += '<th'+(header[n].ralign ? ' class="align-right"' : '')+'>'+(header[n].field == groupBy && groupByAmount ? (loc_items[x].step_name || header[n].field) : header[n].field)+'</th>'
                 }
                 html_str_l += '</tr></thead><tbody>';
 
-                //now loop through data
                 for (let i = 0; i < data.length; i++) {
 
                     let d = data[i];
@@ -21361,7 +20499,7 @@ function format_report(res,rawcsv,_options) {
                         let field = header[n].field;
 
                         let val = d[field];
-                        let val_c = val; //for charts
+                        let val_c = val; 
                         if (float_array.includes(field) || ((typeof val === 'number') && !ccy_array.includes(field) && float_steps.includes(loc_items[x].step_name))) {
                         	val = numberformat(val).toFixed(2);
                         	val_c = val;
@@ -21419,7 +20557,6 @@ function format_report(res,rawcsv,_options) {
                         	val = '<a href="#" class="view_email_msg primary">View Email</a><span class="noshow email-body email_msg">'+val+'</span>';
                         }
 
-                        //groupBy totals are calculated inside summarizeByGroup
                         if (!groupBy && ccy_array.includes(field)) {
                             groupTotal += d[field];
                             if (data.gst !== undefined) {
@@ -21447,20 +20584,16 @@ function format_report(res,rawcsv,_options) {
                         if (chart_obj) {
 
                         	if (groupBy && (i == data.length-1) && (d[header[0].field] == 'Totals')) {
-                        		//Totals row generated by dataTransform2D or consolidateByGroup, ignore
                         	} else {
-	                        	//field & val_c available for each datapoint d
-	                        	if ((!groupBy && (c_step.x == field)) || (groupBy && (groupBy.split('~')[0] == field)))  { //handles normal groupBy and groupBy x~x1~y models
-	                        		//label - x
+	                        	if ((!groupBy && (c_step.x == field)) || (groupBy && (groupBy.split('~')[0] == field)))  { 
 	                        		chart_obj.data.labels.push(val_c);
 	                        	} else if (['stackedbar', 'stackedline'].includes(c_step.type)) {
 	                        		if (!(c_step.y_exclude || []).includes(field)) {
-		                        		//datasets
 		                        		if (chart_obj.data.datasets.filter(item => item.label == field).length) {
 		                        			for (let y = 0; y < chart_obj.data.datasets.length; y++) {
 		                        				if (chart_obj.data.datasets[y].label == field) {
 		                        					chart_obj.data.datasets[y].data.push(val_c);
-		                        					break; //break the inner for loop
+		                        					break; 
 		                        				}
 		                        			}
 		                        		} else {
@@ -21474,10 +20607,9 @@ function format_report(res,rawcsv,_options) {
 		                        		}
 	                        		}
 	                        	} else if (c_step.y == field) {
-	                        		//value - y
 	                        		chart_obj.data.datasets[0].data.push(val_c);
 	                                if (chart_obj.data.labels.length) {
-	                                    chart_obj.data.datasets[0].backgroundColor.push(c_step.colors[chart_obj.data.labels[chart_obj.data.labels.length-1]] || getRandomColor()); //c_step.colors[field] will not work here as field is always constant e.g Amount
+	                                    chart_obj.data.datasets[0].backgroundColor.push(c_step.colors[chart_obj.data.labels[chart_obj.data.labels.length-1]] || getRandomColor()); 
 	                                } else {
 	                                    chart_obj.data.datasets[0].backgroundColor.push(getRandomColor())
 	                                }
@@ -21493,7 +20625,6 @@ function format_report(res,rawcsv,_options) {
                 	chart_data_l.push(chart_obj);
                 }
 
-                //totals row
                 if (groupTotal !== null) {
                     html_str_l += '<tr>';
                     for (let n = 0; n < header.length; n++) {
@@ -21507,7 +20638,7 @@ function format_report(res,rawcsv,_options) {
                     }
                     html_str_l += '</tr>';
                     if (chart_obj_) {
-                    	if (groupTotal > 0 || groupTotal < 0) { //don't push 0 items to chart
+                    	if (groupTotal > 0 || groupTotal < 0) { 
                     		chart_obj_.data.labels.push(loc_items[x].step_name);
                     		chart_obj_.data.datasets[0].data.push(numberformat(groupTotal,0));
                     		chart_obj_.data.datasets[0].backgroundColor.push(chart_rules.master.colors[loc_items[x].step_name] || getRandomColor());
@@ -21515,7 +20646,6 @@ function format_report(res,rawcsv,_options) {
                     }
                 }
 
-                //gst free total row
                 if ((gstFreeTotal !== null) && (gstFreeTotal > 0 || gstFreeTotal < 0)) {
                     html_str_l += '<tr>';
                     for (let n = 0; n < header.length; n++) {
@@ -21530,7 +20660,6 @@ function format_report(res,rawcsv,_options) {
                     html_str_l += '</tr>';              
                 }
 
-                //count row
                 if (res.options.show_count) {
                     html_str_l += '<tr>';
                     for (let n = 0; n < header.length; n++) {
@@ -21541,9 +20670,8 @@ function format_report(res,rawcsv,_options) {
                     html_str_l += '</tr>'; 
                 }
 
-                html_str_l += '</tbody></table></div>'; //close table
+                html_str_l += '</tbody></table></div>'; 
 
-                //grandtotals
                 if (groupBy) {
                     if (groupTotal !== null) {
                         grandTotal += groupTotal;
@@ -21564,11 +20692,11 @@ function format_report(res,rawcsv,_options) {
                     html_str_l += '<div class="w-full bg-natural-white p-8 rounded-[20px] flex justify-center items-center margin_top_md"><p class="text-sm/[18px]">No data to show</p></div>';
                 }
             }
-        } //end of for loop of loc_items
+        } 
 
-        let html_str_ = ''; //for header sumamry of location
+        let html_str_ = ''; 
 
-        if (grandTotal_l === null) { //no headline summary needed
+        if (grandTotal_l === null) { 
             if (final_data[a].location) {
                 html_str_ += '<h2 class="text-lg leading-[18px] margin_btm_md rep_loc_data" data-intrac_rep_loc_data="'+final_data[a].location+'">'+final_data[a].location+'</h2>'
             }
@@ -21584,7 +20712,7 @@ function format_report(res,rawcsv,_options) {
             	s_td += '<td>'+numberformatccy(grandTotal_l)+'</td>';
             }                
 
-            if (res.options.no_gst) { //no gst at all
+            if (res.options.no_gst) { 
             	gstGrandTotal_l = 0;
             	gstFreeGrandTotal_l = grandTotal_l;
             }
@@ -21601,14 +20729,12 @@ function format_report(res,rawcsv,_options) {
             	s_td += '<td>'+numberformatccy(gstFreeGrandTotal_l)+'</td>';
             }
 
-            //other summary fields
 			for (let s = 0; s < summary_fields.length; s++) {
 				let sf = summary_fields[s];
 
 				let sf_val = evalExpression(sf.value, { grandTotal: grandTotal_l }, loc_items);
 
 				if (sf_val !== null) {
-					//for all locations summary
 					if (sf[sf.display] == undefined) {
 						sf[sf.display] = 0;
 					}
@@ -21647,20 +20773,18 @@ function format_report(res,rawcsv,_options) {
 
         chart_data = [...chart_data, ...(chart_obj_ ? [chart_obj_] : []), ...chart_data_l];
 
-        //All locations chart - if there are multiple locations. first object is always location level split at the top most level
         if (res.options.is_multilocation && final_data.length > 1 && chart_data[0]) {
-        	if (grandTotal_l > 0 || grandTotal_l < 0) { //don't push 0 items to chart
+        	if (grandTotal_l > 0 || grandTotal_l < 0) { 
         		chart_data[0].data.labels.push(final_data[a].location);
         		chart_data[0].data.datasets[0].data.push(numberformat(grandTotal_l,0));
         		chart_data[0].data.datasets[0].backgroundColor.push(chart_rules.master.colors[final_data[a].location] || getRandomColor());            		
         	}
         }
 
-    } //end of for loop of locations
+    } 
 
-    //All locations summary - show even there is only one location in final_data as there might be summary_fields
     if (res.options.is_multilocation) {
-        if (grandTotal !== null) { //overall headline summary needed
+        if (grandTotal !== null) { 
             html_str += '<div class="rep_loc_data">\
                             <h2 class="text-lg leading-[18px] margin_btm_md">Summary</h2>';
 
@@ -21672,7 +20796,7 @@ function format_report(res,rawcsv,_options) {
             	s_td += '<td>'+numberformatccy(grandTotal)+'</td>';
             }                
 
-            if (res.options.no_gst) { //no gst at all
+            if (res.options.no_gst) { 
             	gstGrandTotal = 0;
             	gstFreeGrandTotal = grandTotal;
             }
@@ -21689,11 +20813,9 @@ function format_report(res,rawcsv,_options) {
             	s_td += '<td>'+numberformatccy(gstFreeGrandTotal)+'</td>';
             }
 
-            //other summary fields
 			for (let s = 0; s < summary_fields.length; s++) {
 				let sf = summary_fields[s];
 
-				//all locations summary
 				if ((sf[sf.display] != undefined) && sf.ho_only)  {
 		            s_th += '<th>'+sf.display+'</th>';
 		            s_td += '<td>'+numberformatccy(sf[sf.display])+'</td>';
@@ -21720,8 +20842,8 @@ function format_report(res,rawcsv,_options) {
     html_str += html_str_all_l;
 
     $('#report_result').html(html_str);
-   
-    let html_str_c = '';
+
+       let html_str_c = '';
     for (let i = 0; i < chart_data.length; i++) {
     	if (chart_data[i].data.labels.length) {
     		let switches = '<img class="switch_chart margin_left_sm '+(['bar'].includes(chart_data[i].type) ? '' : 'noshow')+'" data-intrac_allowed="bar" src="images/icons/pie.svg" data-intrac="doughnut" alt="">\
@@ -21746,7 +20868,7 @@ function format_report(res,rawcsv,_options) {
     if (html_str_c) {
     	$('.view_rep_data').closest('div').removeClass('noshow');
     } else {
-    	if ($('.view_rep_data').is(":visible")) { //in chart mode currently and about to hide switch to data mode option because of no charts
+    	if ($('.view_rep_data').is(":visible")) { 
     		$('.view_rep_data').click();
     	}
     	$('.view_rep_data').closest('div').addClass('noshow');
@@ -21757,10 +20879,9 @@ function format_report(res,rawcsv,_options) {
     }
 
 	if ($('#sh_reports .rep_location_menu').closest('.toggle_div').is(":visible") && $('#sh_reports .rep_location').val()) {
-		$('#sh_reports .rep_location').change(); //trigger change
+		$('#sh_reports .rep_location').change(); 
 	}
 
-    //links
     let more_menu = false;
     if (html_str.includes('table')) {
     	$('#sh_reports .rep_rawcsv').closest('li').removeClass('noshow');
@@ -21795,7 +20916,6 @@ function format_report(res,rawcsv,_options) {
 
             for (let x = 0; x < res.items.length; x++) {
                 let data = res.items[x].data;
-                //tweak data
                 if (res.items[x].step_name) {
                     for (let y = 0; y < data.length; y++) {
                         let d = data[y];
@@ -21806,7 +20926,7 @@ function format_report(res,rawcsv,_options) {
                     }
                 }
 
-                if (/^[A-Z]/.test(res.items[x].step_name)) { //first letter is uppercase?
+                if (/^[A-Z]/.test(res.items[x].step_name)) { 
                 	merged_data = [...merged_data, ...data];
                 }
             }
@@ -21824,8 +20944,6 @@ function format_report(res,rawcsv,_options) {
         }
     }
 
-    //helper functions
-    //subset of res.items based on location name. If location doesn't exist in step.data, returns the full data
 	function filterStepsByLocation(stepsArray, targetLocation) {
 	    return stepsArray.map(step => {
 	        const hasLocationKey = step.data.some(entry => Object.prototype.hasOwnProperty.call(entry, $('#location_title').val()) || Object.prototype.hasOwnProperty.call(entry, toTitleCase($('#location_title').val())));
@@ -21839,9 +20957,6 @@ function format_report(res,rawcsv,_options) {
 	    });
 	}
 
-    //consolidate/group items based on rep_groupby, and sort based on rep_orderby
-    //returns grouped items based on sort order and grand totals of grouped items
-    //preserve class_id, customer_id if it exists for links
 	function summarizeByGroup(data, groupByKey, sortBy) {
 	    const summary = new Map();
 	    let groupTotal = 0;
@@ -21861,22 +20976,19 @@ function format_report(res,rawcsv,_options) {
 	            summary.set(group, {
 	                [groupByKey]: group,
 	                Amount: 0,
-	                ...(group_id !== null && item[group_id] && { [group_id]: item[group_id] }), //[group_id] here to show class_id etc rather than group_id
+	                ...(group_id !== null && item[group_id] && { [group_id]: item[group_id] }), 
 	                ...(sortBy !== groupByKey && { [sortBy]: sortValue })
 	            });
 	        }
 
 	        summary.get(group).Amount += amount;
 
-	        // Totals
 	        groupTotal += amount;
 	        hasGST ? gstTotal += amount : gstFreeTotal += amount;
 	    });
 
-	    // Convert to sorted array
 	    let result = Array.from(summary.values());
 
-	    // Sort result
 	    result.sort((a, b) => {
 	        return sortBy === 'Amount' || typeof a[sortBy] === 'number'
 	            ? a.Amount - b.Amount
@@ -21891,9 +21003,6 @@ function format_report(res,rawcsv,_options) {
 	    };
 	}
 
-	//similar to summarizeByGroup above, but when not focused on Amount summaries
-	//consolidates numeric fields, excludes non-numeric fields that are other than groupByKey, returns totals row as well
-	//preserve class_id, customer_id if it exists for links. Also populates parent_id,email,altemail,phone from data (first matching record with the customer_id if it exists)
 	function consolidateByGroup(data, groupByKey, sortBy) {
 	    const summary = new Map();
 	    const numericTotals = {};
@@ -21909,7 +21018,7 @@ function format_report(res,rawcsv,_options) {
 	        if (!summary.has(group)) {
 	            summary.set(group, { 
 	                [groupByKey]: group,
-	                ...(group_id !== null && item[group_id] && { [group_id]: item[group_id] }), //[group_id] here to show class_id etc rather than group_id 
+	                ...(group_id !== null && item[group_id] && { [group_id]: item[group_id] }), 
 	                ...(sortBy !== groupByKey && { [sortBy]: sortValue })
 	            });
 	        }
@@ -21921,27 +21030,21 @@ function format_report(res,rawcsv,_options) {
 
 	            const value = item[key];
 
-	            // Only process numeric fields and CALC fields
 	            if (!isNaN(value) && value !== '' && value !== null) {
 	                const num = parseFloat(value);
 
-	                // Add to current group
 	                groupEntry[key] = (groupEntry[key] || 0) + num;
 
-	                // Track grand totals
 	                numericTotals[key] = (numericTotals[key] || 0) + num;
 	            } else if (value && value.includes('CALC')) {
-	            	
-	            	// Add to current group
+
 	            	groupEntry[key] = value;
 
-	            	// Track calcFields
 	            	calcFields[key] = value;
 	            }
 	        }
 	    });
 
-	    // Convert to sorted array
 	    const result = Array.from(summary.values());
 
 	    result.sort((a, b) => {
@@ -21950,7 +21053,6 @@ function format_report(res,rawcsv,_options) {
 	            : String(a[sortBy]).localeCompare(String(b[sortBy]));
 	    });
 
-	    // Post-process: populate parent_id, email, phone based on customer_id
 	    result.forEach(groupEntry => {
 	        if ('customer_id' in groupEntry) {
 	            const match = data.find(item => item.customer_id === groupEntry.customer_id);
@@ -21963,23 +21065,18 @@ function format_report(res,rawcsv,_options) {
 	        }
 	    });
 
-	    // Add final totals row
 	    const totalRow = { [groupByKey]: 'Totals', ...numericTotals, ...calcFields };
 	    result.push(totalRow);
 
 	    return result;
 	}
 
-	//convert 1D JSON array to 2D, so that the table could use x1 as column names
-	//groupKey is x (e.g. date), pivotKey is x1 (e.g. type), valueKey is y (e.g. total)
-	//retuns totals per each x1 (e.g. type) as well as the last row
 	function dataTransform2D(data, groupKey, pivotKey, valueKey) {
 	    const groupMap = new Map();
 	    const allPivotValues = new Set();
 	    const pivotTotals = {};
 	    let grandTotal = 0;
 
-	    // Step 1: Group and collect unique pivot values
 	    for (const entry of data) {
 	        const group = entry[groupKey];
 	        const pivot = entry[pivotKey];
@@ -21994,12 +21091,10 @@ function format_report(res,rawcsv,_options) {
 	        const groupEntry = groupMap.get(group);
 	        groupEntry[pivot] = (groupEntry[pivot] || 0) + value;
 
-	        // Add to pivot-wise totals
 	        pivotTotals[pivot] = (pivotTotals[pivot] || 0) + value;
 	        grandTotal += value;
 	    }
 
-	    // Step 2: Build final result
 	    const result = [];
 
 	    for (const [group, pivotData] of groupMap.entries()) {
@@ -22016,7 +21111,6 @@ function format_report(res,rawcsv,_options) {
 	        result.push(row);
 	    }
 
-	    // Step 3: Add totals row
 	    const totalsRow = { [groupKey]: "Totals" };
 	    let totalOfTotals = 0;
 
@@ -22032,14 +21126,11 @@ function format_report(res,rawcsv,_options) {
 	    return result;
 	}
 
-	//same as dataTransform2D above, except the count is based on string, used in attendance
-	//will still return Totals row i.e. vertical totals, but will not return Total in each result i.e. horizontal totals
 	function dataTransform2DStrings(data, groupKey, pivotKey, valueKey, countCode) {
 	    const groupMap = new Map();
 	    const pivotCounts = {};
 	    const pivotValueSet = new Set();
 
-	    // Step 1: Group values and collect all pivot keys
 	    for (const entry of data) {
 	        const group = entry[groupKey];
 	        const pivot = entry[pivotKey];
@@ -22059,7 +21150,6 @@ function format_report(res,rawcsv,_options) {
 	        }
 	    }
 
-	    // Step 2: Sort pivot keys
 	    const isDatePivot = pivotKey.toLowerCase() === "date";
 	    const sortedPivots = Array.from(pivotValueSet).sort((a, b) => {
 	        if (isDatePivot) {
@@ -22068,7 +21158,6 @@ function format_report(res,rawcsv,_options) {
 	        return a.localeCompare(b);
 	    });
 
-	    // Step 3: Build result
 	    const result = [];
 
 	    for (const [group, pivotData] of groupMap.entries()) {
@@ -22081,7 +21170,6 @@ function format_report(res,rawcsv,_options) {
 	        result.push(row);
 	    }
 
-	    // Step 4: Add Totals row
 	    const totalsRow = { [groupKey]: "Totals" };
 
 	    for (const pivot of sortedPivots) {
@@ -22092,16 +21180,13 @@ function format_report(res,rawcsv,_options) {
 	    return result;
 	}
 
-	//convert expressions in summary_fields to values
 	function evalExpression(expression, variables = {}, dataset = []) {
-	    // Build step data map from dataset
 	    const stepMap = {};
 	    for (const step of dataset) {
-	        stepMap[step.step_name] = step.data?.[0] || {}; // only first row in step.data checked
+	        stepMap[step.step_name] = step.data?.[0] || {}; 
 	    }
 
 	    try {
-	        // Replace variables and step.field references
 	        const substituted = expression.replace(/([a-zA-Z_][\w]*)\.([a-zA-Z_][\w]*)|\b[a-zA-Z_][\w]*\b/g, match => {
 	            if (match.includes('.')) {
 	                const [step, field] = match.split('.');
@@ -22113,7 +21198,6 @@ function format_report(res,rawcsv,_options) {
 	            }
 	        });
 
-	        // Tokenize and compute only + and -
 	        const tokens = substituted.match(/[+\-]?[\d.]+/g) || [];
 	        return tokens.reduce((sum, token) => sum + Number(token), 0);
 	    } catch {
@@ -22121,15 +21205,13 @@ function format_report(res,rawcsv,_options) {
 	    }
 	}
 
-	//custom calculations using mathjs evaluate
     function evaluateCALCExpression(str, data) {
         if (typeof str !== 'string' || !str.startsWith('CALC(') || !str.endsWith(')')) {
-            return str; // Return original if not a valid CALC string
+            return str; 
         }
 
-        const expression = str.slice(5, -1); // Extract expression inside CALC(...)
+        const expression = str.slice(5, -1); 
 
-        // Case-insensitive variable substitution
         const scope = {};
         for (const key in data) {
             scope[key.toLowerCase()] = data[key];
@@ -22141,14 +21223,13 @@ function format_report(res,rawcsv,_options) {
             let resl = math.evaluate(normalizedExpr, scope);
             return isNaN(resl) ? 0 : resl;
         } catch (err) {
-            return 0; //send 0 on errors rather than nulls etc
+            return 0; 
         }
     }
 
 }
 
 function getRandomColor() {
- 	//return '#' + Math.floor(Math.random() * 16777215).toString(16);
  	let colors = ['#E57373','#F06292','#BA68C8','#9575CD','#7986CB','#64B5F6','#4FC3F7','#4DD0E1','#4DB6AC','#81C784','#AED581','#DCE775','#FFF176','#FFD54F','#FFB74D','#FF8A65','#A1887F','#90A4AE','#F48FB1','#CE93D8','#B39DDB','#9FA8DA','#90CAF9','#81D4FA','#80DEEA','#80CBC4','#A5D6A7','#C5E1A5','#E6EE9C','#FFF59D','#FFE082','#FFCC80','#FFAB91','#BCAAA4','#B0BEC5','#EC407A','#AB47BC','#7E57C2','#5C6BC0','#42A5F5','#29B6F6','#26C6DA','#26A69A','#66BB6A','#9CCC65','#D4E157','#FFEE58','#FFCA28','#FFA726','#FF7043','#8D6E63','#78909C','#EF5350','#EC407A','#D81B60','#8E24AA','#5E35B1','#3949AB','#1E88E5','#039BE5','#00ACC1','#00897B','#43A047','#7CB342','#C0CA33','#FDD835','#FFB300','#FB8C00','#F4511E','#6D4C41','#546E7A','#E53935','#D81B60','#C2185B','#7B1FA2','#512DA8','#303F9F','#1976D2','#0288D1','#0097A7','#00796B','#388E3C','#689F38','#AFB42B','#FBC02D','#FFA000','#F57C00','#E64A19','#5D4037','#455A64','#F44336','#E91E63','#9C27B0','#673AB7','#3F51B5','#2196F3','#03A9F4','#00BCD4','#009688','#4CAF50'];
  	return colors[Math.floor(Math.random() * colors.length)] || '#645bef';
 }
@@ -22233,7 +21314,6 @@ function create_charts(el) {
 		$(this).removeClass('xl_chart');
 
 	    let ccy_tooltip = {
-        	//backgroundColor: '#645bef',
         	callbacks: {
 	        	label: function(context) {
 	          		let label = context.dataset.label || '';
@@ -22251,16 +21331,12 @@ function create_charts(el) {
 
 		let datalabels = {
 			display: 'auto',
-			//anchor: 'end',
-			//align: 'end',
-			//clip: true,  
 			formatter: (value, context) => {
 		    	const { chart, datasetIndex } = context;
 		    	const dataset = chart.data.datasets[datasetIndex];
 
 		    	const hiddenIndices = chart._hiddenIndices || {};
 
-		    	// Sum only visible items
 		    	let total = 0;
 		    	dataset.data.forEach((val, idx) => {
 		      		if (!hiddenIndices[idx]) {
@@ -22275,25 +21351,16 @@ function create_charts(el) {
 		    	const percentage = (value / total) * 100;
 		    	return numberformat(percentage, 0) + '%';
 		  	}
-		  	/*
-      		formatter: ((value, ctx) => {
-      			const totalSum = ctx.dataset.data.reduce((accumulator, currentValue) => {
-      				return accumulator + currentValue
-      			}, 0);
-      			const percentage = value / totalSum * 100;
-      			return numberformat(percentage,0)+'%'
-      		})*/		  	
 		};
 
 		const lineShadow = {
             id: 'lineShadow',
             beforeDatasetDraw(chart, args, pluginOptions) {
-                if (args.index !== 0) return; // Only apply to the first dataset
+                if (args.index !== 0) return; 
                 const meta = chart.getDatasetMeta(0);
                 if (!meta || !meta.dataset) return;
                 const ctx = chart.ctx;
 
-                // Outer shadow
                 ctx.save();
                 ctx.shadowColor = 'rgba(125, 91, 255, 0.25)';
                 ctx.shadowBlur = 16;
@@ -22304,7 +21371,6 @@ function create_charts(el) {
                 meta.dataset.draw(ctx);
                 ctx.restore();
 
-                // Inset shadow (optional, subtle)
                 ctx.save();
                 ctx.shadowColor = 'rgba(129, 113, 223, 0.18)';
                 ctx.shadowBlur = 2;
@@ -22331,7 +21397,6 @@ function create_charts(el) {
 			}
 
 			if ((data.type == 'pie') || (data.type == 'doughnut')) {
-				// Allow callers to explicitly disable/override datalabels.
 				if (data.options.plugins.datalabels === undefined) {
 					data.options.plugins.datalabels = datalabels;
 				}
@@ -22349,7 +21414,6 @@ function create_charts(el) {
 				$(this).addClass('xl_chart');
 			}
 
-			//remove grid lines
 			if (['bar', 'stackedbar', 'line', 'stackedline'].includes(data.type)) {
 				if (data.options.scales) {
 					data.options.scales.x = {...data.options.scales.x, grid: { display: false }};
@@ -22427,18 +21491,16 @@ function destroy_charts(el) {
 }
 
 function run_report_max_days(report) {
-	$('#report_summary_title .rep_sub_name').prop('dataset').intrac_dont_run = true; //set don't run parameter
-	$('.view_report[data-intrac="'+report+'"]').click(); //init the report, which will set everything except won't run the report
+	$('#report_summary_title .rep_sub_name').prop('dataset').intrac_dont_run = true; 
+	$('.view_report[data-intrac="'+report+'"]').click(); 
 
-	//set dates
 	let max_days = $('.view_report[data-intrac="'+report+'"]').prop('dataset').intrac_max_days || 90;
 	let finish = dayjs().format('YYYY-MM-DD');
 	let start = dayjs(finish).subtract(max_days-1, 'day').format('YYYY-MM-DD');
 	$('#sh_reports .rep_start_date')[0]._flatpickr.setDate(start);
 	$('#sh_reports .rep_finish_date')[0]._flatpickr.setDate(finish);
 	$('#sh_reports .rep_dates_tr').removeClass('noshow');
-	
-	//run now with updated dates
+
 	$('#report_summary_title .rep_sub_name').removeAttr('data-intrac_dont_run');
 	run_report($('#reports .rep_report').val()); 
 }
@@ -22471,7 +21533,6 @@ function run_lists() {
 			}
 		}
 
-		//check for alt values in selects
 		if ($(this).find('option').length) {
 			if ($(this).find('option[value="'+value+'"]').prop('dataset')?.intrac_alt) {
 				field = field+'_alt';
@@ -22487,7 +21548,7 @@ function run_lists() {
 		errors.push('Please enter at least one or more values in the filters and re-try');
 	}
 
-	errors = [...new Set(errors)]; //remove duplicates
+	errors = [...new Set(errors)]; 
 
 	if (errors.length == 0) {
 		$('<a>', {
@@ -22503,7 +21564,6 @@ function run_lists() {
 		set_side_error(errors.join("<br>"));
 	}
 
-	//convert age e.g. 5y/18m to dob
 	function ageToDate(ageStr) {
 	    const m = ageStr.match(/^(\d+)([ym])$/i);
 	    if (!m) return null;
@@ -22521,7 +21581,6 @@ function init_eftpos(code) {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
     if (!code) {
     	errors.push('Invalid pairing code entered');
     }
@@ -22540,7 +21599,7 @@ function init_eftpos(code) {
                 set_side_error('EFTPOS paired succesfully', 'green', 'keep');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -22558,7 +21617,7 @@ function init_eftpos(code) {
 
 function get_monthly_membs() {
 
-    $(mc+' .monthly_membs_tab').html($('#master_proc_view .monthly_membs_tab').html()); //reset
+    $(mc+' .monthly_membs_tab').html($('#master_proc_view .monthly_membs_tab').html()); 
 
     $('#loader-wrapper').show();
 
@@ -22608,7 +21667,7 @@ function get_monthly_membs() {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -22624,7 +21683,7 @@ function process_monthly_membs() {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .monthly_membsbtn_save').hide(); //hide the process button
+    $(mc+' .monthly_membsbtn_save').hide(); 
 
     let data = {action: 'monthly_memberships', commit: true};
 
@@ -22644,7 +21703,7 @@ function process_monthly_membs() {
             close_modal();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -22657,7 +21716,6 @@ function process_monthly_membs() {
     }).fail( function(xhr, textStatus, errorThrown) {
         set_side_error("Operation failed " + (xhr.responseText?xhr.responseText:''));
         $('#loader-wrapper').hide();
-        //$(mc+' .monthly_membsbtn_save').show();
 
         set_side_error("This process might be still running in the background, please click on 'Membership Invoices tab' to check the current status");
         get_monthly_membs();
@@ -22666,7 +21724,7 @@ function process_monthly_membs() {
 
 function get_overdues() {
 
-    $(mc+' .overdues_tab').html($('#master_proc_view .overdues_tab').html()); //reset
+    $(mc+' .overdues_tab').html($('#master_proc_view .overdues_tab').html()); 
 
     $('#loader-wrapper').show();
 
@@ -22709,7 +21767,7 @@ function get_overdues() {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -22739,7 +21797,7 @@ function process_overdues() {
             get_overdues();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -22753,7 +21811,7 @@ function process_overdues() {
 
 function get_directs() {
 
-    $(mc+' .directs_tab').html($('#master_proc_view .directs_tab').html()); //reset
+    $(mc+' .directs_tab').html($('#master_proc_view .directs_tab').html()); 
 
     $('#loader-wrapper').show();
 
@@ -22819,7 +21877,7 @@ function get_directs() {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -22851,7 +21909,7 @@ function process_directs() {
             get_direct_history();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -22865,7 +21923,7 @@ function process_directs() {
 
 function get_direct_history(rawcsv='') {
 
-    $(mc+' .directs_tab').html($('#master_proc_view .directs_tab').html()); //reset
+    $(mc+' .directs_tab').html($('#master_proc_view .directs_tab').html()); 
     $(mc+' .directs_tab .direct_history').remove();
     $(mc+' .directs_tab .get_directs').removeClass('noshow');
     $(mc+' .directs_tab .directsbtn_save').remove();
@@ -22949,7 +22007,7 @@ function get_direct_history(rawcsv='') {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -22981,7 +22039,7 @@ function trigger_direct() {
             get_direct_history();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -23023,7 +22081,7 @@ function get_locks() {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -23037,7 +22095,6 @@ function get_locks() {
 
 function get_notes() {
 
-    //$('#loader-wrapper').show(); don't use spinner as often this loads in parallel with other functions
 
 	if ($('.instructor-page').length) {
 		return false;
@@ -23052,7 +22109,6 @@ function get_notes() {
 
         if (response.success != undefined) {
 
-            //$('#loader-wrapper').hide(); don't use spinner as often this loads in parallel with other functions
 
             let res = response.success;
 
@@ -23069,7 +22125,7 @@ function get_notes() {
 	                                <p class="text-gray">'+d.comment_data+'</p>\
 	                            </div>';
                 } else {
-                	let desc = d.comment_data.replace(/\r?\n|\r/g,"<br>"); //replace new lines with br as it's html format
+                	let desc = d.comment_data.replace(/\r?\n|\r/g,"<br>"); 
 	                html_str += '<div class="margin_btm_sm">\
 	                                <p class="text-gray">'+desc+'</p>\
 	                                <span class="'+d.comment_id+' noshow_imp">'+d.comment_data+'</span>\
@@ -23092,7 +22148,7 @@ function get_notes() {
             $('#notes_list').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -23108,7 +22164,6 @@ function save_notes() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
 
     let data ={
         comment_id: $(mc+' .notes_comment_id').val(),
@@ -23120,7 +22175,6 @@ function save_notes() {
     };  
 
     let errors = [];
-    //validations
 
     if (isEmpty(data.comment_data)) {
         errors.push('Please enter a comment and re-try');
@@ -23141,13 +22195,13 @@ function save_notes() {
                 close_modal();                
 
                 if (!$('#notes_list').closest('.notes-dropdown').hasClass('show_block')) {
-                	$('#get_notes').click(); //get_notes is part of this
+                	$('#get_notes').click(); 
                 } else {
                 	get_notes();
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -23168,7 +22222,6 @@ function delete_notes(comment_id) {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -23183,13 +22236,13 @@ function delete_notes(comment_id) {
                 $('#loader-wrapper').hide();
 
                 if (!$('#notes_list').closest('.notes-dropdown').hasClass('show_block')) {
-                	$('#get_notes').click(); //get_notes is part of this
+                	$('#get_notes').click(); 
                 } else {
                 	get_notes();
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -23232,7 +22285,7 @@ function get_weathers() {
 
             for (let i = 0; i < data.length; i++) {
                 let d = data[i];
-                let desc = d.weather_comment.replace(/\r?\n|\r/g,"<br>"); //replace new lines with br as it's html format
+                let desc = d.weather_comment.replace(/\r?\n|\r/g,"<br>"); 
                 html_str += '<tr>\
                                 <td>'+convert_date_time(d.weather_start)+' - '+convert_date_time(d.weather_finish, 'h:mma')+'</td>\
                                 <td>'+desc+'</td>\
@@ -23242,7 +22295,7 @@ function get_weathers() {
             $(mc+' .weathers_list tbody').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -23326,7 +22379,7 @@ function get_weather_bookings() {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -23373,7 +22426,6 @@ function save_weather() {
     });
 
     let errors = [];
-    //validations
     if (dayjs(data.weather_date).isBefore(dayjs(dayjs().subtract(4, 'day').format('YYYY-MM-DD')))) {
     	errors.push('Date can only be upto 4 days in the past');
     }
@@ -23400,14 +22452,13 @@ function save_weather() {
 	            let html_str = build_weather_html(data, 'saveWeather');
 
 	            $(mc+' .weather_results_list tbody').html(html_str);
-	            $(mc+' .weather_bookings_list tbody').html(''); //clear to avoid duplicate SMSs
+	            $(mc+' .weather_bookings_list tbody').html(''); 
 
 	            if (html_str) {
                 	$(mc+' .weather_tab .sms_lnk').removeClass('noshow');
                 	$(mc+' .weather_tab .email_lnk').removeClass('noshow');
 	            }
 
-	            //refresh grid
 	            if ($('#spaces').is(":visible") || $('#lessons').is(":visible")) {
 	            	get_grid(false);
 	            } else if ($('#classes').is(":visible")) {
@@ -23421,7 +22472,7 @@ function save_weather() {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -23485,7 +22536,7 @@ function get_upd_classes() {
             $(mc+' .upd_classes_list tbody').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -23515,7 +22566,6 @@ function save_upd_classes() {
     });
 
     let errors = [];
-    //validations
 
     if (!data.class_ids.length) {
         errors.push('Please select one or more items from the above list and re-try');
@@ -23536,7 +22586,7 @@ function save_upd_classes() {
                 get_upd_classes();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -23576,7 +22626,6 @@ function build_multir_html(data, from='get_multir') {
 
 function get_multir_items() {
 
-	//reset
 	$(mc+' .multir_items_list tbody').html('');
 
     let data = {
@@ -23618,7 +22667,7 @@ function get_multir_items() {
 	            $(mc+' .multir_items_list tbody').html(html_str);
 
 	        } else if (response.redirect != undefined) {
-	            mini_login_wizard(response.redirect); //session timeout case
+	            mini_login_wizard(response.redirect); 
 	        } else {    
 	        	let eligible = (response.error && response.error[0].includes('eligible')) ? true : false;
 	            set_side_error(response.error.join("<br>"), eligible ? 'amber' : '');
@@ -23648,7 +22697,6 @@ function save_multir() {
     });
 
     let errors = [];
-    //validations
 
     if (!data.register_ids.length) {
         errors.push('Please select one or more items from the above list and re-try');
@@ -23678,7 +22726,7 @@ function save_multir() {
                 $(mc+' .multir_results_list tbody').html(html_str);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -23737,7 +22785,7 @@ function get_class_recalc_items() {
 	            $(mc+' .multir_items_list tbody').html(html_str);
 
 	        } else if (response.redirect != undefined) {
-	            mini_login_wizard(response.redirect); //session timeout case
+	            mini_login_wizard(response.redirect); 
 	        } else {    
 	            set_side_error(response.error.join("<br>"));
 	            $('#loader-wrapper').hide();
@@ -23769,7 +22817,6 @@ function save_class_recalc() {
     });
 
     let errors = [];
-    //validations
 
     if (!data.register_ids.length) {
         errors.push('Please select one or more items from the above list and re-try');
@@ -23799,7 +22846,7 @@ function save_class_recalc() {
                 $(mc+' .multir_results_list tbody').html(html_str);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -23817,7 +22864,6 @@ function save_class_recalc() {
 
 function get_cxl_registers() {
 
-    //reset
     $(mc+' .cxl_registers_list tbody').html('');
 
     $('#loader-wrapper').show();
@@ -23852,7 +22898,7 @@ function get_cxl_registers() {
             $(mc+' .cxl_registers_list tbody').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {
         	let eligible = (response.error && response.error[0].includes('eligible')) ? true : false;
             set_side_error(response.error.join("<br>"), eligible ? 'amber' : '');     	
@@ -23880,7 +22926,6 @@ function save_cxl_registers() {
     });
 
     let errors = [];
-    //validations
 
     if (!data.register_ids.length) {
         errors.push('Please select one or more items from the above list and re-try');
@@ -23905,7 +22950,7 @@ function save_cxl_registers() {
                 get_cxl_registers();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -23928,14 +22973,13 @@ function show_template_preview() {
     if ($(mc+' .tmp_shellemail').text()) {
         let shellemail = $(mc+' .tmp_shellemail').text();
         shellemail = shellemail.replace(/##template/,data).replace(/.email-body/g, mc+' .template_html_preview');
-        data = shellemail; //override
+        data = shellemail; 
     }
 
     if (subject) {
         data = 'Subject: '+subject+'<br><br>'+data;
     }
 
-    //handle variables
     $(mc+' .leg_name').each(function () {
 
     	if (!$(this).closest('p').hasClass('noshow')) {
@@ -23950,11 +22994,9 @@ function show_template_preview() {
 
     data = data.replaceCase('##no_shellemail','');
 
-    //handle conditions
     data = evalTemplateRules(data);
 
-    if (data.includes('<style>')) { //raw HTML template copied from another tool
-        //transform body {} and html {} in css of data to .template_html_preview {}, so that global body sytles of this page is not impacted
+    if (data.includes('<style>')) { 
         data = data.replace(
                     /<style[^>]*>([\s\S]*?)<\/style>/gi,
                     (m, css) => {
@@ -24004,14 +23046,12 @@ function get_class_notices() {
 
 	            let res = response.success;
 
-	            //template
                 $(mc+' .tmp_template_data').val(res.template.template_data);
 
                 if (res.shellemail) {
                     $(mc+' .tmp_shellemail').text(res.shellemail);
                 }
 
-                //template_details - optional
                 let template_details = res.template.template_details;
                 $(mc+' .tmp_details_subject').val(template_details ? (template_details.subject || '') : '');
 
@@ -24019,7 +23059,6 @@ function get_class_notices() {
                 quill.clipboard.dangerouslyPasteHTML($(mc+' .tmp_template_data').val());
                 quill.blur();
 
-                //data
 	            let data = res.data;
 
 	            let html_str = '';
@@ -24045,7 +23084,6 @@ function get_class_notices() {
 				                            </tr>';
 			                }            
 
-			                //update legend
 			                if (i == 0) {
 			                	$(mc+' .leg_first_name .leg_example').text(d.first_name);
 			                	$(mc+' .leg_term_name .leg_example').text(d.term_name);
@@ -24085,7 +23123,6 @@ function get_class_notices() {
 	            	$(mc+' .class_notices_tab .sms_lnk').addClass('noshow');
 	            }
 
-	            //other classes
 		        let status_map = {
 		            0: '<span class="event-status bg-gray-100 text-gray"><span class="size-1.5 bg-gray rounded-[20px]"></span> Archive</span>',
 		            1: '<span class="event-status bg-yellow-100 text-black"><span class="size-1.5 bg-yellow rounded-[20px]"></span> Renewals</span>',
@@ -24119,10 +23156,10 @@ function get_class_notices() {
 
 	            $(mc+' .notice_other_class_list tbody').html(html_str_c);
 
-	            $(mc+' .show_template_preview').click(); //show preview mode by default
+	            $(mc+' .show_template_preview').click(); 
 
 	        } else if (response.redirect != undefined) {
-	            mini_login_wizard(response.redirect); //session timeout case
+	            mini_login_wizard(response.redirect); 
 	        } else {
 	        	set_side_error(response.error.join("<br>"));     	
 	            $('#loader-wrapper').hide();
@@ -24151,7 +23188,6 @@ function send_class_notices(sample='') {
     }
 
     let errors = [];
-    //validations
 
     if (!data.term_id || !data.action) {
         errors.push("Something went wrong! Please refresh the page and re-try");
@@ -24178,7 +23214,7 @@ function send_class_notices(sample='') {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -24205,7 +23241,6 @@ function save_notice_template() {
         template_data: $(mc+' .tmp_template_data').val(),
     };
 
-    //template_details - optional
     let template_details = {};
     if ($(mc+' .tmp_details_subject').val()) {
         template_details.subject = $(mc+' .tmp_details_subject').val();
@@ -24215,7 +23250,6 @@ function save_notice_template() {
     }
 
     let errors = [];
-    //validations 
     if (isEmpty(data.template_data)) {
         errors.push('Invalid template data, please enter some text and re-try');
     }
@@ -24238,11 +23272,10 @@ function save_notice_template() {
 
                 set_side_error('Template saved succesfully', 'green');
 
-                //refresh data
                 get_class_notices();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -24260,7 +23293,6 @@ function save_notice_template() {
 
 function get_shuffles() {
 
-    //resets
     $(mc+' .shuffle_list tbody').html('');
     $(mc+' .shuffle_past_dates').prop('checked', false);
 
@@ -24305,7 +23337,7 @@ function get_shuffles() {
                 $(mc+' .shuffle_list tbody').html(html_str);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {
                 let eligible = (response.error && response.error[0].includes('eligible')) ? true : false;
                 set_side_error(response.error.join("<br>"), eligible ? 'amber' : '');       
@@ -24341,7 +23373,6 @@ function save_shuffle(unshuffle='') {
     });
 
     let errors = [];
-    //validations
 
     if (!data.program_ids.length) {
         errors.push('Please select one or more options from the above list and re-try');
@@ -24366,7 +23397,7 @@ function save_shuffle(unshuffle='') {
                 get_shuffles();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -24398,7 +23429,6 @@ function get_perm_rollovers() {
 
             let res = response.success;
 
-            //data
             let data = res;
 
         	$(mc+' .pb_rlvr_cur_term_id').text(data.cur_term ? data.cur_term.term_id : '0')
@@ -24474,7 +23504,7 @@ function get_perm_rollovers() {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -24493,9 +23523,8 @@ function savePermRollover() {
 
     $('#loader-wrapper').show();
 
-    $(mc+' .rlvrbtn_rollover').hide(); //hide the rollover button
+    $(mc+' .rlvrbtn_rollover').hide(); 
 
-    //prepare the data
     let data ={
         cur_term_id: $(mc+' .pb_rlvr_cur_term_id').text(),
         new_term_id: $(mc+' .pb_rlvr_new_term_id').text(),
@@ -24526,7 +23555,6 @@ function savePermRollover() {
     }
 
     let errors = [];
-    //validations
     if (delay) {
         if (!isvalidDate(data.delay_date)) {
             errors.push("Invalid delay date");
@@ -24556,7 +23584,6 @@ function savePermRollover() {
 
                 close_modal();
 
-                //refresh dates from db and reload after 30 secs and 90 secs
 				setTimeout(async () => {
 				    try {
 				        let options = await get_client_options('term');
@@ -24576,7 +23603,7 @@ function savePermRollover() {
 				}, 90000);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -24586,12 +23613,10 @@ function savePermRollover() {
         }).fail( async function(xhr, textStatus, errorThrown) {
             set_side_error("Operation failed " + (xhr.responseText?xhr.responseText:''));
             $('#loader-wrapper').hide();
-            //$(mc+' .rlvrbtn_rollover').show();
 
             set_side_error("This process might be still running in the background, please refresh the page to check current status");
             close_modal();
 
-            //refresh dates from db and reload
             let options = await get_client_options('term');
             getTermsOptions(options.term || ''); 
         });  
@@ -24613,7 +23638,6 @@ function merge_customers() {
     };
 
     let errors = [];
-    //validations
 
     if (!data.old_customer_id || !data.new_customer_id) {
         errors.push('Missing Old or New customer data, please double check and re-try');
@@ -24637,11 +23661,11 @@ function merge_customers() {
                 refresh_customers();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
-                if (response.error[0].includes('error')) { //e.g. generic errors and not validation errors
+                if (response.error[0].includes('error')) { 
                 	close_modal();
                 	refresh_customers();
                 }   
@@ -24705,12 +23729,11 @@ function get_class_sched_puids() {
             $(mc+' .class_sched_puids_list tbody').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {
             $('#loader-wrapper').hide();
         	let unavail = (response.error.errors && response.error.errors[0].includes('No') && response.error.errors[0].includes('selected date')) ? true : false;
             if (unavail) {
-            	//don't throw any error
             } else {
             	set_side_error((response.error.errors || response.error).join("<br>"));
             }            
@@ -24740,7 +23763,6 @@ function update_class_sched_puids(msgid) {
     });    
 
     let errors = [];
-    //validations
     if (!schedules.length) {
         errors.push('Please change one or more instructors before saving');
     }
@@ -24766,7 +23788,7 @@ function update_class_sched_puids(msgid) {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -24822,7 +23844,7 @@ function get_cancel_sms() {
             $(mc+' .cancel_sms_list tbody').html(html_str);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -24838,7 +23860,6 @@ function cancel_sms(msgid) {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -24855,7 +23876,7 @@ function cancel_sms(msgid) {
                 get_cancel_sms();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -24894,7 +23915,6 @@ function getAssesssResults(res) {
     for (let i = 0; i < data.length; i++) {
     	let d = data[i];
 
-    	//summary
         html_str_s += '<tr>\
                             <td>'+d.username+'<span class="user_id noshow">'+d.user_id+'</span></td>\
                             <td class="align-right">'+d.all+'</td>\
@@ -24905,18 +23925,15 @@ function getAssesssResults(res) {
                                 </ul></td>\
                         </tr>';
 
-        //user details - dropdown
         opts_str += '<option value="'+d.user_id+'">'+(d.username || 'No Instructor')+'</option>';
 
-        //user details
         let programs_ids = d.details.map(item => item.program_id);
-        programs_ids = [...new Set(programs_ids)]; //remove duplicates
+        programs_ids = [...new Set(programs_ids)]; 
 
         for (let n = 0; n < programs_ids.length; n++) {
 
         	let p_data = d.details.filter(item => item.program_id == programs_ids[n]);
 
-        	//program header
         	let header = '';
 
         	if (programs_ids[n] > 0) {
@@ -24940,7 +23957,6 @@ function getAssesssResults(res) {
                             </thead>\
                             <tbody>';
 
-            //program data
             for (let k = 0; k < p_data.length; k++) {
             	let d_ = p_data[k];
 
@@ -24966,20 +23982,18 @@ function getAssesssResults(res) {
 
             }
 
-            //close table
             html_str_d += '</tbody></table></div>'             	
         }
 
     }
 
-	//close table
 	html_str_s += '</tbody></table></div>';
 
     $(mc3+' .assess_summary_list').html(html_str_s);
     $(mc3+' .assess_details_list').html(html_str_d);
 
     if ($(mc3+' .assesssrch_user_id option').length) {
-    	$(mc3+' .assesssrch_user_id').change(); //trigger change
+    	$(mc3+' .assesssrch_user_id').change(); 
     } else {
     	$(mc3+' .assesssrch_user_id').html(opts_str);
     }
@@ -25000,8 +24014,8 @@ function get_cust_assess(customer_id, assess_id='') {
     	$(mc3+' .tab-list').html($('#master_assess_view .tab-list').html());
     	$(mc3+' .tl_assess_cust').click(); 
     }
-    
-    reset_cust_assess_data();
+
+        reset_cust_assess_data();
 
     $('#loader-wrapper').show();
 
@@ -25032,7 +24046,6 @@ function get_cust_assess(customer_id, assess_id='') {
                 $(mc3+' .assess_customer_level_id').val(res.customer.level_id);
                 $('.modal_title_mc3').text(cust_name+' ('+res.customer.level_name.trim()+')');
 
-                //data
                 let data = res.data;
 
                 let cur_assess = false;
@@ -25077,7 +24090,7 @@ function get_cust_assess(customer_id, assess_id='') {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -25127,7 +24140,6 @@ function viewAsses(assess_id) {
                 	$(mc3+' .assess_level_name').text(res.customer.level_name);		
                 }
 
-                //template
                 let template = res.template.template_data;
 
                 if (template.show_comments) {
@@ -25144,8 +24156,8 @@ function viewAsses(assess_id) {
                     let a = assess_config[i];
 
                     let category_name = a.category_name;
-                    
-                    for (let k = 0; k < a.aconfig.length; k++) {
+
+                                        for (let k = 0; k < a.aconfig.length; k++) {
                         let s = a.aconfig[k];
 
                         let skill = s.skill;
@@ -25175,7 +24187,6 @@ function viewAsses(assess_id) {
 
                 $(mc3+' .assess_configs').html(html_str);
 
-                //data
                 let data = res.data;
 
                 if (data.length) {
@@ -25185,8 +24196,8 @@ function viewAsses(assess_id) {
 
                     for(const key in aconfig) {
                     	$(mc3+' .aconfig_item[data-intrac="'+key+'"]').val(aconfig[key]);
-                    	
-                    	if (res.options.assess_click_model) {
+
+                    	                    	if (res.options.assess_click_model) {
                     		if (isvalidDate(aconfig[key])) {
                     			$(mc3+' .aconfig_item[data-intrac="'+key+'"]').closest('div').find('.assess_record_date').replaceWith('<span class="text-gray">Achieved on '+convert_date(aconfig[key])+'<a href="#" class="btn-link label-link assess_delete_date margin_left_sm noshow">Delete</a></span>');
                     		}
@@ -25211,7 +24222,6 @@ function viewAsses(assess_id) {
 			        scrollTop: $(mc3+' .assess_form').position().top + $(mc3+' .new-modal-content').scrollTop() - $(mc3 + ' .modal-header').outerHeight()
 			    }, 500); 
 
-			    //promote
 			    if (res.options.assess_click_model) {
 			    	if (!$(mc3+' .assess_record_date').length) {
 			    		$(mc3+' .assess_promote_div').show();
@@ -25220,7 +24230,7 @@ function viewAsses(assess_id) {
 			    }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -25239,7 +24249,6 @@ function saveAssess(reopen=false) {
 
     let errors = [];
 
-    //prepare the data
     let data ={
         assess_id: $(mc3+' .assess_assess_id').val(),
         customer_id: $(mc3+' .assess_customer_id').val(),
@@ -25275,9 +24284,7 @@ function saveAssess(reopen=false) {
         qry_from = '?from=instructor';
     }
 
-    //console.log(data);
 
-    //validations
 
     if (errors.length == 0) {
 
@@ -25292,27 +24299,24 @@ function saveAssess(reopen=false) {
 
                 $('#loader-wrapper').hide();
                 set_side_error('Assessment saved succesfully', 'green');
-                
-                if ($('.instructor-page').length) {
+
+                                if ($('.instructor-page').length) {
                 	if (reopen) {
-                		//refresh data
                 		get_cust_assess(data.customer_id,(reopen ? (data.assess_id || response.success) : ''));
                 	} else {
                 		close_modal3();
                 	}
 
-	                //refresh class attendance
 	                if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
 	                	get_class_attendance();
 	                }
                 } else {
-                	//refresh data
                 	get_cust_assess(data.customer_id,(reopen ? (data.assess_id || response.success) : ''));
                 	get_api('getAssesss', true);
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -25326,8 +24330,8 @@ function saveAssess(reopen=false) {
         set_side_error(errors.join("<br>"));
         $('#loader-wrapper').hide();        
     }  
-          
-}
+
+          }
 
 function deleteAssess(assess_id) {
 
@@ -25341,7 +24345,6 @@ function deleteAssess(assess_id) {
     }
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -25355,22 +24358,20 @@ function deleteAssess(assess_id) {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                if ($('.instructor-page').length) {
+
+                                if ($('.instructor-page').length) {
                 	close_modal3()
 
-	                //refresh class attendance
 	                if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
 	                	get_class_attendance();
 	                }
                 } else {
-                	//refresh data
                 	get_cust_assess(customer_id);
                 	get_api('getAssesss', true);                	
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -25384,8 +24385,8 @@ function deleteAssess(assess_id) {
         set_side_error(errors.join("<br>"));
         $('#loader-wrapper').hide();        
     }  
-          
-}
+
+          }
 
 function assessPromote() {
 
@@ -25395,7 +24396,6 @@ function assessPromote() {
     let level_id = $(mc3+' .assess_promote_div .level_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -25409,25 +24409,21 @@ function assessPromote() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                set_side_error("Customer's level updated succesfully", 'green');
+
+                                set_side_error("Customer's level updated succesfully", 'green');
 
                 if ($('.instructor-page').length) {
                 	close_modal3()
 
-	                //refresh class attendance
 	                if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
 	                	get_class_attendance();
 	                }
                 } else {
 
-	                //refresh data
 	                get_cust_assess(customer_id);
 	                get_api('getAssesss', true);
 
-	                //refresh customer data
 	                if (is_datatable_on('main') || is_datatable_on()) {
-	                    //refresh datatable
 	                    refreshCustomerDatatable(customer_id);
 	                }
 
@@ -25437,7 +24433,7 @@ function assessPromote() {
 	            }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -25451,8 +24447,8 @@ function assessPromote() {
         set_side_error(errors.join("<br>"));
         $('#loader-wrapper').hide();        
     }  
-          
-}
+
+          }
 
 function get_messages(silent=false) {
 
@@ -25483,8 +24479,8 @@ function get_messages(silent=false) {
             let c_html_str_s = '';
             for (let i = 0; i < res.data.length; i++) {
                 let d = res.data[i];
-                
-                let archived = isvalidDate(d.close);
+
+                                let archived = isvalidDate(d.close);
 
                 let html_str = '<tr'+(d.close == '0000-00-00' ? '' : ' class="msg_comment_archived noshow"')+'>\
                                     <td>'+convert_date(d.open)+'<span class="noshow comment_id">'+d.comment_id+'</span></td>\
@@ -25516,7 +24512,7 @@ function get_messages(silent=false) {
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -25545,7 +24541,6 @@ function save_msg_comment() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
 
     let data ={
         comment_id: $(mc+' .msg_comment_id').val(),
@@ -25560,7 +24555,6 @@ function save_msg_comment() {
     }
 
     let errors = [];
-    //validations
 
     if (isEmpty(data.comment_data)) {
         errors.push('Please enter a comment and re-try');
@@ -25585,7 +24579,7 @@ function save_msg_comment() {
                 get_messages();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -25607,7 +24601,6 @@ function archive_delete_msg_comment(comment_id,action='archive') {
     let location_id = $('#location_id').val();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -25624,7 +24617,7 @@ function archive_delete_msg_comment(comment_id,action='archive') {
                 get_messages();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -25642,18 +24635,17 @@ function archive_delete_msg_comment(comment_id,action='archive') {
 
 function get_general_comments() {
 
-	//can't reset msg_general_tab because of msg_gen_month
     $(mc+' .msg_gen_comments_list').html($('#master_message_view .msg_gen_comments_list').html());
     $(mc+' .msg_gen_comment_form').html($('#master_message_view .msg_gen_comment_form').html());
     $(mc+' .msg_gen_comment_form').addClass('noshow_imp');
 
     let month = $(mc+' .msg_gen_month').val();
-    
-    if ((month) && (isvalidDate(month+'-01'))) {
+
+        if ((month) && (isvalidDate(month+'-01'))) {
 
     	$('#loader-wrapper').show();
-	    
-	    $.ajax({
+
+	    	    $.ajax({
 	        type: 'GET',
 	        url: '/api/getComments',
 	        data: {action: 'general', date: month+'-01', location_id: $('#location_id').val()},
@@ -25669,8 +24661,8 @@ function get_general_comments() {
 	            let c_html_str = '';
 	            for (let i = 0; i < res.data.length; i++) {
 	                let d = res.data[i];
-	                
-	                c_html_str += '<tr>\
+
+	                	                c_html_str += '<tr>\
 	                                    <td>'+convert_date(d.open)+'<span class="noshow comment_id">'+d.comment_id+'</span></td>\
 	                                    <td>'+(d.opener ? 'Created by: '+d.opener+'<br>' : '')+d.comment_data.replace(/\r?\n|\r/g,"<br>")+'</td>\
 	                                </tr>';
@@ -25678,7 +24670,7 @@ function get_general_comments() {
 	            $(mc+' .msg_gen_comments_list tbody').html(c_html_str);
 
 	        } else if (response.redirect != undefined) {
-	            mini_login_wizard(response.redirect); //session timeout case
+	            mini_login_wizard(response.redirect); 
 	        } else {    
 	            set_side_error(response.error.join("<br>"));
 	            $('#loader-wrapper').hide();
@@ -25695,7 +24687,6 @@ function save_msg_gen_comment() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let comment_data = '';
 
     $(mc+' .msg_gen_item:visible').each(function() {
@@ -25710,7 +24701,6 @@ function save_msg_gen_comment() {
     };
 
     let errors = [];
-    //validations
 
     if (isEmpty(data.comment_data)) {
         errors.push('Please enter one or more values and re-try');
@@ -25730,12 +24720,12 @@ function save_msg_gen_comment() {
 
                 set_side_error('Record saved successfully', 'green');
 
-                $(mc+' .msg_gen_month')[0]._flatpickr.setDate(dayjs().format('YYYY-MM'), false); // Update month without triggers
+                $(mc+' .msg_gen_month')[0]._flatpickr.setDate(dayjs().format('YYYY-MM'), false); 
 
                 get_general_comments();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -25753,7 +24743,6 @@ function save_msg_gen_comment() {
 
 function get_gcards() {
 
-    //can't reset gcards_tab because of date
     $(mc+' .gcards_list').html($('#master_gcard_view .gcards_list').html());
     $(mc+' .gsusp_list').html($('#master_gcard_view .gsusp_list').html());
     $(mc+' .gsusp_form').html($('#master_gcard_view .gsusp_form').html());
@@ -25779,8 +24768,8 @@ function get_gcards() {
             let html_str = '';
             for (let i = 0; i < res.data.length; i++) {
                 let d = res.data[i];
-                
-                let team1 = (d.team1_name || '');
+
+                                let team1 = (d.team1_name || '');
                 let team2 = (d.team2_name || '');
 
                 if (d.orders == 1) {
@@ -25823,7 +24812,7 @@ function get_gcards() {
             $(mc+' .gsusp_list tbody').html(html_str_s);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -25839,7 +24828,6 @@ function save_gcard_suspension() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data = {
     	card_id: '',
         susp_card_id: $(mc+' .gsusp_card_id').val(),
@@ -25850,7 +24838,6 @@ function save_gcard_suspension() {
     };
 
     let errors = [];
-    //validations
 
     if (isEmpty(data.card_comment)) {
     	errors.push('Please enter a comment and re-try');
@@ -25875,7 +24862,7 @@ function save_gcard_suspension() {
                 get_gcards();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -25896,7 +24883,6 @@ function delete_gcard(card_id) {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -25910,11 +24896,11 @@ function delete_gcard(card_id) {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                
-                get_gcards();
+
+                                get_gcards();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -25958,13 +24944,11 @@ function get_game_summary() {
 
             let res = response.success;
 
-            //game title
             $(mc+' .game_class_name').text(res.fixture.class_name);
             $(mc+' .game_title').text((res.fixture.tag ? res.fixture.tag+': ' : '')+(res.fixture.team1_name || '') +' v '+ (res.fixture.team2_name || ''));
             $(mc+' .game_start').text(convert_date_time(res.fixture.schedule_start, 'h:mma')+' to '+convert_date_time(res.fixture.schedule_finish, 'h:mma'));
             $(mc+' .game_space').text(res.fixture.space_names ? res.fixture.space_names.split(',').filter(item => item).join(', ') : '');
 
-            //game rules
             let opts_str_p = '<option value="0"></option>';
             for (let i = 1; i <= res.game_rules.periods; i++) {
             	opts_str_p += '<option value="'+i+'">'+i+'</option>';
@@ -25974,7 +24958,6 @@ function get_game_summary() {
 
             $(mc+' .game_period_title').text(res.game_rules.periods == 4 ? 'Quarter' : 'Period');
 
-            //fixture
             $(mc+' .game_team1_name').text(res.fixture.team1_name || '');
             $(mc+' .game_team2_name').text(res.fixture.team2_name || '');
 
@@ -25983,12 +24966,10 @@ function get_game_summary() {
             $(mc+' .game_team1_captain').text(c1 ? c1.first_name+' '+c1.last_name+' (C)' : 'No Captain Assigned');
             $(mc+' .game_team2_captain').text(c2 ? c2.first_name+' '+c2.last_name+' (C)' : 'No Captain Assigned');
 
-            //scorecard
             if (res.scoreboard) {
             	set_game_scoreboard(res.scoreboard);
             }
 
-            //card options
             let opts_str_c = '<option value=""></option>';
             for (let i = 0; i < res.data.length; i++) {
             	let d = res.data[i];
@@ -25996,13 +24977,12 @@ function get_game_summary() {
             }
             $(mc+' .game_card_player').html(opts_str_c);
 
-            //cards
             let html_str_c = '';
             res.cards = res.cards || [];
             for (let i = 0; i < res.cards.length; i++) {
                 let d = res.cards[i];
-                
-                let team = d.orders == 1 ? (d.team1_name || '') : (d.team2_name || '');
+
+                                let team = d.orders == 1 ? (d.team1_name || '') : (d.team2_name || '');
                 if (team) {
                     team = team+': ';
                 }
@@ -26013,7 +24993,6 @@ function get_game_summary() {
                 html_str_c += (convert_date_time(d.card_time, 'h:mma')+' '+team+cust.first_name+' '+cust.last_name+card)+'<br>';
             }
 
-            //suspensions
             res.suspensions = res.suspensions || [];
             for (let i = 0; i < res.suspensions.length; i++) {
                 let d = res.suspensions[i];
@@ -26032,7 +25011,7 @@ function get_game_summary() {
             $(mc+' .game_cards_list').html(html_str_c);
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -26065,8 +25044,8 @@ function set_game_scoreboard(scoreboard) {
 	$(mc+' .game_colour1').val(scoreboard.colour1);
 	$(mc+' .game_colour1').closest('.bg_div').css('background-color', 'var(--game-bg-'+(scoreboard.colour1 || 'white').toLowerCase()+')');
 	$(mc+' .game_colour1').closest('div').find('.bg_span').css('background-color', 'var(--game-'+(scoreboard.colour1 || 'white').toLowerCase()+')');
-	
-	$(mc+' .game_colour2').val(scoreboard.colour2);
+
+		$(mc+' .game_colour2').val(scoreboard.colour2);
 	$(mc+' .game_colour2').closest('.bg_div').css('background-color', 'var(--game-bg-'+(scoreboard.colour2 || 'white').toLowerCase()+')');
 	$(mc+' .game_colour2').closest('div').find('.bg_span').css('background-color', 'var(--game-'+(scoreboard.colour2 || 'white').toLowerCase()+')');	
 
@@ -26088,37 +25067,33 @@ function set_game_scoreboard(scoreboard) {
 	$(mc+' .clock_not_started_divs').addClass('noshow');
 	$(mc+' .clock_started_divs').addClass('noshow');
 
-	//clock
 	$(mc+' .game_timer').text('');
 	$(mc+' .game_timer').css('color', '');
 
     clear_game_clock();
 
 	if (isvalidDateTime(scoreboard.finish) && isvalidDateTime(scoreboard.pause)) {
-		//started and paused
 		$(mc+' .clock_started_divs').removeClass('noshow');
 		$(mc+' .btn_pauseGameClock').addClass('noshow');
 		$(mc+' .btn_unpauseGameClock').removeClass('noshow');
 
-		const diffSeconds = Math.abs(dayjs(scoreboard.finish).diff(dayjs(scoreboard.pause), 'second')); //diff in seconds
+		const diffSeconds = Math.abs(dayjs(scoreboard.finish).diff(dayjs(scoreboard.pause), 'second')); 
 		const mins = Math.floor(diffSeconds / 60);
 		const secs = diffSeconds % 60;
 		const time_str = mins+':'+secs.toString().padStart(2, '0');
 
         $(mc+' .game_timer').text(time_str);
 		if (dayjs(scoreboard.pause).isAfter(dayjs(scoreboard.finish))) {
-			$(mc+' .game_timer').css('color', 'red'); //overtime
+			$(mc+' .game_timer').css('color', 'red'); 
 		}
 
 	} else if (isvalidDateTime(scoreboard.finish)) {
-		//started
 		$(mc+' .clock_started_divs').removeClass('noshow');
 		$(mc+' .btn_pauseGameClock').removeClass('noshow');
 		$(mc+' .btn_unpauseGameClock').addClass('noshow');
 
 		game_clock('game', scoreboard.cur_db_time, scoreboard.finish, scoreboard.period, scoreboard.game_periods);
 	} else {
-		//not started
 		$(mc+' .clock_not_started_divs').removeClass('noshow');
 	}
 }
@@ -26141,30 +25116,26 @@ function set_score_scoreboard(scoreboard) {
     	$(mc+' .score_score2').css('color', 'white');
     }
 
-    //clock
     $(mc+' .score_timer').text('');
     $(mc+' .score_timer').css('color', 'white');
 
     clear_game_clock();
 
     if (isvalidDateTime(scoreboard.finish) && isvalidDateTime(scoreboard.pause)) {
-        //started and paused
 
-        const diffSeconds = Math.abs(dayjs(scoreboard.finish).diff(dayjs(scoreboard.pause), 'second')); //diff in seconds
+        const diffSeconds = Math.abs(dayjs(scoreboard.finish).diff(dayjs(scoreboard.pause), 'second')); 
         const mins = Math.floor(diffSeconds / 60);
         const secs = diffSeconds % 60;
         const time_str = mins+':'+secs.toString().padStart(2, '0');
 
         $(mc+' .score_timer').text(time_str);
         if (dayjs(scoreboard.pause).isAfter(dayjs(scoreboard.finish))) {
-            $(mc+' .score_timer').css('color', 'red'); //overtime
+            $(mc+' .score_timer').css('color', 'red'); 
         }
 
     } else if (isvalidDateTime(scoreboard.finish)) {
-        //started
         game_clock('score', scoreboard.cur_db_time, scoreboard.finish, scoreboard.period, scoreboard.game_periods);
     } else {
-        //not started
     }
 }
 
@@ -26172,7 +25143,6 @@ function save_game_colour() {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data = {
     	fixture_id: $(mc+' .game_fixture_id').val(),
         colour1: $(mc+' .game_colour1').val(),
@@ -26181,7 +25151,6 @@ function save_game_colour() {
     };
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -26195,11 +25164,10 @@ function save_game_colour() {
 
             	$('#loader-wrapper').hide();
 
-            	//load from database result
             	set_game_scoreboard(response.success);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -26219,7 +25187,6 @@ function save_game_clock(action) {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data = {
     	fixture_id: $(mc+' .game_fixture_id').val(),
         action: action
@@ -26231,7 +25198,6 @@ function save_game_clock(action) {
     }
 
     let errors = [];
-    //validations
 
     if (action == 'start') {
 		if (!validator.isInt(data.duration,{min: 0})) {
@@ -26251,11 +25217,10 @@ function save_game_clock(action) {
 
             	$('#loader-wrapper').hide();
 
-            	//load from database result
             	set_game_scoreboard(response.success);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -26275,7 +25240,6 @@ function save_game_goal(goal) {
 
     $('#loader-wrapper').show();
 
-    //prepare the data
     let data = {
     	fixture_id: $(mc+' .game_fixture_id').val(),
         goal: goal,
@@ -26283,7 +25247,6 @@ function save_game_goal(goal) {
     };
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
         $.ajax({
@@ -26297,11 +25260,10 @@ function save_game_goal(goal) {
 
             	$('#loader-wrapper').hide();
 
-            	//load from database result
             	set_game_scoreboard(response.success);
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -26342,7 +25304,6 @@ function save_game_card_ry(admin_card_data) {
     }
 
     let errors = [];
-    //validations
 
     if (isEmpty(data.card_comment)) {
     	errors.push('Please enter a comment and re-try');
@@ -26372,7 +25333,7 @@ function save_game_card_ry(admin_card_data) {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -26445,12 +25406,12 @@ function get_scoreboard_fixtures() {
             	$(mc+' .score_div').removeClass('noshow');
             }
 
-            $(mc+' .score_fixture_id').html(opts_str).change(); //trigger change
+            $(mc+' .score_fixture_id').html(opts_str).change(); 
 
-            set_score_font_sizes(); //font sizes
+            set_score_font_sizes(); 
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -26464,12 +25425,12 @@ function get_scoreboard_fixtures() {
 
 function get_scoreboard_data(reset=true) {
 
-	clear_score_loop(); //clear always
+	clear_score_loop(); 
 
 	if ($(mc+' .score_fixture_id').length) {
 		if (reset) {
 			$(mc+' .score_div').html($('#master_scoreboard_view .score_div').html());
-			set_score_font_sizes(); //font sizes
+			set_score_font_sizes(); 
 
 			clear_game_clock();
 		}
@@ -26493,22 +25454,18 @@ function get_scoreboard_data(reset=true) {
 
 		            let res = response.success;
 
-		            //fixture
 		            $(mc+' .score_team1_name').text(res.fixture.team1_name || '');
 		            $(mc+' .score_team2_name').text(res.fixture.team2_name || '');
 
 		            $(mc+' .score_fixture_time').text(convert_date_time(res.fixture.schedule_start, 'h:mma')+' - '+convert_date_time(res.fixture.schedule_finish, 'h:mma'));
 		            $(mc+' .score_space_name').text(res.fixture.space_names ? res.fixture.space_names.split(',').filter(item => item).join(', ') : '');
 
-		            //scorecard
 		            if (res.scoreboard) {
 		                set_score_scoreboard(res.scoreboard);
 		            }
 
-		            //call the function again in 5 seconds during live period
 					if (dayjs().isAfter(dayjs(res.fixture.schedule_start).subtract(10, 'minute')) && 
 	                    dayjs().isBefore(dayjs(res.fixture.schedule_finish).add(30, 'minute'))) {
-	                    //valid live period        	            
 					  	let scoreLoopID = setTimeout(() => {
 					    	 get_scoreboard_data(false);
 					  	}, 5000);
@@ -26517,7 +25474,7 @@ function get_scoreboard_data(reset=true) {
 		            }
 
 		        } else if (response.redirect != undefined) {
-		            mini_login_wizard(response.redirect); //session timeout case
+		            mini_login_wizard(response.redirect); 
 		        } else {    
 		            set_side_error(response.error.join("<br>"));
 		            $('#loader-wrapper').hide();
@@ -26561,7 +25518,7 @@ function refresh_dashboard_widget(type, html_str = '') {
     let widget = $('.widget_item[data-type='+type+']');
     widget.closest('.grid-stack-item-content').html(contentHtml);
 
-    widget = $('.widget_item[data-type='+type+']'); //assign again as HTML replaced
+    widget = $('.widget_item[data-type='+type+']'); 
 
     if (contentHtml.includes('rep_chart')) {
     	destroy_charts(widget.find('.rep_chart'));
@@ -26879,7 +25836,7 @@ function get_widget_data(modes=[], mode_opts={}) {
 								        );
 								    }
 								} else {
-									labels = Object.keys(res[m]).filter(k => k !== 'alt').map(k => k.split(' ')[0]); // MMM only
+									labels = Object.keys(res[m]).filter(k => k !== 'alt').map(k => k.split(' ')[0]); 
 								}
 
 							    chart_data.data.labels = labels;
@@ -26898,9 +25855,9 @@ function get_widget_data(modes=[], mode_opts={}) {
 							    	{
 						                data: Array(labels.length).fill(null),
 						                borderWidth: 1,
-						                borderColor: 'rgba(23, 30, 41, 0.5)', // Dark grey
+						                borderColor: 'rgba(23, 30, 41, 0.5)', 
 						                backgroundColor: 'rgba(23, 30, 41, 0.5)',
-						                borderDash: [2, 4], // Dashed line: 8px dash, 6px gap
+						                borderDash: [2, 4], 
 						                tension: 0.3,
 						                pointRadius: 0,
 						                pointHoverRadius: 0,
@@ -26926,14 +25883,12 @@ function get_widget_data(modes=[], mode_opts={}) {
 								    }
 								}
 
-							    //remove nulls at start and end
 							    if (!mode_opts.revenue_alt) {
 								    const { start, end } = findTrimRange([chart_data.data.datasets[0].data, chart_data.data.datasets[1].data]);
 								    chart_data.data.labels = chart_data.data.labels.slice(start, end + 1);
 								    chart_data.data.datasets[0].data = chart_data.data.datasets[0].data.slice(start, end + 1);
 								    chart_data.data.datasets[1].data = chart_data.data.datasets[1].data.slice(start, end + 1);
 							    }
-							    //nulls removal completed
 
 							    let cur_revenue = numberformatccy(res[m][dayjs().format('MMM')] || res[m][dayjs().format('MMM YY')] || 0, 0);
 
@@ -26951,13 +25906,11 @@ function get_widget_data(modes=[], mode_opts={}) {
 					        						<div class="chart_data noshow">'+JSON.stringify(chart_data)+'</div>\
 					        				  </div>'
 
-					        	//Helper function
 								function findTrimRange(datasets) {
 								    const len = datasets[0].length;
 								    let start = 0;
 								    let end = len - 1;
 
-								    // find first non-null across all datasets
 								    for (let i = 0; i < len; i++) {
 								        const hasValue = datasets.some(ds => ds[i] != null);
 								        if (hasValue) {
@@ -26966,7 +25919,6 @@ function get_widget_data(modes=[], mode_opts={}) {
 								        }
 								    }
 
-								    // find last non-null across all datasets
 								    for (let i = len - 1; i >= 0; i--) {
 								        const hasValue = datasets.some(ds => ds[i] != null);
 								        if (hasValue) {
@@ -27015,7 +25967,6 @@ function get_widget_data(modes=[], mode_opts={}) {
 		                	}
 
 		                	if (m == 'class_schedules') {
-				                //header
 				                html_str = '<div class="content table-scroll"><h4>Today\'s '+($('#class_title').val() == 'class' ? 'classes' : $('#class_title').val()+'s')+'</h4>';
 				                html_str += '<table class="table">\
 				                                <thead>\
@@ -27027,7 +25978,6 @@ function get_widget_data(modes=[], mode_opts={}) {
 				                                </thead>\
 				                                <tbody>';
 
-				                //data
 				                for (let i = 0; i < res[m].length; i++) {
 
 				                	let d = res[m][i];
@@ -27045,7 +25995,6 @@ function get_widget_data(modes=[], mode_opts={}) {
 				                                </tr>';
 				                }
 
-								//close table
 				                html_str += '</tbody></table>';
 				                html_str += '</div>'
 		                	}
@@ -27058,11 +26007,9 @@ function get_widget_data(modes=[], mode_opts={}) {
 
 								res[m] = sortedObj;
 
-				                //header
 				                html_str = '<div class="content table-scroll"><h4>Staff hours</h4>';
 
 				                let total = 0;
-				                //data
 				                for(const key in res[m]) {
 				                	total += res[m][key].hours;
 				                }
@@ -27075,7 +26022,6 @@ function get_widget_data(modes=[], mode_opts={}) {
 				                html_str += '<table class="table">\
 				                                <tbody>';
 
-				                //data
 				                for(const key in res[m]) {
 				                    html_str += '<tr>\
 				                                    <td><div class="flex_gap"><span><img src="'+(res[m][key].image_data ? 'data:image/png;base64,'+res[m][key].image_data : 'images/avatar.png')+'" class="avatar" alt=""></span>'+key+'</div></td>\
@@ -27083,7 +26029,6 @@ function get_widget_data(modes=[], mode_opts={}) {
 				                                </tr>';
 				                }
 
-								//close table
 				                html_str += '</tbody></table>';
 				                html_str += '</div>'
 		                	}
@@ -27098,24 +26043,22 @@ function get_widget_data(modes=[], mode_opts={}) {
 				                }
 
 								let sortedObj = Object.fromEntries(
-								    Object.entries(res[m]).sort(([, a], [, b]) => (overdue_mode ? b.overdue - a.overdue : b.left - a.left)) // sort values by left/overdue descending
+								    Object.entries(res[m]).sort(([, a], [, b]) => (overdue_mode ? b.overdue - a.overdue : b.left - a.left)) 
 								);
 
 								res[m] = sortedObj;
 
-				                //header
 				                html_str = '<div class="content table-scroll"><h4>Assessments</h4>';
 
 				                let total = 0;
-				                //data
 				                for(const key in res[m]) {
 				                	if (overdue_mode) {
 				                		total += res[m][key].overdue;
 				                	} else {
 				                		total += res[m][key].left;	
 				                	}
-				                	
-				                }
+
+				                					                }
 				                total = numberformat(total,0);
 
 				                if (total > 0) {
@@ -27133,7 +26076,6 @@ function get_widget_data(modes=[], mode_opts={}) {
 				                                </thead>\
 				                                <tbody>';
 
-				                //data
 				                for(const key in res[m]) {
 				                    html_str += '<tr>\
 				                                    <td><div class="flex_gap"><span><img src="'+(res[m][key].image_data ? 'data:image/png;base64,'+res[m][key].image_data : 'images/avatar.png')+'" class="avatar" alt=""></span>'+key+'</div></td>\
@@ -27143,7 +26085,6 @@ function get_widget_data(modes=[], mode_opts={}) {
 				                                </tr>';
 				                }
 
-								//close table
 				                html_str += '</tbody></table>';
 				                html_str += '</div>'
 		                	}		                	
@@ -27153,7 +26094,7 @@ function get_widget_data(modes=[], mode_opts={}) {
 	                }
 
 	            } else if (response.redirect != undefined) {
-	                mini_login_wizard(response.redirect); //session timeout case
+	                mini_login_wizard(response.redirect); 
 	            } else {    
 	                set_side_error(response.error.join("<br>"));
 	                $('#loader-wrapper').hide();
@@ -27204,7 +26145,6 @@ function save_dashboard_layout() {
 	$('#loader-wrapper').show();
 
     let errors = [];
-    //validations
     if (!Array.isArray(layout)) {
         errors.push("Something went wrong! Please refresh the page and re-try");
     }
@@ -27223,12 +26163,11 @@ function save_dashboard_layout() {
 
                 set_side_error('Your settings saved succesfully', 'green');
 
-                //refresh favs, which includes layout
                 let options = await get_client_options('favs');
                 getFavsOptions(options.favs || '');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -27249,7 +26188,6 @@ function reset_dashboard_layout() {
     $('#loader-wrapper').show();
 
     let errors = [];
-    //validations
 
     if (errors.length == 0) {
 
@@ -27264,13 +26202,12 @@ function reset_dashboard_layout() {
 
                 $('#loader-wrapper').hide();
 
-                //refresh favs, which includes layout
                 let options = await get_client_options('favs');
                 getFavsOptions(options.favs || '');
                 init_dashboard_widgets();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -27303,8 +26240,8 @@ async function refresh_widget(type, mode_opts={}) {
 }
 
 function save_grid_default(reset='') {
-	
-	$('#loader-wrapper').show();
+
+		$('#loader-wrapper').show();
 
     let errors = [];
 
@@ -27322,12 +26259,11 @@ function save_grid_default(reset='') {
 
                 set_side_error('Your settings saved succesfully', 'green');
 
-                //refresh favs, which includes layout
                 let options = await get_client_options('favs');
                 getFavsOptions(options.favs || '');
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -27363,7 +26299,7 @@ function print_grid_process() {
 
         let weeks = $(mc+' .print_grid_weeks').val();
 
-        fetchData(1); //trigger the ajax runs
+        fetchData(1); 
 
 	    function fetchData(i) {
 	    	if (errors.length) {
@@ -27398,15 +26334,14 @@ function print_grid_process() {
 	            if (response.success != undefined) {
 	                if (response.success.data_schedule.length) {
 
-	                    //is_weekly = response.success.data & response.success.data[0].grid_view.includes('weekly') ? true : false;
 
 	                    data = [...data, ...response.success.data_schedule];
 
-	                    fetchData(i+1); //call next iteration
+	                    fetchData(i+1); 
 	                }
 
 	            } else if (response.redirect != undefined) {
-	                mini_login_wizard(response.redirect); //session timeout case
+	                mini_login_wizard(response.redirect); 
 	            } else {
 	                let unavail = (response.error.errors && response.error.errors[0].includes('No') && response.error.errors[0].includes('scheduled')) ? true : false;
 	                if (!unavail) {
@@ -27441,20 +26376,17 @@ function print_grid_process() {
             let dates = data.map(item => convert_date(item.schedule_start, 'dddd D MMM YYYY'));
             dates = sortDates([...new Set(dates)]);
 
-            //build html
             let loop = (group_by == 'space_name') ? space_names : usernames;
 
-            //user or space loop
             for (let n = 0; n < loop.length; n++) {
-                
-                let l_name = loop[n];
 
-                html_str += '<table><tbody>'; //user or space level table
+                                let l_name = loop[n];
+
+                html_str += '<table><tbody>'; 
 
                 html_str += '<tr><td colspan="7" style="font-size:larger">'+l_name+'</td></tr>';
 
                 let html_str_dt_arr = [];
-                //dates loop
                 for (let e = 0; e < dates.length; e++) {
 
                     let html_str_dt = '';
@@ -27464,25 +26396,24 @@ function print_grid_process() {
                     let data_ = (group_by == 'space_name') ? data.filter(item => item.space_names.split(',')[0] == l_name && convert_date(item.schedule_start, 'dddd D MMM YYYY') == dt) : data.filter(item => item.usernames.split(',')[0] == l_name && convert_date(item.schedule_start, 'dddd D MMM YYYY') == dt);
 
                     if (data_.length) {
-                        html_str_dt += '<table><tbody>'; //date table
-                        
-                        html_str_dt += '<tr><td colspan="4">'+dt+'</td></tr>';
+                        html_str_dt += '<table><tbody>'; 
 
-                        //data loop
+                                                html_str_dt += '<tr><td colspan="4">'+dt+'</td></tr>';
+
                         for (let i = 0; i < data_.length; i++) {
                             let schedule = data_[i];
 
                             let l_name_sub = (group_by == 'space_name') ? (schedule.usernames ? schedule.usernames.split(',')[0] : '') : (schedule.space_names ? schedule.space_names.split(',')[0] : '');
 
-                            html_str_dt += '<tr><td style="font-size:2px; border:0">&nbsp;</td></tr>'; //space above each schedule
+                            html_str_dt += '<tr><td style="font-size:2px; border:0">&nbsp;</td></tr>'; 
 
                             html_str_dt += '<tr><td colspan="4"><b>'+(schedule.class_name ? schedule.class_name+' &nbsp; ' : '')+'</b>'+convert_date_time(schedule.schedule_start, 'h:mma')+'-'+convert_date_time(schedule.schedule_finish, 'h:mma')+' &nbsp; <b>'+l_name_sub+' </b></td></tr>';
 
                             if (schedule.register_data) {
                                 for (let y = 0; y < schedule.register_data.length; y++) {
                                     let d = schedule.register_data[y];
-                                    
-                                    let age = (getAge(d.dob)) ? ' ('+getAge(d.dob)+')' : '';
+
+                                                                        let age = (getAge(d.dob)) ? ' ('+getAge(d.dob)+')' : '';
                                     if (d.details && d.details.schoolyear) {
                                         age = ' ('+d.details.schoolyear+')';
                                     }
@@ -27508,31 +26439,24 @@ function print_grid_process() {
                                 }
                             }                            
                         }
-                        //end of data loop
 
-                        //close date table
                         html_str_dt += '</tbody></table>';
 
                         html_str_dt_arr.push(html_str_dt);
                     }
                 }
-                //end of dates loop
 
-                //insert dates html strings for the user or space
                 html_str += '<tr>';
                 for (let a = 0; a < html_str_dt_arr.length; a++) {
                     html_str += '<td style="vertical-align: top; padding-right: 10px;">'+html_str_dt_arr[a]+'</td>'
                 }
                 html_str += '</tr>';
 
-                //close user or space level table
                 html_str += '</tbody></table>';
 
-                html_str += '<p style="page-break-before:always">&nbsp;</p>'; //page break after each user/space
+                html_str += '<p style="page-break-before:always">&nbsp;</p>'; 
             }
-            //end of user or space loop
 
-            //open in new tab
             const printWindow = window.open("", "_blank");
             const doc = printWindow.document;
             doc.write(`
@@ -27553,7 +26477,6 @@ function print_grid_process() {
 
             const $styles = $('link[rel="stylesheet"], style').clone();
   			const $logo = $('#top_container .logo:first').clone();
-  			// Use setTimeout to wait for the new window to render before injecting
 		  	setTimeout(() => {
 		    	const $printDoc = $(printWindow.document);
 		    	$printDoc.find('head').append($styles);
@@ -27563,7 +26486,6 @@ function print_grid_process() {
     }
 }
 
-/*Generic functions*/
 function set_tool_tips() {
 
 	let otherOptions = {
@@ -27732,7 +26654,6 @@ function printDiv_responsive(el) {
   `);
   doc.close();
 
-  // Use setTimeout to wait for the new window to render before injecting
   setTimeout(() => {
     const $printDoc = $(printWindow.document);
     $printDoc.find('head').append($styles);
@@ -27743,7 +26664,6 @@ function printDiv_responsive(el) {
     	$printDoc.find('body').append($('#report_summary_title').clone());
     }
 
-    // Replace canvas with images
     const $clonedCanvases = $content.find('canvas');
     $originalCanvases.each((i, origCanvas) => {
       const img = new Image();
@@ -27757,10 +26677,8 @@ function printDiv_responsive(el) {
     $printDoc.find('body').append($content);
     $(printWindow.document).find('body').addClass('bg-white');
     if (el == '#report_result') {
-    	//$(printWindow.document).find('body').addClass('bg-white');
     }
 
-	//print colors same as html
 	const printFix = document.createElement('style');
 	printFix.textContent = `
 	  @media print {
@@ -27771,7 +26689,6 @@ function printDiv_responsive(el) {
 	  }`;
 	  $printDoc.find('head').append(printFix);
 
-    // Allow content to render before printing
     setTimeout(() => {
       printWindow.focus();
       printWindow.print();
@@ -27811,7 +26728,7 @@ function set_smss({ res = null, el = null} = {}) {
 
         $(el).closest('.se_div').find('.se_det').each(function () {
         	if (from_reports && $(this).closest('.rep_loc_data').hasClass('noshow')) {
-        		return true; //skip
+        		return true; 
         	}
             let d = $(this).text().split('~');
             if ($(el).hasClass('usr_phone_sms')) {
@@ -27829,7 +26746,7 @@ function set_smss({ res = null, el = null} = {}) {
             }
         });
 
-        data = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()]; //remove duplicates in JSON array
+        data = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()]; 
     }
 
     let html_str = '';
@@ -27866,7 +26783,7 @@ function set_smss({ res = null, el = null} = {}) {
     $('.modal_o_sms:first').click();
     $(mc3+' .smss_list').html(html_str);
 
-    if (res && res[0]?.sms_msg) { //custom messages per each mobile
+    if (res && res[0]?.sms_msg) { 
     	$(mc3+' .sms_message').val('');
     	$(mc3+' .sms_message_div').hide();
     	$(mc3+' .sms_altsmsgw_div').hide();
@@ -27884,7 +26801,7 @@ function set_emails({ res = null, el = null} = {}) {
 
         $(el).closest('.se_div').find('.se_det').each(function () {
         	if (from_reports && $(this).closest('.rep_loc_data').hasClass('noshow')) {
-        		return true; //skip
+        		return true; 
         	}        	
             let d = $(this).text().split('~');
             data.push({
@@ -27893,7 +26810,7 @@ function set_emails({ res = null, el = null} = {}) {
             });
         });
 
-        data = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()]; //remove duplicates in JSON array
+        data = [...new Map(data.map(obj => [JSON.stringify(obj), obj])).values()]; 
     }
 
     let html_str = '';
@@ -27938,7 +26855,7 @@ function send_smss() {
     $('#loader-wrapper').show();
 
     let mobileids = [];
-    let sms_msgs = []; //custom messages per each mobile
+    let sms_msgs = []; 
 
     $(mc3+' .sms_chk').each(function () {
        	if (this.checked) {
@@ -27969,8 +26886,8 @@ function send_smss() {
     let message = $(mc3+' .sms_message').val().trim();
     let twoway = $(mc3+' .sms_twoway').is(":checked") ? true : false;
     let altsmsgw = $(mc3+' .sms_altsmsgw').is(":checked") ? true : false;
-    
-    let delay = '';
+
+        let delay = '';
 
     if ($(mc3+' .sms_delay').is(":checked")) {
         delay = $(mc3+' .sms_delaydt').val()+' '+$(mc3+' .sms_delaytm').val();
@@ -27978,7 +26895,6 @@ function send_smss() {
     }
 
     let errors = [];
-    //validations
 
     if (!mobileids.length) {
         errors.push('No mobiles selected above');
@@ -28011,17 +26927,16 @@ function send_smss() {
             if (response.success != undefined) {
 
                 $('#loader-wrapper').hide();
-                //show success message
                 if (response.success == 1) {
                 	set_side_error('sms message sent succesfully', 'green');
                 } else {
                 	set_side_error(response.success+' sms messages sent succesfully', 'green', 'keep');	
                 }
-                
-                close_modal3();
+
+                                close_modal3();
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {    
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -28037,7 +26952,6 @@ function send_smss() {
     } 
 }
 
-//Reports DB using indexedDB for local storage
 async function openLocal_iDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open('INTRAC', 1);
@@ -28089,11 +27003,10 @@ function upload_image_file_init(e,clipboard=null) {
 
     let file = null;
     if (clipboard) {
-        //process clipboard image and send to image processing
         if ((e.clipboardData) && (e.clipboardData.items.length) && (e.clipboardData.items[0].type.indexOf("image") != -1)) {
             file = e.clipboardData.items[0].getAsFile();
         } else {
-            return; //don't throw any errors
+            return; 
         }
     } else {
         let files = e.target.files;
@@ -28135,7 +27048,7 @@ function webcam_image_file_init(stream) {
 
     resize_and_convert_image('webcam', $(_mc+' .webcam-video').get(0), 'image/png');
 
-    stream.getTracks().forEach(track => track.stop()); //this stops webcam
+    stream.getTracks().forEach(track => track.stop()); 
 }
 
 async function resize_and_convert_image(source='file', img, fileType) {
@@ -28149,13 +27062,11 @@ async function resize_and_convert_image(source='file', img, fileType) {
     let canvas = $(_mc+' .img-canvas').get(0);
     let ctx = canvas.getContext('2d');
 
-    //these control the size of the image, almost always gets < 64KB
     canvas.width = 200;
     canvas.height = 150;
 
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-    // Check if image is fully black
     if (isImageFullyBlack(ctx, canvas.width, canvas.height)) {
         set_side_error("Unable to capture the image correctly, please try again or use alternative upload methods");
         return;
@@ -28171,20 +27082,18 @@ async function resize_and_convert_image(source='file', img, fileType) {
             let err_msg = (source == 'file') ? 'The resized image exceeds 64KB. Please upload a smaller image' : 'The captured image exceeds 64KB. Please try again';
             set_side_error(err_msg);
         } else if (!imgblob) {
-            let err_msg = 'Unexpected error, please try again'; //this should never show
+            let err_msg = 'Unexpected error, please try again'; 
             set_side_error(err_msg);
-            break; //break the loop
+            break; 
         } else if (imgblob.size > 64 * 1024) {
-            //let the loop run
-            //console.log('Image too large '+(imgblob.size/1000).toFixed(2)+'KB, resizing '+fileType+' with quality '+quality);
-            fileType = 'image/jpeg'; //compression only allowed for this file type
+            fileType = 'image/jpeg'; 
         } else {
             let base64Reader = new FileReader();
             base64Reader.onloadend = function () {
-                upload_image_file(base64Reader.result.split(',')[1]); //base64 image string result.0 is type and result.1 is base64 string
+                upload_image_file(base64Reader.result.split(',')[1]); 
             };
             base64Reader.readAsDataURL(imgblob);
-            break; //break the loop
+            break; 
         }
     }
 
@@ -28198,20 +27107,19 @@ async function resize_and_convert_image(source='file', img, fileType) {
 
 	function isImageFullyBlack(ctx, width, height) {
 	    let imageData = ctx.getImageData(0, 0, width, height).data;
-	    let tolerance = 10; // Allow slight variations instead of strict black
+	    let tolerance = 10; 
 
 	    for (let i = 0; i < imageData.length; i += 4) {
-	        let r = imageData[i];     // Red
-	        let g = imageData[i + 1]; // Green
-	        let b = imageData[i + 2]; // Blue
-	        let alpha = imageData[i + 3]; // Alpha (opacity)
+	        let r = imageData[i];     
+	        let g = imageData[i + 1]; 
+	        let b = imageData[i + 2]; 
+	        let alpha = imageData[i + 3]; 
 
-	        // Ensure there is at least some visible color
 	        if (r > tolerance || g > tolerance || b > tolerance) {
-	            return false; // Found a non-black pixel
+	            return false; 
 	        }
 	    }
-	    return true; // All pixels are (close to) black
+	    return true; 
 	}
 }
 
@@ -28228,29 +27136,29 @@ function upload_image_file(base64_img) {
     let product_image = false;
     let customer_image = false;
 
-    if ($(mc+' .user_image_tr').is(":visible")) { //trigger from users page
+    if ($(mc+' .user_image_tr').is(":visible")) { 
         user_image = true;
         data.user_id = $(mc+' .user_edit_tab .usr_user_id').val();
         data.image_id = $(mc+' .user_image_id').text();
     }
 
-    if ($(mc+' .class_image_tr').is(":visible")) { //trigger from class page
+    if ($(mc+' .class_image_tr').is(":visible")) { 
         class_image = true;
         data.class_id = $(mc+' .class_class_id').val();
         data.image_id = $(mc+' .class_image_id').text();
     }
 
-    if ($(mc3+' .prod_image_tr').is(":visible")) { //trigger from products page
+    if ($(mc3+' .prod_image_tr').is(":visible")) { 
         product_image = true;
         data.product_id = $(mc3+' .prod_product_id').val();
         data.image_id = $(mc3+' .prod_image_id').text();
     }
 
-    if ($(mc2+' .cust_child_form').is(":visible")) { //trigger from customers child page
+    if ($(mc2+' .cust_child_form').is(":visible")) { 
         customer_image = true;
         data.customer_id = $(mc2+' .cust_child_form .cust_customer_id').val();
         data.image_id = $(mc2+' .cust_image_child_tr .cust_image_id').text();
-    } else if ($(mc2+' .cust_form').is(":visible")) { //trigger from customers page
+    } else if ($(mc2+' .cust_form').is(":visible")) { 
         customer_image = true;
         data.customer_id = $(mc2+' .cust_form .cust_customer_id').val();
         data.image_id = $(mc2+' .cust_image_tr .cust_image_id').text();        
@@ -28266,21 +27174,17 @@ function upload_image_file(base64_img) {
         if (response.success != undefined) {
 
             $('#loader-wrapper').hide();
-            //reload image from db
             if (user_image) {
                 get_user_image(data.user_id);
 
-                //refresh grid
                 if ($('#lessons').is(":visible")) {
                     get_grid(false);
                 }
 
-                //refresh grid
                 if ($('#classes').is(":visible")) {
                     get_class_grid(false);
                 }
 
-                //refresh grid
                 if ($('#rosters').is(":visible")) {
                     get_roster_grid(false);
                 }
@@ -28295,20 +27199,19 @@ function upload_image_file(base64_img) {
             if (customer_image) {
                 get_cust_image([data.customer_id]);
 
-                //refresh class attendance
                 if (($(mc).hasClass('modal-open')) && $(mc+' .tl_attendance').hasClass('active')) {
                 	get_class_attendance();
                 }
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else { 
             set_side_error(response.error);
             $('#loader-wrapper').hide();
         }
-        
-    }).fail( function(xhr, textStatus, errorThrown) {
+
+            }).fail( function(xhr, textStatus, errorThrown) {
         set_side_error("Operation failed: " + xhr.responseText);
         $('#loader-wrapper').hide();
     });
@@ -28332,7 +27235,7 @@ function init_day_flatpickr(el, defaultDate = $('#main_date').val()) {
 	    monthSelectorType: 'static',
 		defaultDate: defaultDate,
 		locale: {
-      		firstDayOfWeek: 1 // Start from Monday
+      		firstDayOfWeek: 1 
     	}
 	});
 }
@@ -28341,9 +27244,9 @@ function init_month_flatpickr(el) {
     $(el).flatpickr({
         plugins: [
             new monthSelectPlugin({
-              shorthand: true, //defaults to false
-              dateFormat: "Y-m", //value
-              altFormat: "F Y", //display
+              shorthand: true, 
+              dateFormat: "Y-m", 
+              altFormat: "F Y", 
             })
         ],
         altInput: true,
@@ -28511,26 +27414,23 @@ function deferHeavyWorkAfterNavPaint(fn) {
 function open_modal(el, modal_alt='') {
     let mc_ = modal_alt ? modal_alt : mc;
 
-    //handle add/edit
     if ($(el).hasClass('add-link')) {
         $(mc_+' ul.tab-list li:not(.perm_tab)').remove();
         $(mc_+' ul.tab-list li span, '+mc_+' .modal-tab-content h4').text(function() {
             return $(this).text().replaceCaseFull('Edit','Add');
         });
-        //specific for customer, product, user and term/perm booking modals
         if (!$(mc_+' .ae_tab_title').text().includes('Add')) {
         	$(mc_+' .ae_tab_title').text('Add '+$(mc_+' .ae_tab_title').text())
         }
-        //specific for customer modal
         if (!$(mc_+' .add_customer').length) {
         	$(mc_+' .tl_cust_edit').closest('li').remove();
         }
 
-    } else { //adjust/show modal tabs e.g. based on class type
+    } else { 
         if ($(el).closest('.class_row').find('.show_tabs').length) {
             let show_tabs = $(el).closest('.class_row').find('.show_tabs').text().split(',').map(str => str.trim()).filter(str => str != '');
 
-            if ($(el).closest('#classes').length || $(el).closest('#rosters').length) { //invoked from class or roster grid attend button, set defaults
+            if ($(el).closest('#classes').length || $(el).closest('#rosters').length) { 
             	show_tabs = ['tl_class_enrolments','tl_programs','tl_schedules','tl_attendance','tl_waitlist']
             }
 
@@ -28549,8 +27449,8 @@ function open_modal(el, modal_alt='') {
 }
 
 function close_modal() {
-    
-    destroy_flatpickr_instances('.mc_flatpickr');
+
+        destroy_flatpickr_instances('.mc_flatpickr');
 
     if ($(mc+' .game_fixture_id').length || $(mc+' .score_fixture_id').length) {
 	    clear_game_clock()
@@ -28572,7 +27472,6 @@ function open_modal2(el) {
 
 function close_modal2() {
 
-    //destroy any mc2 datatables first before removing html
     destroy_datatable();
     if ($('.stripe_items').length) {
     	StripePaymentManager.unmount();
@@ -28591,7 +27490,7 @@ function close_modal2() {
 
     $('#cregister_deeplinks').text('');
     $('#cbooking_deeplinks').text('');
-    $('.section-box.active').removeClass('active'); //clear any slots that are active
+    $('.section-box.active').removeClass('active'); 
     clear_promo_code();
 
 }
@@ -28611,14 +27510,12 @@ function open_modal3(el) {
 
 function close_modal3() {
 
-    //destroy flatpickr instances first
     destroy_flatpickr_instances('.mc3_flatpickr');
 
     $(mc3).removeClass("modal-open");
     $(mc3).html('');
     $('.modal_title_mc3').text('');
-    
-    //don't show both mc2 and mc, must only show one of the modals via "back" link
+
     if ($(mc2).hasClass("modal-open")) {
     	$(mc2).removeClass('noshow');   	
     } else if ($(mc).hasClass("modal-open")) {
@@ -28635,7 +27532,6 @@ function reset_side_modal_fields() {
 	$('.offcanvse textarea').val('');
 	$('.offcanvse select').prop('selectedIndex', 0);
 	$('.offcanvse input[type="checkbox"]').prop('checked',false);
-	//radio etc
 	$('.offcanvse .var_text').text('');
 	$('.booking_addons_div').show();
 	$('.booking_addons').prop('checked', false);
@@ -28679,7 +27575,7 @@ function remove_dynamic_row() {
 }
 
 function main_block_resets() {
-    $('.main_block').addClass('noshow'); //e.g. #spaces, #classes etc
+    $('.main_block').addClass('noshow'); 
     $('div[id*="sh_"]').addClass('noshow');
     $('[class*="sh_items_"]').addClass('noshow');
     $('#main_page_title').text('').addClass('noshow');
@@ -28741,7 +27637,7 @@ function dashboardGridItemsInLayoutOrder() {
 	return $(nodes);
 }
 
-function run_table_diag_intro_animation($table, onDone) {
+function run_table_diag_intro_animation($table, onDone, opts) {
 	if (!$table || !$table.length) {
 		if (typeof onDone === 'function') {
 			onDone();
@@ -28755,15 +27651,35 @@ function run_table_diag_intro_animation($table, onDone) {
 		return;
 	}
 
-	const DIAG_STEP = 42;
-	const FADE_MS = 340;
+	opts = opts || {};
+	var fc = typeof opts.fadeMs === 'number' ? opts.fadeMs : 700;
+	var tc = typeof opts.timeColumnFadeMs === 'number' ? opts.timeColumnFadeMs : null;
+	if (fc === 0 && (tc === null || tc === 0)) {
+		if (typeof onDone === 'function') {
+			onDone();
+		}
+		return;
+	}
+	var DIAG_STEP = typeof opts.diagStep === 'number' ? opts.diagStep : 70;
+	var FADE_MS = fc;
+	var TIME_COL_FADE_MS = tc;
 	const items = [];
 	const $firstHeadRow = $table.find('thead tr').first();
 	const ncol = $firstHeadRow.children('th').length;
 	const headerMaxSum = Math.max(0, ncol - 1);
 
+	function fadeMsForEl(el) {
+		if (TIME_COL_FADE_MS !== null && el && el.classList && el.classList.contains('time-column-many')) {
+			return TIME_COL_FADE_MS;
+		}
+		return FADE_MS;
+	}
+
 	function diagIntroTarget(el) {
 		if (!el || el.nodeType !== 1) {
+			return el;
+		}
+		if (opts.skipCellUnwrap) {
 			return el;
 		}
 		if (el.tagName === 'TD' && el.classList.contains('cell-many') && el.firstElementChild) {
@@ -28776,13 +27692,15 @@ function run_table_diag_intro_animation($table, onDone) {
 	}
 
 	$firstHeadRow.children('th').each(function (colIdx) {
-		items.push({ el: diagIntroTarget(this), delay: colIdx * DIAG_STEP });
+		var tgt = diagIntroTarget(this);
+		items.push({ el: tgt, delay: colIdx * DIAG_STEP, fadeMs: fadeMsForEl(tgt) });
 	});
 
 	$table.find('tbody tr').each(function (rowIdx) {
 		$(this).children('td').each(function (colIdx) {
 			const sum = rowIdx + colIdx;
-			items.push({ el: diagIntroTarget(this), delay: (headerMaxSum + 1 + sum) * DIAG_STEP });
+			var tgt = diagIntroTarget(this);
+			items.push({ el: tgt, delay: (headerMaxSum + 1 + sum) * DIAG_STEP, fadeMs: fadeMsForEl(tgt) });
 		});
 	});
 
@@ -28795,22 +27713,28 @@ function run_table_diag_intro_animation($table, onDone) {
 
 	items.forEach(function (item) {
 		item.el.style.opacity = '0';
-		item.el.style.transform = 'translateY(10px)';
+		item.el.style.transform = 'translateY(16px) scale(0.94)';
 		item.el.style.transition = 'none';
 	});
 
 	void document.body.offsetWidth;
 
 	items.forEach(function (item) {
-		item.el.style.transition = 'opacity ' + FADE_MS + 'ms cubic-bezier(0.4, 0, 0.2, 1) ' + item.delay + 'ms, transform ' + FADE_MS + 'ms cubic-bezier(0.4, 0, 0.2, 1) ' + item.delay + 'ms';
+		var fm = typeof item.fadeMs === 'number' ? item.fadeMs : FADE_MS;
+		item.el.style.transition = 'opacity ' + fm + 'ms cubic-bezier(0.22, 1.2, 0.36, 1) ' + item.delay + 'ms, transform ' + fm + 'ms cubic-bezier(0.22, 1.2, 0.36, 1) ' + item.delay + 'ms';
 		item.el.style.opacity = '1';
-		item.el.style.transform = 'translateY(0)';
+		item.el.style.transform = 'translateY(0) scale(1)';
 	});
 
 	var maxDelay = 0;
+	var maxFadeTail = FADE_MS;
 	items.forEach(function (item) {
 		if (item.delay > maxDelay) {
 			maxDelay = item.delay;
+		}
+		var fm = typeof item.fadeMs === 'number' ? item.fadeMs : FADE_MS;
+		if (fm > maxFadeTail) {
+			maxFadeTail = fm;
 		}
 	});
 
@@ -28823,7 +27747,7 @@ function run_table_diag_intro_animation($table, onDone) {
 		if (typeof onDone === 'function') {
 			onDone();
 		}
-	}, maxDelay + FADE_MS + 60);
+	}, maxDelay + maxFadeTail + 60);
 }
 
 function run_class_grid_intro_animation() {
@@ -28898,7 +27822,6 @@ function run_events_intro_animation() {
 	}, maxDelay + FADE_DUR + 100);
 }
 
-/** Direct children of .content, expanding tables into tbody rows (same stagger idea as SSR dashboard). */
 function collectDashboardContentAnimRows($gridItem) {
 	const $content = $gridItem.find('.widget_item > .content').first();
 	if (!$content.length) {
@@ -29070,26 +27993,22 @@ function open_file(link) {
 	window.open(link, '_blank', 'noopener');	
 }
 
-//DOM ready
 $(async function() {
 
 	resetHeaderIntroFlagIfPageReload();
 
-	$.ajaxSetup({ timeout: 59000 }); //global ajax timeout
+	$.ajaxSetup({ timeout: 59000 }); 
 
 	sanitiseCSSTemplate();
 
-    //dayjs plugins
     dayjs.extend(window.dayjs_plugin_quarterOfYear);
     dayjs.extend(window.dayjs_plugin_customParseFormat);
     dayjs.extend(window.dayjs_plugin_isBetween);
     dayjs.extend(window.dayjs_plugin_minMax);
     dayjs.extend(window.dayjs_plugin_isoWeek);
 
-    //Quill plugins and add-ons
     register_quill_plugins();
 
-    //Charts
     Chart.defaults.font.family = "Aeonik Regular";
     Chart.defaults.color = "#000";
     Chart.register(ChartDataLabels);
@@ -29098,7 +28017,6 @@ $(async function() {
         e.preventDefault();
     });
 
-    //multi select
     if (!isTouchDevice()) {
 	    $(document).on('mousedown', '.multi_select option', function (e) {
 	        e.preventDefault();
@@ -29109,7 +28027,7 @@ $(async function() {
 	        option.selected = !option.selected;
 
 	        setTimeout(() => {
-	            select.scrollTop = scrollTop; //reset focus position
+	            select.scrollTop = scrollTop; 
 	        }, 0);
 
 	        $(select).trigger('change');
@@ -29121,17 +28039,14 @@ $(async function() {
     	$(this).closest('.custom-radio-div').find('.custom-radio').click();
     });
 
-	//navigation links. nav_instr_ links are handled separately
 	$('.nav-link-main').on('click', function (e) {
 	    $('.nav-link-row').removeClass('active');
 	    $(this).closest('.nav-link-row').addClass('active');
 
-	    //close mobile menu
 	    if ($('#cross').is(":visible")) {
 	    	$('#cross').click();
 	    }
 
-	    //main block resets
 	    main_block_resets();
 
 	    if ($(this).hasClass('nav_space') || $(this).hasClass('nav_lesson') || $(this).hasClass('nav_class') || $(this).hasClass('nav_roster')) {
@@ -29175,8 +28090,6 @@ $(async function() {
 		});
 	});
 
-	//mobile navigation
-	// Toggle sidebar on hamburger click
 	$('#hamburger').on('click', function (e) {
 	    $('#mobile_menu').show();
 	});
@@ -29186,39 +28099,35 @@ $(async function() {
 	});
 
 	$(document).on('click', '#mobile_favourites a, #mobile_functions a, #mobile_reports a, #mobile_account a, .instructor_nav', function (e) {
-	    //close mobile menu
 	    if ($('#cross').is(":visible")) {
 	    	$('#cross').click();
 	    }
 	});
 
-    //dropdown toggles
-    /*close menus when clicked outside*/
 	$(document).on('click', function (e) {
 	    const $menu = $('.show_block');
 	    const $toggle = $('.block_toggle');
 
-	    // If click is outside menu and toggle button
 	    if (!$menu.is(e.target) && $menu.has(e.target).length === 0 &&
 	        !$toggle.is(e.target) && $toggle.has(e.target).length === 0) {
-	        $menu.removeClass('show_block'); // close it
+	        $menu.removeClass('show_block'); 
 	    }
 	});
 
 	$(document).on('click', '.bottom_right_modal .new-modal-content', function (e) {
-	    e.stopPropagation(); //prevent clicks inside the modal from closing it
+	    e.stopPropagation(); 
 	});
 
 	$(document).on('click', '.bottom_right_modal.modal-backdrop', function () {
-	    $(this).find('.modal-close:first').click();	//close modal if clicking directly on backdrop	
+	    $(this).find('.modal-close:first').click();	
 	});
 
 	$(document).on('click','.block_toggle', function(e){
 		let target = $(this).prop('dataset').toggle_target;
 
-		let keep = $(this).closest('.toggle_div').find('.' + target).add($(this).closest('.show_block')); //keep current target and any other show_block wrapping the button (e.g. notes)
+		let keep = $(this).closest('.toggle_div').find('.' + target).add($(this).closest('.show_block')); 
 
-		$('.show_block').not(keep).removeClass('show_block'); //close all other open menus first
+		$('.show_block').not(keep).removeClass('show_block'); 
 
 		$(this).closest('.toggle_div').find('.'+target).toggleClass('show_block');
 	});
@@ -29232,14 +28141,12 @@ $(async function() {
 		$(this).closest('div').removeClass('show_block');
 	});
 
-	//custom select dropdowns
 	$(document).on('click','.dropdown-item', function(e){
 		$(this).closest('.show_block').removeClass('show_block');
 	    $(this).closest('.dropdown').find('.dropdown-toggle span').text($(this).text());
 	    $(this).closest('.dropdown').find('.dropdown-toggle').change();
 	});
 
-	//tabs
 	$(document).on('click','.tab-list .tab-link', function(e){
 
 		let tabGroup = $(this).closest('.modal-body');
@@ -29265,10 +28172,8 @@ $(async function() {
     	virtual_location_filter_grid();
     });
 
-    //event listener for window resize, inactivity/debounce model to reduce number of calls
 	window.addEventListener("resize", debounce(window_resized, 200));
 
-	//event listener for window focus
 	window.addEventListener("focus", () => {
 	    if ($('#cust_generate_invoice').text()) {
 	    	let ids = $('#cust_generate_invoice').text().split('~');
@@ -29278,7 +28183,6 @@ $(async function() {
 
 	set_tool_tips();
 
-	//date picker
 	$('#calendar_main').flatpickr({
 	    enableTime: false,
 	    dateFormat: 'Y-m-d',
@@ -29288,7 +28192,7 @@ $(async function() {
 	    monthSelectorType: 'static',
 		defaultDate: 'today',
 		locale: {
-      		firstDayOfWeek: 1 // Start from Monday
+      		firstDayOfWeek: 1 
     	},
 		onReady: function(selectedDates, dateStr, instance) {
 			$('#main_date').val(dateStr).change();
@@ -29306,10 +28210,9 @@ $(async function() {
 	});
 
 	$('#todays_bookings').on('click', function (e) {
-	    $('#calendar_main')[0]._flatpickr.setDate(dayjs().format('YYYY-MM-DD'), true); //trigger change as well, which will refresh grid and update mobile calendar too
+	    $('#calendar_main')[0]._flatpickr.setDate(dayjs().format('YYYY-MM-DD'), true); 
 	});
 
-	//to prevent calendar from opening when switching tabs
 	$(window).on('blur', function() {
         if ($(document.activeElement).closest('div').find('[id^="calendar_"').length) {
             $(document.activeElement).blur();
@@ -29322,14 +28225,13 @@ $(async function() {
 	});
 
 	$(document).on("change",".calendar_booking", function(e){
-		$('#calendar_main')[0]._flatpickr.setDate($(this).val(), true); //trigger change as well, which will refresh grid and update mobile calendar too
+		$('#calendar_main')[0]._flatpickr.setDate($(this).val(), true); 
 	});
 
-	//location
 	$(document).on('click','#main_switch_location .dropdown-item', function(e){
 	    $('#location_id').val($(this).prop('dataset').intrac);
 	    localStorage.setItem('admin_location_id', $('#location_id').val());
-	    $('#location_id').change(); //trigger
+	    $('#location_id').change(); 
 	});
 
 	$(document).on('click','.cur_location_name', function(e){
@@ -29356,7 +28258,6 @@ $(async function() {
         }
 	});
 
-	//errors
     $(document).on("click",".error_close", function(e){
     	$(this).closest('.notification-box').remove();
     });
@@ -29373,7 +28274,6 @@ $(async function() {
 		}
 	});
 
-	//modal popup
 	$(document).on('click','#display_modal .modal-close', function(e){
         close_modal();
 	});
@@ -29391,7 +28291,6 @@ $(async function() {
 		close_side_modal();
 	});
 
-    //confirm popup
     $('.close_popup').on('click', function (e) {
         close_popup();
     });
@@ -29400,17 +28299,15 @@ $(async function() {
         execute_confirm_popup();
     });
 
-    //dynamic rows
     $(document).on("click", ".dynamic_actions .fa-plus-square-o",add_dynamic_row);
     $(document).on("click", ".dynamic_actions .fa-minus-square-o",remove_dynamic_row);
 
-    //images
     document.addEventListener('paste', e => {
         if (($(mc+' .user_image_tr').is(":visible")) ||
         	($(mc+' .class_image_tr').is(":visible")) || 
         	($(mc3+' .prod_image_tr').is(":visible")) || 
             ($(mc2+' .cust_image_tr').is(":visible")) ||
-            ($(mc2+' .cust_image_child_tr').is(":visible"))) { //trigger only if we are on products or customers page
+            ($(mc2+' .cust_image_child_tr').is(":visible"))) { 
             upload_image_file_init(e,'clipboard');
         }
     });
@@ -29420,14 +28317,13 @@ $(async function() {
     });
 
     $(document).on('click', '.file-to-upload', function(e) {
-        $(this).val(null); //empty any existing files
+        $(this).val(null); 
     });
 
     $(document).on('change', '.file-to-upload', function(e) {
         upload_image_file_init(e);
     });
 
-    //webcam
     $(document).on("click",".webcam-btn", function(e){
 
     	let _mc = $(mc3).hasClass('modal-open') ? mc3 : ($(mc2).hasClass('modal-open') ? mc2 : mc);
@@ -29441,7 +28337,7 @@ $(async function() {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function (mediaStream) {
                 video.srcObject = mediaStream;
-                video.play(); // Ensure the video is playing
+                video.play(); 
                 $(_mc+' .webcam-video').show();
                 $(_mc+' .webcam-capture-btn').show();
             })
@@ -29461,9 +28357,7 @@ $(async function() {
 
         webcam_image_file_init(video.srcObject);
     });
-    //webcam - end
 
-    //live dates and times
     $(document).on("input",".live_date", debounce(function(event) {
 	    let res = parse_date($(this).val());
 	    if (isvalidDate(res)) {
@@ -29482,7 +28376,6 @@ $(async function() {
 	    }
 	}, 200));
 
-	//nav links
 	$('.nav_dashboard').on('click', function (e) {
 		$('#main_page_title').text($(this).text()).removeClass('noshow');
 		$('#dashboard_main').removeClass('noshow');
@@ -29566,7 +28459,6 @@ $(async function() {
 		}
 	}, 0);
 
-	//add_edit form buttons
 	$(document).on('click','.add_form, .edit_form', function(e){
 		let mc_ = mc;
 	    if ($(mc3).hasClass("modal-open")) {
@@ -29580,13 +28472,11 @@ $(async function() {
 		if (di) {
 			di = di.split('~');
 
-			//special cases - pre
 			let sp_id_html = '';
 			if ($(el).hasClass('sched_form')) {
 				sp_id_html = $(mc+' .sched_program_id').html();
 			}
 
-			//resets
 			let master_form = '#master_'+di[0]+'_view .'+di[1]+'_form'
 			$(el).html($(master_form).html()).show();
 			if ($(master_form).hasClass('static_form')) {
@@ -29600,10 +28490,7 @@ $(async function() {
 				$(el).find('h4:first').text($(el).find('h4:first').text().replace('Add', 'Edit'));
 			}
 
-			//special cases - post
 			if (($(el).hasClass('prog_form')) || ($(el).hasClass('sched_form')) || ($(el).hasClass('tb_prog_form')) || ($(el).hasClass('tb_sched_form')) || ($(el).hasClass('pb_prog_form')) || ($(el).hasClass('pb_sched_form'))) {
-			    //have to do these here than in master
-			    //set each ps_space_id_ sel with a value per index, so that selects don't look all blanks
 			    set_ps_space_id_defaults();
 			}
 
@@ -29628,7 +28515,7 @@ $(async function() {
 			}
 
 			if ($(el).hasClass('cust_child_form') && $(this).hasClass('add_form')) {
-				$(mc2+' .childs_tab .last_name').val($(mc2+' .cust_edit_tab .last_name').val()); //add child surname default
+				$(mc2+' .childs_tab .last_name').val($(mc2+' .cust_edit_tab .last_name').val()); 
 			}
 
 			if (($(el).hasClass('tb_prog_form')) || ($(el).hasClass('tb_sched_form')) || ($(el).hasClass('pb_prog_form')) || ($(el).hasClass('pb_sched_form'))) {
@@ -29643,7 +28530,6 @@ $(async function() {
 		}
 	});
 
-	//class events
 	$(document).on('click','.modal_o_class', function(e){
 		$(mc).html($('#master_class_view').html());
 		const quill = quill_init(mc+' .class_class_comment');
@@ -29665,14 +28551,14 @@ $(async function() {
 
 	$('#class_status_filter').on('change', function (e) {
 		if ($('#class_status_filter span').text().toLowerCase() == 'archive') {
-			get_all_classes(); //filter applied in this
+			get_all_classes(); 
 		} else {
 			filter_classes();	
 		}
 	});
 
     $(document).on("click",".btn_saveClass", function(e){
-        if ($(mc+' .class_status').val() === '0') { //archive
+        if ($(mc+' .class_status').val() === '0') { 
         	open_confirm_popup({fn: 'saveClass', fn_data: ''});
         } else {
         	saveClass();
@@ -29725,7 +28611,7 @@ $(async function() {
     });
 
     $(document).on("change",".restr_restriction_type", function(e){
-    	if ($(this).val() == 4) { //level_id restriction
+    	if ($(this).val() == 4) { 
     		$(mc+' .restr_level_ids').removeClass('noshow');
     		$(mc+' .restr_value').addClass('noshow');
     	} else {
@@ -29759,7 +28645,7 @@ $(async function() {
 			$(mc+' .sched_swap_user_id').val($(mc+' .sched_swap_user_id option:not([value="0"]').first().val());
 		}
 
-	    $(mc+' .sched_swap_user_id').change(); //trigger
+	    $(mc+' .sched_swap_user_id').change(); 
 	});
 
     $(document).on("change",".sched_swap_user_id", function(e){
@@ -29777,7 +28663,7 @@ $(async function() {
     });
 
     $(document).on("change",".reg_term_id", function(e){
-        get_class_registers({term_changed: true}); //term_changed
+        get_class_registers({term_changed: true}); 
     });
 
     $(document).on("change",".reg_schedule_id", function(e){
@@ -29790,7 +28676,6 @@ $(async function() {
         $(mc+' .reg_term_id option').each(function(index) {
             if (index < currentIndex) {
                 term_id = $(this).val();
-                //Break the loop not needed here
             }
         });
 
@@ -29803,7 +28688,7 @@ $(async function() {
         $(mc+' .reg_term_id option').each(function(index) {
             if (index > currentIndex) {
                 term_id = $(this).val();
-                return false; // Break the loop
+                return false; 
             }
         });
 
@@ -29816,7 +28701,6 @@ $(async function() {
         $(mc+' .reg_schedule_id option').each(function(index) {
             if (index < currentIndex) {
                 schedule_id = $(this).val();
-                //Break the loop not needed here
             }
         });
 
@@ -29829,7 +28713,7 @@ $(async function() {
         $(mc+' .reg_schedule_id option').each(function(index) {
             if (index > currentIndex) {
                 schedule_id = $(this).val();
-                return false; // Break the loop
+                return false; 
             }
         });
 
@@ -29874,8 +28758,8 @@ $(async function() {
         $(mc+' .ps_space_multiple_div .user_td').show();
         $(mc+' .ps_user_id_div').hide();
         $(this).hide();
-        
-        $(mc+' .ps_su_sel').each(function() {
+
+                $(mc+' .ps_su_sel').each(function() {
             if ((this.checked) && ($(mc+' .ps_user_id:visible').val())) {
                 $(this).closest('tr').find('.ps_user_id_').val($(mc+' .ps_user_id').val());
             }
@@ -29926,7 +28810,6 @@ $(async function() {
         $(mc+' .sched_term_id option').each(function(index) {
             if (index < currentIndex && $(this).prop('dataset').intrac_from_schedule == 1) {
                 term_id = $(this).val();
-                // Break the loop not needed here
             }
         });
 
@@ -29939,7 +28822,7 @@ $(async function() {
         $(mc+' .sched_term_id option').each(function(index) {
             if (index > currentIndex && $(this).prop('dataset').intrac_from_schedule == 1) {
                 term_id = $(this).val();
-                return false; // Break the loop
+                return false; 
             }
         });
 
@@ -30015,7 +28898,7 @@ $(async function() {
         let teams = $(mc+' .class_team_item').length;
         let pools_n_max = Math.min(Math.floor(teams/4),10);
         if (pools_n_max >= 2) {
-            let _list = Array.from({ length: pools_n_max - 1 }, (_, i) => i + 2); //array from 2 to pools_n_max
+            let _list = Array.from({ length: pools_n_max - 1 }, (_, i) => i + 2); 
             open_confirm_popup({fn: 'team_auto_pools', fn_data: 'fn_select', sel_options: _list, msg: 'Are you sure? Please select number of pools from below'});
         }
     });
@@ -30044,8 +28927,8 @@ $(async function() {
 		$(mc+' .tmalter_div').remove();
 		let el = $(this).closest('.class_team_item');
 		$(el).find('.empty_div:first').after('<div class="tmalter_div flex_new_row margin_top_sm margin_bottom_sm">'+$(mc+' .team_move_class_view').html()+'</div>');
-		
-		let class_id = $(el).find('.class_id').text();
+
+				let class_id = $(el).find('.class_id').text();
         let team_id = $(el).find('.team_id').text();
 		update_class_team(class_id, team_id, true);
 	});
@@ -30059,8 +28942,8 @@ $(async function() {
 		$(mc+' .tmalter_div').remove();
 		let el = $(this).closest('.class_team_item');
 		$(el).find('.empty_div:first').after('<div class="tmalter_div flex_new_row margin_top_sm margin_bottom_sm">'+$(mc+' .team_swap_team_view').html()+'</div>');
-		
-		let class_id = $(el).find('.class_id').text();
+
+				let class_id = $(el).find('.class_id').text();
         let team_id = $(el).find('.team_id').text();
 		update_class_team(class_id, team_id, true);
 	});
@@ -30081,7 +28964,7 @@ $(async function() {
             }
         });
 
-        $(mc+' .team_swap_new_team_id').val(''); //reset current selects       
+        $(mc+' .team_swap_new_team_id').val(''); 
     });
 
     $(document).on("click",".tl_fixtures", function(e){
@@ -30186,7 +29069,6 @@ $(async function() {
 
     $(document).on("click",".tl_attendance", function(e){
     	if ($(this).prop('dataset').intrac_no_attendance) {
-    		//do nothing
     	} else {
 	    	let class_id = $(mc+' .class_class_id').val();
 	    	get_class_attendance({class_id: class_id});
@@ -30194,7 +29076,7 @@ $(async function() {
     });  
 
     $(document).on("change",".att_term_id", function(e){
-        get_class_attendance({term_changed: true}); //term_changed
+        get_class_attendance({term_changed: true}); 
     });
 
     $(document).on("change",".att_schedule_id", function(e){
@@ -30207,7 +29089,6 @@ $(async function() {
         $(mc+' .att_term_id option').each(function(index) {
             if (index < currentIndex) {
                 term_id = $(this).val();
-                //Break the loop not needed here
             }
         });
 
@@ -30220,7 +29101,7 @@ $(async function() {
         $(mc+' .att_term_id option').each(function(index) {
             if (index > currentIndex) {
                 term_id = $(this).val();
-                return false; // Break the loop
+                return false; 
             }
         });
 
@@ -30233,7 +29114,6 @@ $(async function() {
         $(mc+' .att_schedule_id option').each(function(index) {
             if (index < currentIndex) {
                 schedule_id = $(this).val();
-                //Break the loop not needed here
             }
         });
 
@@ -30246,15 +29126,15 @@ $(async function() {
         $(mc+' .att_schedule_id option').each(function(index) {
             if (index > currentIndex) {
                 schedule_id = $(this).val();
-                return false; // Break the loop
+                return false; 
             }
         });
 
         $(mc+' .att_schedule_id').val(schedule_id).change();
     });
 
-    
-    $(document).on("click",".btn_attend", async function(e){
+
+        $(document).on("click",".btn_attend", async function(e){
         let ids = $(this).prop('dataset').intrac.split('~');
         let class_id = ids[0];
         let schedule_id = ids[2];
@@ -30281,7 +29161,7 @@ $(async function() {
     });
 
     $(document).on("click",".btn_saveClassRoll", function(e){
-        if (dayjs().format('YYYY-MM-DD') != $(mc+' .att_schedule_date').val()) { //not today
+        if (dayjs().format('YYYY-MM-DD') != $(mc+' .att_schedule_date').val()) { 
         	open_confirm_popup({fn: 'saveClassRoll', fn_data: '', msg: "This isn't today's lesson. Are you sure?"});
         } else {
         	saveClassRoll();
@@ -30304,7 +29184,6 @@ $(async function() {
 
 	        let roll_type = $(this).find(el+':visible:checked').length ? $(this).find(el+':visible:checked').val() : '';
 
-	        //set only if roll not marked already
 	        if (!roll_type) {
 				if ($(btn).hasClass('att_mark_rest_present')) {
 					$(this).find(el+'[value="1"]').prop('checked', true);
@@ -30313,14 +29192,13 @@ $(async function() {
 				}
 	        }
 
-	        //set for all even if roll marked already
 			if ($(btn).hasClass('att_mark_all_washout')) {
 				$(this).find(el+'[value="4"]').prop('checked', true);
 			}
 	    });
 
 	    if ($(btn).hasClass('att_mark_rest_present')) {
-	    	$(mc+' .class_att_item [name^="att_roll_type_"][value="1"]:last').click(); //to trigger over capacity check below
+	    	$(mc+' .class_att_item [name^="att_roll_type_"][value="1"]:last').click(); 
 	    }
 
 		$(mc+' .btn_saveClassRoll').click();
@@ -30443,7 +29321,6 @@ $(async function() {
     });
 
     $(document).on("click",".class_wait_enrol", function(e){
-    	//reg_register_customer already completed first
     	let customer_id = $(this).closest('.class_wait_item').find('.customer_id').text();
     	let parent_id = $(this).closest('.class_wait_item').find('.parent_id').text();
         let id = (parent_id > 0) ? parent_id : customer_id;
@@ -30469,7 +29346,6 @@ $(async function() {
         $(mc+' .tl_class_comments').click();
     });
 
-    //customer events
 	$(document).on('click','.modal_o_customers', function(e){
 		if (USE_CUSTOMERS_MOCKS) {
 			$('#loader-wrapper').hide();
@@ -30479,14 +29355,12 @@ $(async function() {
         clone_customers();
 	});
 
-	//add customer, from search page
     $(document).on('click','.add_customer', function(e){
         $(mc2+' .tl_cust_edit').click();
         reset_customer_data(true);
-        open_modal2($(this)); //to adjust tabs
+        open_modal2($(this)); 
     });
 
-	//force refresh
 	$(document).on('click','.refresh_customers', function(e){
 		$(this).remove();
 		refresh_customers();
@@ -30515,7 +29389,6 @@ $(async function() {
     $(document).on('mouseleave','#display_modal2 .customers_table_div .tooltip', function(e){
 	    const table = $('#display_modal2 .customers_table_div .table-wrapper.overflow-hidden')[0];
 	    table.style.transform = 'translateZ(0)';
-	    //safari is making table scroll unresposive until a button is clicked, the below will force a reflow
 	    requestAnimationFrame(() => {
     		table.style.transform = '';
 		});
@@ -30562,8 +29435,7 @@ $(async function() {
 
         let customer_id = $(this).closest('tr').find('.customer_id').text();
         let parent_id = $(this).closest('tr').find('.parent_id').text();
-        
-        //for links not in a table
+
         if ($(this).prop('dataset').intrac_customer_id) {
         	customer_id = $(this).prop('dataset').intrac_customer_id;
         	parent_id = $(this).prop('dataset').intrac_parent_id;
@@ -30588,8 +29460,7 @@ $(async function() {
         let customer_id = $(this).closest('tr').find('.customer_id').text();
         let parent_id = $(this).closest('tr').find('.parent_id').text();
         let receipt_id = $(this).closest('tr').find('.receipt_id').text();
-        
-        //for links not in a table
+
         if ($(this).prop('dataset').intrac_customer_id) {
         	customer_id = $(this).prop('dataset').intrac_customer_id;
         	parent_id = $(this).prop('dataset').intrac_parent_id;
@@ -30609,8 +29480,8 @@ $(async function() {
     $(document).on('click','.view_customer_info', function(e){
         let customer_id = $(this).prop('dataset').intrac_customer_id;
         let parent_id = $(this).prop('dataset').intrac_parent_id;
-        
-        let id = (parent_id > 0) ? parent_id : customer_id;
+
+                let id = (parent_id > 0) ? parent_id : customer_id;
         if (id > 2) {
         	let goto_tab = $(this).prop('dataset').intrac_goto_tab || '';
             viewCustomer(id,goto_tab);
@@ -30620,7 +29491,6 @@ $(async function() {
     $('#btnCheckin').on("click", function(e){
     	$('#cust_scan').val($('#cust_scan').val().trim());
     	if ($('#cust_scan').val()) {
-		    //close mobile menu
 		    if ($('#cross').is(":visible")) {
 		    	$('#cross').click();
 		    }    		
@@ -30629,16 +29499,15 @@ $(async function() {
     });
 
     $(document).on("keypress","#cust_scan", function(e){
-        if (e.which === 13) { //enter key
+        if (e.which === 13) { 
         	$('#cust_scan').val($('#cust_scan').val().trim());
 	    	if ($('#cust_scan').val()) {
-			    //close mobile menu
 			    if ($('#cross').is(":visible")) {
 			    	$('#cross').click();
 			    }	    		
 	    		viewCustomer('scan', 'checkin');	
 	    	}
-            return false; //to prevent default behaviour
+            return false; 
         }
     });
 
@@ -30651,9 +29520,9 @@ $(async function() {
     	$('#checkin_full_div').addClass('noshow_imp');
     	$('#cust_scan').blur();
     });
-    
 
-    $(document).on("click",".cust_rec_receipt", function(e){
+
+        $(document).on("click",".cust_rec_receipt", function(e){
         if ($(mc2+' .cust_rec_receipt:checked').length) {
         	$(mc2+' .custbtn_invoice').show();
         } else {
@@ -30676,8 +29545,8 @@ $(async function() {
 	    	$(mc2+' .custbtn_invoice').show().click();
 	    }
     });
-   
-    $(document).on("paste",".conf_last_name, .conf_email", function(e){
+
+       $(document).on("paste",".conf_last_name, .conf_email", function(e){
     	e.preventDefault();
     });
 
@@ -30694,15 +29563,15 @@ $(async function() {
     });
 
     $(document).on("click",".custbtn_pay", function(e){
-        if ($(mc2+' .cust_payment_process input:radio[name="refund_mode"]:checked').val()) { //refund
+        if ($(mc2+' .cust_payment_process input:radio[name="refund_mode"]:checked').val()) { 
             open_confirm_popup({fn: 'process_admin_payment', fn_data: ''});
-        } else { //normal payment
+        } else { 
             process_admin_payment();
         }
-        
-    }); 
-    
-    $(document).on("click",".cust_acc_pay", function(e){
+
+            }); 
+
+        $(document).on("click",".cust_acc_pay", function(e){
     	calc_customer_payment();
     }); 
 
@@ -30755,15 +29624,15 @@ $(async function() {
 
     $(document).on("input",".card_number", function(e){
     	$(this).closest('table').find('input[name="mode"][value="cc"]').click();
-        let value = $(this).val().replace(/\D/g, ''); // Remove all non-digit characters
-        let formattedValue = value.replace(/(.{4})/g, '$1 '); // Add a space after every 4 digits
+        let value = $(this).val().replace(/\D/g, ''); 
+        let formattedValue = value.replace(/(.{4})/g, '$1 '); 
         $(this).val(formattedValue.trim());
     });
 
 	$(document).on("input", ".card_expiry", function () {
-	    let value = $(this).val().replace(/[^0-9\\/]/g, ''); // Remove all non-digit characters
+	    let value = $(this).val().replace(/[^0-9\\/]/g, ''); 
 	    if (value.length > 2 && value.indexOf('/') === -1) {
-	        value = value.substring(0, 2) + '/' + value.substring(2); // Add a / after the first 2 digits if it isn't already there
+	        value = value.substring(0, 2) + '/' + value.substring(2); 
 	    }
 	    $(this).val(value);
 	});
@@ -30790,7 +29659,7 @@ $(async function() {
     });
 
     $(document).on("click",".cregister_customer_id", function(e){
-    	e.stopPropagation(); //to prevent click event bubbling to the below customer_accordion again
+    	e.stopPropagation(); 
     });
 
     $(document).on("click",".cust_registers_tab .customer_accordion", function(e){
@@ -30806,7 +29675,6 @@ $(async function() {
     });
 
     $(document).on("change",".cregister_class_id", function(e){
-    	//resets
 	    $(mc2+' .cregister_program_list').html('');
 	    $(mc2+' .cregister_schedule_list').html('');
 	    $(mc2+' .cregister_team_list').html('');
@@ -30822,14 +29690,11 @@ $(async function() {
             $(mc2+' .cregister_ps_trs').removeClass('noshow');
             $(mc2+' .cregister_comp_trs').addClass('noshow');
             get_cust_class_programs();
-            //get_cust_class_schedules(); called from inside get_cust_class_programs();
-            //calcRegisterCost(); called from inside get_cust_class_schedules();
         }
 
-        //reset buttons
         if ($(mc2+' .cregister_team_manager').is(":checked")) {
             $(mc2+' .custregisterbtn_save').hide();
-            $(mc2+' .cregister_email_tr').addClass('noshow_imp'); //dont show at all
+            $(mc2+' .cregister_email_tr').addClass('noshow_imp'); 
             $(mc2+' .custteammanagerbtn_save').show();
         } else {
             $(mc2+' .custregisterbtn_save').show();
@@ -30850,8 +29715,8 @@ $(async function() {
         } else {
         	$(mc2+' .custwaitbtn_save').show();
         }
-        
-        get_cust_class_passs();
+
+                get_cust_class_passs();
         get_cust_class_addons();
     });
 
@@ -30859,7 +29724,6 @@ $(async function() {
         calcRegisterCost();
     });
 
-    //do this after calcRegisterCost to ensure cregister_schedule_id default is ticked
     $(document).on("change",".cregister_program_id, .cregister_schedule_id, .cregister_fixture_id", function(e){
         get_cust_class_passs();
     });
@@ -30869,20 +29733,17 @@ $(async function() {
 
         $(mc2+' .cregister_team_payments').val(0);
 
-        if (class_data.features.includes('t')) { //team_payments
+        if (class_data.features.includes('t')) { 
             get_cust_class_team_data($(this).val());
-            //get_cust_class_fixtures(); called from inside get_cust_class_team_data();
-            //calcRegisterCost(); called from inside get_cust_class_fixtures();
         } else {
             get_cust_class_fixtures();
-            //calcRegisterCost(); called from inside get_cust_class_fixtures();
         }
     });
 
     $(document).on("change",".cregister_team_manager", function(e){
         if ($(this).is(":checked")) {
             $(mc2+' .custregisterbtn_save').hide();
-            $(mc2+' .cregister_email_tr').addClass('noshow_imp'); //dont show at all
+            $(mc2+' .cregister_email_tr').addClass('noshow_imp'); 
             $(mc2+' .custteammanagerbtn_save').show();            
         } else {
             $(mc2+' .custregisterbtn_save').show();
@@ -30965,7 +29826,7 @@ $(async function() {
     });
 
     $(document).on("click",".cpass_customer_id", function(e){
-    	e.stopPropagation(); //to prevent click event bubbling to the below customer_accordion again
+    	e.stopPropagation(); 
     });
 
     $(document).on("click",".passes_tab .customer_accordion", function(e){
@@ -31131,7 +29992,7 @@ $(async function() {
     });
 
     $(document).on("click", ".cust_add_file", function() {
-        $(mc2+' .cust_upload_file').val(null); //empty any existing files
+        $(mc2+' .cust_upload_file').val(null); 
         $(mc2+' .cust_upload_file').click();
     });
 
@@ -31165,7 +30026,6 @@ $(async function() {
         checkin_deductpass($(this));
     });
 
-    //terms events
 	$(document).on('click','.modal_o_terms', function(e){
 		$(mc).html($('#master_term_view').html());
         open_modal($(this));
@@ -31231,18 +30091,16 @@ $(async function() {
         update_term_location_bookingdt(item_row);
     });
 
-    //users events
 	$(document).on('click','.modal_o_users', function(e){
 		$(mc).html($('#master_user_view').html());
         open_modal($(this));
-        $(mc+' .tl_users').click(); //not using get_api('getUsers') to adjust the tabs
+        $(mc+' .tl_users').click(); 
 	});
 
-	//add user, from users list page
     $(document).on('click','.add_user', function(e){
         $(mc+' .tl_user_edit').click();
         reset_user_data(true);
-        open_modal($(this)); //to adjust tabs
+        open_modal($(this)); 
     });
 
     $(document).on("click",".tl_users", function(e){
@@ -31310,7 +30168,7 @@ $(async function() {
     });
 
     $(document).on("click", ".user_add_file", function() {
-        $(mc+' .user_upload_file').val(null); //empty any existing files
+        $(mc+' .user_upload_file').val(null); 
         $(mc+' .user_upload_file').click();
     });
 
@@ -31381,7 +30239,6 @@ $(async function() {
     	open_confirm_popup({fn: 'open_file', fn_data: $(this).prop('dataset').intrac, msg: 'For your security, please do not open this file in the browser, open it with a PDF viewer only'});
     })
 
-    //product events
 	$(document).on('click','.modal_o_products', function(e){
 		$(mc3).html($('#master_product_view').html());
         open_modal3($(this));
@@ -31390,16 +30247,15 @@ $(async function() {
         	init_month_flatpickr(mc3+' .stock_delvr_month');
         	init_month_flatpickr(mc3+' .stock_adj_month');
 
-        	$(mc3+' .stock_delvr_month')[0]._flatpickr.setDate(dayjs().format('YYYY-MM'), false); // Update month without triggers
-        	$(mc3+' .stock_adj_month')[0]._flatpickr.setDate(dayjs().format('YYYY-MM'), false); // Update month without triggers
+        	$(mc3+' .stock_delvr_month')[0]._flatpickr.setDate(dayjs().format('YYYY-MM'), false); 
+        	$(mc3+' .stock_adj_month')[0]._flatpickr.setDate(dayjs().format('YYYY-MM'), false); 
         }
 	});
 
-	//add product, from search page
     $(document).on('click','.add_product', function(e){
         $(mc3+' .tl_prod_edit').click();
         reset_product_data(true);
-        open_modal3($(this)); //to adjust tabs
+        open_modal3($(this)); 
     });
 
     $(document).on("click",".tl_prod_search", function(e){
@@ -31429,9 +30285,9 @@ $(async function() {
     });
 
     $(document).on("keypress",".product_search", function(e){
-        if (e.which === 13) { //enter key
+        if (e.which === 13) { 
             get_products_filtered();
-            return false; //to prevent default behaviour
+            return false; 
         }
     });
 
@@ -31464,7 +30320,7 @@ $(async function() {
     });
 
     $(document).on("change",".ppurch_customer_member", function(e){
-    	$(mc3+' .ppurch_quantity').change(); //trigger calc
+    	$(mc3+' .ppurch_quantity').change(); 
     });
 
     $(document).on("change",".ppurch_quantity", function(e){
@@ -31513,7 +30369,6 @@ $(async function() {
         save_prod_stocktake();
     });  
 
-    //passtype events
 	$(document).on('click','.modal_o_passtypes', function(e){
 		$(mc).html($('#master_passtype_view').html());
         open_modal($(this));
@@ -31591,7 +30446,6 @@ $(async function() {
         get_passs_report($(mc+' .prep_mode').val(),'rawcsv');
     });
 
-    //gift events
     $(document).on('click','.modal_o_gifts', function(e){
         $(mc).html($('#master_gift_view').html());
         open_modal($(this));
@@ -31599,15 +30453,15 @@ $(async function() {
     });
 
     $(document).on("click",".tl_gift_redeem", function(e){
-    	$(mc+' .gift_redeem_tab').html($('#master_gift_view .gift_redeem_tab').html()); //reset
+    	$(mc+' .gift_redeem_tab').html($('#master_gift_view .gift_redeem_tab').html()); 
     });
 
     $(document).on("click",".delete_gift", function(e){
         let id = $(this).closest('.gift_row').find('.gift_id').text();
         open_confirm_popup({fn: 'deleteGift', fn_data: id});
     });
-    
-    $(document).on("click",".btn_saveGift", function(e){
+
+        $(document).on("click",".btn_saveGift", function(e){
         saveGift();
     });
 
@@ -31621,7 +30475,6 @@ $(async function() {
         redeem_gift();
     });
 
-    //availability events
 	$(document).on('click','.modal_o_avails', function(e){
 		$(mc).html($('#master_avail_view').html());
         open_modal($(this));
@@ -31656,7 +30509,7 @@ $(async function() {
         $(mc+' .avail_row .avail_id').each(function () {
         	if ($(this).text() == avail_id) {
         		$(this).closest('.avail_row').find('.edit_avail').click();
-        		return false; //break the loop
+        		return false; 
         	}
         });        
     });
@@ -31692,7 +30545,6 @@ $(async function() {
         $(this).closest('ul').find('.avail_row_hidden').removeClass('noshow');
     });
 
-    //roster events
     $(document).on('click','.modal_o_rosters', function(e){
         $(mc).html($('#master_roster_view').html());
         open_modal($(this));
@@ -31728,7 +30580,7 @@ $(async function() {
         $(mc+' .roster_row .schedule_id').each(function () {
         	if ($(this).text() == schedule_id) {
         		$(this).closest('.roster_row').find('.edit_roster').click();
-        		return false; //break the loop
+        		return false; 
         	}
         });
     });
@@ -31778,11 +30630,10 @@ $(async function() {
         $(this).closest('ul').find('.roster_row_hidden').removeClass('noshow');
     });
 
-    //location events
 	$(document).on('click','.modal_o_locations', function(e){
 		$(mc).html($('#master_location_view').html());
         open_modal($(this));
-        $(mc+' .tl_locations').click(); //no permanent second tab, this will also adjust rounded edges
+        $(mc+' .tl_locations').click(); 
 	});
 
     $(document).on("click",".tl_locations", function(e){
@@ -31841,12 +30692,10 @@ $(async function() {
         save_loc_space();
     });
 
-    //print modal
     $(document).on("click",".print_modal", function(e){
         printDiv_responsive($(this).closest('.modal-tab-content'));
     });    
 
-    //sms and email
     set_sms_options();
 
 	$(document).on('click','.modal_o_sms', function(e){
@@ -31876,8 +30725,8 @@ $(async function() {
     	let el = $(this).hasClass('reports_lnk') ? $('#report_result') : $(this);
     	set_smss({el: el});
     });
-    
-	$(document).on('click','.modal_o_email', function(e){
+
+    	$(document).on('click','.modal_o_email', function(e){
 		$(mc3).html($('#master_email_view').html());
         open_modal3($(this));
 	});
@@ -31887,7 +30736,6 @@ $(async function() {
     	set_emails({el: el});
     });
 
-    //favourites events
 	$(document).on('click','.manage_favs', function(e){
 		$(mc).html($('#master_favs_view').html());
         open_modal($(this));
@@ -31947,8 +30795,8 @@ $(async function() {
 
 	$(document).on('click','.print_grid', function(e){
 		$(mc).html($('#master_print_grid_view').html());
-        
-		$(mc+' .ps_user_id option[value="0"]').text('All').val('All users');
+
+        		$(mc+' .ps_user_id option[value="0"]').text('All').val('All users');
 		$(mc+' .ps_space_id option[value="0"]').text('All').val('All '+$('#space_title').val()+'s');
 
 		let opts_str_u = '';
@@ -31993,7 +30841,6 @@ $(async function() {
     	print_grid_process();
     });
 
-    //cash sale events
 	$(document).on('click','.modal_o_cash_sale', function(e){
 		$(mc3).html($('#master_cash_sale_view').html());
         open_modal3($(this));
@@ -32002,9 +30849,9 @@ $(async function() {
 	});
 
     $(document).on("keypress",".cash_sale_search", function(e){
-        if (e.which === 13) { //enter key
+        if (e.which === 13) { 
             get_products_filtered(true);
-            return false; //to prevent default behaviour
+            return false; 
         }
     });
 
@@ -32031,8 +30878,8 @@ $(async function() {
     $(document).on("change",".cash_sale_surcharge_charge", function(e){
     	calc_cash_sale_cost();
     });
-    
-    $(document).on("click",".cs_show_products", function(e){
+
+        $(document).on("click",".cs_show_products", function(e){
         $(this).remove();
         $(mc3+' .cs_products_list').show();
         get_cash_sale_products();
@@ -32041,7 +30888,7 @@ $(async function() {
     $(document).on("click",".cs_show_cc", function(e){
         $(this).remove();
         $(mc3+' .cs_cc_items').show();
-        $(mc3).find('.stripe_block input[name="mode"][value="cc"]').click(); //note: non stripe items are also in stripe_block
+        $(mc3).find('.stripe_block input[name="mode"][value="cc"]').click(); 
     });
 
     $(document).on("click",".csbtn_pay", function(e){
@@ -32056,8 +30903,7 @@ $(async function() {
         let id = $(this).closest('.cs_row').find('.purchase_id').text();
         open_confirm_popup({fn: 'delete_cash_sale', fn_data: id});
     });
-    
-	//term booking events
+
 	$(document).on('click','.modal_o_term_bookings', function(e){
 		$(mc).html($('#master_term_booking_view').html());
         open_modal($(this));
@@ -32080,7 +30926,6 @@ $(async function() {
         $(mc+' .tb_term_id option').each(function(index) {
             if (index < currentIndex && $(this).prop('dataset').intrac_from_program == 1) {
                 term_id = $(this).val();
-                // Break the loop not needed here
             }
         });
 
@@ -32093,7 +30938,7 @@ $(async function() {
         $(mc+' .tb_term_id option').each(function(index) {
             if (index > currentIndex && $(this).prop('dataset').intrac_from_program == 1) {
                 term_id = $(this).val();
-                return false; // Break the loop
+                return false; 
             }
         });
 
@@ -32174,7 +31019,6 @@ $(async function() {
         }        
     });
 
-	//perm booking events
 	$(document).on('click','.modal_o_perm_bookings', function(e){
 		$(mc).html($('#master_perm_booking_view').html());
         open_modal($(this));
@@ -32197,7 +31041,6 @@ $(async function() {
         $(mc+' .pb_term_id option').each(function(index) {
             if (index < currentIndex && $(this).prop('dataset').intrac_from_program == 1) {
                 term_id = $(this).val();
-                // Break the loop not needed here
             }
         });
 
@@ -32210,7 +31053,7 @@ $(async function() {
         $(mc+' .pb_term_id option').each(function(index) {
             if (index > currentIndex && $(this).prop('dataset').intrac_from_program == 1) {
                 term_id = $(this).val();
-                return false; // Break the loop
+                return false; 
             }
         });
 
@@ -32265,7 +31108,6 @@ $(async function() {
         save_pb_schedule();
     });
 
-	//single booking events
 	$(document).on('click','.modal_o_single_bookings', async function(e){
 		$(mc).html($('#master_single_booking_view').html());
         open_modal($(this));
@@ -32285,11 +31127,10 @@ $(async function() {
         save_sb_booking();
     });
 
-    //space and lesson grid events - slots
 	$(document).on('click','.section-box-space:not(.booked-box, .hold-box)', function(e){
 	    $('.section-box.active').removeClass('active');
     	$(this).addClass('active');
-    	if ($('#hold_space').text()) { //hold mode
+    	if ($('#hold_space').text()) { 
     		saveHold();
     	} else {
 	    	$('#cbooking_deeplinks').text('space');
@@ -32358,12 +31199,11 @@ $(async function() {
 		let mode = $(this).prop('dataset').intrac;
 
 		if ((mode == 'space') || (mode == 'lesson')) {
-			//store current selection
 			let space_id = (mode == 'lesson') ? $('#lesson_modal .users_list li.checked:first a').prop('dataset').intrac : $('#space_modal .spaces_list li.checked:first a').prop('dataset').intrac;
 			let start = (mode == 'lesson') ? convert_time(parse_time($('#lesson_modal .starttimes_list').val()), 'HH-mm') : convert_time(parse_time($('#space_modal .starttimes_list').val()), 'HH-mm');
 			$('#cbooking_deeplinks').text(mode+'~'+space_id+'_'+start);
-			
-			close_side_modal();
+
+						close_side_modal();
 		} else if (mode == 'term_booking') {
 			$('#cbooking_deeplinks').text(mode);
 		} else if (mode == 'perm_booking') {
@@ -32394,13 +31234,11 @@ $(async function() {
 
     $('#add_booking_space').on("click", function(e){
 
-    	//alter
 		let sd = '';
 		if ($('#space_modal .schedule_data').text()) {
 			sd = JSON.parse($('#space_modal .schedule_data').text());
 		}
 
-		//check whether amend amount is exceeding original amount for paid bookings
 		if (sd && ((sd.receipt_type === 0) || (sd.receipt_type === 2))) {
 
 			let sd = JSON.parse($('#space_modal .schedule_data').text());
@@ -32410,8 +31248,8 @@ $(async function() {
 			total_aud_new = parseFloat(total_aud_new);
 
 			if (!isFinite(total_aud_new)) {
-				set_side_error('Something went wrong! Please try again'); //this should never show up
-				return; //halt execution
+				set_side_error('Something went wrong! Please try again'); 
+				return; 
 			}
 
 			if (total_aud_new > numberformat(sd.amount+sd.addons_amount)) {
@@ -32468,31 +31306,26 @@ $(async function() {
     	let pass_id = $(this).prop('dataset').intrac_pass_id;
 
     	if (class_id > 0) {
-    		//view class
 	        $('#loader-wrapper').show();
 	        await editClass(class_id, false);
 	        await get_class_attendance({class_id: class_id, schedule_id: schedule_id});
 	        $(mc+' .tl_attendance').click();
     	} else if (program_id > 0) {
     		if (program_type == 1) {
-	    		//view term booking
 	        	$(mc).html($('#master_term_booking_view').html());
 	        	open_modal($(this));    		
 	    		view_tb_program(program_id,schedule_id);
     		} else if (program_type == 2) {
-	    		//view perm booking
 	        	$(mc).html($('#master_perm_booking_view').html());
 	        	open_modal($(this));    		
 	    		view_pb_program(program_id,schedule_id);
     		}
     	} else {
-    		//normal space booking
     		get_booking_details(id, pass_id > 0 ? 'lesson' : 'space');
     		$('.modal_o_booking:first').click();    		
     	}
 	});
 
-	//schedule bookings in classes
 	$(document).on('click','.btn_view_booking', function(e){
     	let id = $(this).prop('dataset').intrac_schedule_id;
     	let mode = $(this).prop('dataset').intrac_mode;
@@ -32511,10 +31344,10 @@ $(async function() {
 
 		let space_id = (mode == 'lesson') ? sd.user_ids.split(',')[0] : sd.space_ids.split(',')[0];
 		let start = convert_date_time(sd.schedule_start, 'HH-mm');
-		$('#cbooking_deeplinks').text(mode+'~'+space_id+'_'+start); //default, which will be ignored later
+		$('#cbooking_deeplinks').text(mode+'~'+space_id+'_'+start); 
 
 	    close_modal();
-	    viewCustomer(parent_id > 0 ? parent_id : customer_id, 'silent'); //silent mode. init_space_booking & init_lesson_booking triggered inside this
+	    viewCustomer(parent_id > 0 ? parent_id : customer_id, 'silent'); 
 	});
 
 	$(document).on('click','.btn_cancelBooking', function(e){
@@ -32547,8 +31380,7 @@ $(async function() {
     	open_confirm_popup({fn: 'delete_hold', fn_data: id+'~'+location_id, msg: 'Are you sure you want to delete this reservation?'});
 	});
 
-    //reports events
-    $(document).on("click",'.view_report[data-intrac!="Email"][data-intrac!="SMS"][data-intrac!="Attendance"]', function(e){ //this should be before view_report
+    $(document).on("click",'.view_report[data-intrac!="Email"][data-intrac!="SMS"][data-intrac!="Attendance"]', function(e){ 
 	    reset_rep_sub_name();
     });
 
@@ -32572,10 +31404,10 @@ $(async function() {
     });
 
     $(document).on("click",".rep_rawcsv", function(e){
-        run_report($('#reports .rep_report').val(),true,'rawcsv'); //run from local
+        run_report($('#reports .rep_report').val(),true,'rawcsv'); 
     });
 
-    $(document).on("change",".rep_start_date", function(e){ //this should be before run_report below
+    $(document).on("change",".rep_start_date", function(e){ 
 	    let start = $('#sh_reports .rep_start_date').val();
 
 	    if ($('#sh_reports .rep_finish_date').is(":visible")) {
@@ -32587,8 +31419,8 @@ $(async function() {
 	    }
     });
 
-    $(document).on("change",".rep_term_id", function(e){ //this should be before run_report below
-        $('#sh_reports .rep_last_term_id').val(''); //let back-end pick the last term appropriate to the changed term_id
+    $(document).on("change",".rep_term_id", function(e){ 
+        $('#sh_reports .rep_last_term_id').val(''); 
     });
 
     $(document).on("change",".rep_start_date, .rep_finish_date, .rep_term_id, .rep_last_term_id, .rep_month, .rep_payperiod", function(e){
@@ -32609,7 +31441,7 @@ $(async function() {
     });
 
     $(document).on("change",".rep_groupby", function(e){
-        run_report($('#reports .rep_report').val(), true); //run from local
+        run_report($('#reports .rep_report').val(), true); 
     });
 
     $(document).on("change",".rep_orderby", async function(e){
@@ -32637,7 +31469,6 @@ $(async function() {
 	        	await saveItem_iDB(res);
 	        }
 
-	        //helper function. flip based on last space in str
 			function flipName (str) {
 			    const parts = String(str).trim().split(/\s+/);
 			    if (parts.length < 2) return str;
@@ -32646,7 +31477,7 @@ $(async function() {
 			};	        
     	}
 
-        run_report($('#reports .rep_report').val(), true); //run from local
+        run_report($('#reports .rep_report').val(), true); 
     });
 
     $(document).on("click",".rep_groupby_menu a", function(e){
@@ -32712,7 +31543,6 @@ $(async function() {
     		destroy_charts($(this).closest('.rep_chart'));
     		create_charts($(this).closest('.rep_chart'));
 
-    		//adjust switches
     		$(this).closest('.rep_chart').find('.switch_chart').addClass('noshow');
     		$(this).closest('.rep_chart').find('.switch_chart').each(function () {
     			if (($(this).prop('dataset').intrac_allowed || '').split('~').includes(data.type)) {
@@ -32721,8 +31551,8 @@ $(async function() {
     		});
     	}
     });
-    
-    $(document).on("click",".cust_email_hist", function(e){
+
+        $(document).on("click",".cust_email_hist", function(e){
     	reset_rep_sub_name();
     	let customer_id = $(mc2+' .cust_edit_tab .cust_customer_id').val();
     	let customer_name = $(mc2+' .cust_edit_tab .first_name').val()+' '+$(mc2+' .cust_edit_tab .last_name').val();
@@ -32730,8 +31560,8 @@ $(async function() {
     		close_modal2();
 	    	$('#report_summary_title .rep_sub_name').html(' - '+customer_name+($('.view_report[data-intrac="Email"]').hasClass('noshow') ? '' : ' <a href="#" class="btn-link primary clear_rep_sub_name">Show all</a>'));
 	    	$('#report_summary_title .rep_sub_name').prop('dataset').intrac_customer_id = customer_id;    		
-    		
-    		run_report_max_days('Email');
+
+    		    		run_report_max_days('Email');
     	}
     });
 
@@ -32748,12 +31578,12 @@ $(async function() {
     		close_modal2();
 	    	$('#report_summary_title .rep_sub_name').html(' - '+customer_name+($('.view_report[data-intrac="SMS"]').hasClass('noshow') ? '' : ' <a href="#" class="primary clear_rep_sub_name">Show all</a>'));
 	    	$('#report_summary_title .rep_sub_name').prop('dataset').intrac_customer_id = customer_id;
-	    	
-	    	run_report_max_days('SMS');
+
+	    		    	run_report_max_days('SMS');
     	}
     });
-    
-    $(document).on("click",".usr_sms_hist", function(e){
+
+        $(document).on("click",".usr_sms_hist", function(e){
     	reset_rep_sub_name();
     	let user_id = $(mc+' .usr_user_id').val();
     	let username = $(mc+' .usr_username').val();
@@ -32761,8 +31591,8 @@ $(async function() {
     		close_modal();
 	    	$('#report_summary_title .rep_sub_name').html(' - '+username+($('.view_report[data-intrac="SMS"]').hasClass('noshow') ? '' : ' <a href="#" class="primary clear_rep_sub_name">Show all</a>'));
 	    	$('#report_summary_title .rep_sub_name').prop('dataset').intrac_user_id = user_id;    		
-    		
-    		run_report_max_days('SMS');
+
+    		    		run_report_max_days('SMS');
     	}
     });
 
@@ -32808,7 +31638,6 @@ $(async function() {
     	get_locks();
     });
 
-    //notes events
     $('#get_notes').on("click", function(e){
     	get_notes();
     });
@@ -32834,7 +31663,6 @@ $(async function() {
     	}
     });
 
-    //processes events
 	$(document).on('click','.modal_o_procs', function(e){
 		$(mc).html($('#master_proc_view').html());
 		if ($(mc+' .class_notice_template').length) {
@@ -32884,7 +31712,7 @@ $(async function() {
 	});
 
 	$(document).on('click','.tl_weather', function(e){
-		$(mc+' .weather_tab').html($('#master_proc_view .weather_tab').html()); //reset
+		$(mc+' .weather_tab').html($('#master_proc_view .weather_tab').html()); 
 		$(mc+' .weather_date').val(convert_date($('#main_date').val()));
 		$(mc+' .weather_steps').addClass('noshow');
 		get_weathers();
@@ -32940,7 +31768,7 @@ $(async function() {
     });
 
     $(document).on('click','.tl_multir', function(e){
-        $(mc+' .multir_tab').html($('#master_proc_view .multir_tab').html()); //reset
+        $(mc+' .multir_tab').html($('#master_proc_view .multir_tab').html()); 
         $(mc+' .multir_steps').addClass('noshow');
         if (!$(this).prop('dataset').intrac_class_id) {
             get_multir_items();
@@ -33041,8 +31869,8 @@ $(async function() {
         $(mc+' .tmp_template_data').val(sanitiseQuillHTML($(mc+' .class_notice_template .ql-editor').html()))
         show_template_preview();
     });
-    
-    $(document).on('click','.show_template_editor', function(e){
+
+        $(document).on('click','.show_template_editor', function(e){
         $(mc+' .template_editor').removeClass('noshow');
         $(mc+' .template_preview').addClass('noshow');
     });
@@ -33068,7 +31896,7 @@ $(async function() {
     });
 
 	$(document).on('click','.tl_perm_rollover', function(e){
-		$(mc+' .perm_rollover_tab').html($('#master_proc_view .perm_rollover_tab').html()); //reset
+		$(mc+' .perm_rollover_tab').html($('#master_proc_view .perm_rollover_tab').html()); 
 		get_perm_rollovers();
 	});
 
@@ -33118,7 +31946,6 @@ $(async function() {
         open_confirm_popup({fn: 'merge_customers', fn_data: '', msg: 'This process cannot be reversed, please cross check the details before proceeding further'});
     });
 
-    //lists events
 	$(document).on('click','.modal_o_lists', function(e){
 		$(mc).html($('#master_lists_view').html());
         open_modal($(this));
@@ -33137,13 +31964,12 @@ $(async function() {
     	run_lists();
     });
 
-    //Stripe events
     $(document).on("click",".stripe_mount", function(e){
     	if ($(this).hasClass('stripe_cs')) {
-    		$(this).closest('.modal-tab-content').find('.stripe_block input[name="mode"][value="cc"]').click();	//mc2 cc checked automatically
+    		$(this).closest('.modal-tab-content').find('.stripe_block input[name="mode"][value="cc"]').click();	
     	}
-    	$(this).closest('.modal-tab-content').find('.cust_payment_options .directs_items').removeClass('noshow'); //mc2
-    	$(this).closest('.modal-tab-content').find('.stripe_block .cs_cc_items').removeClass('noshow'); //mc3
+    	$(this).closest('.modal-tab-content').find('.cust_payment_options .directs_items').removeClass('noshow'); 
+    	$(this).closest('.modal-tab-content').find('.stripe_block .cs_cc_items').removeClass('noshow'); 
 
     	let total_aud = $(this).closest('.modal-tab-content').find('.stripe_block .total_aud').val() || '0';
     	total_aud = parseFloat(total_aud)*100;
@@ -33166,12 +31992,11 @@ $(async function() {
         $(mc2+' .cust_cc_items').removeClass('noshow');
     });
 
-    //Assess events
 	$(document).on('click','.modal_o_assess', function(e){
 		$(mc3).html($('#master_assess_view').html());
         open_modal3($(this));
         if ($('.instructor-page').length) {
-        	$(mc3+' .tl_assess_details').click(); //to populate modal title
+        	$(mc3+' .tl_assess_details').click(); 
         }
         get_api('getAssesss');
 	});
@@ -33238,17 +32063,16 @@ $(async function() {
         assessPromote();
     });
 
-    //Message events
 	$(document).on('click','.modal_o_messages', function(e){
 		$(mc).html($('#master_message_view').html());
         open_modal($(this));
         if ($('.instructor-page').length) {
-        	$(mc+' .tl_msg_comments').click(); //to populate modal title
+        	$(mc+' .tl_msg_comments').click(); 
         }        
         get_messages();
         if ($(mc+' .message_general_items').length) {
         	init_month_flatpickr(mc+' .msg_gen_month');
-        	$(mc+' .msg_gen_month')[0]._flatpickr.setDate(dayjs().format('YYYY-MM'), false); // Update month without triggers
+        	$(mc+' .msg_gen_month')[0]._flatpickr.setDate(dayjs().format('YYYY-MM'), false); 
         }
 	});
 
@@ -33265,7 +32089,7 @@ $(async function() {
         $(mc+' .msg_comment_form').show();
 	    $(mc+' .new-modal-content').animate({
 	        scrollTop: $(mc+' .msg_comment_form').position().top + $(mc+' .new-modal-content').scrollTop() - $(mc + ' .modal-header').outerHeight()
-	    }, 500, function () { //safari animation is making multiselect unresposive, the below will force a reflow
+	    }, 500, function () { 
 		    this.style.transform = 'translateZ(0)';
 		    requestAnimationFrame(() => {
         		this.style.transform = '';
@@ -33311,8 +32135,7 @@ $(async function() {
     $(document).on("click",".btn_saveMsgGenComment", function(e){
         save_msg_gen_comment();
     }); 
-    
-    //Game Card events
+
 	$(document).on('click','.modal_o_gcards', function(e){
 		$(mc).html($('#master_gcard_view').html());
         open_modal($(this));
@@ -33330,8 +32153,8 @@ $(async function() {
 	        scrollTop: $(mc+' .gsusp_form').position().top + $(mc+' .new-modal-content').scrollTop() - $(mc + ' .modal-header').outerHeight()
 	    }, 500);
     });
-	
-    $(document).on("change",".gcard_date", function(e){
+
+	    $(document).on("change",".gcard_date", function(e){
         get_gcards();
     });
 
@@ -33414,7 +32237,7 @@ $(async function() {
         if (_list.length) {
         	open_confirm_popup({fn: 'admin_add_game_card', fn_data: 'fn_select~fn_select2~fn_input'+'~'+fixture_id+'~'+orders, sel_options: _list, sel2_options: _list2, msg: 'Record Player Booking - please select player, booking type and add a comment'});
         } else {
-        	set_side_error('Something went wrong! Please try again'); //this should never show up
+        	set_side_error('Something went wrong! Please try again'); 
         }
     }); 
 
@@ -33428,7 +32251,6 @@ $(async function() {
     	get_scoreboard_data();
     });
 
-    //Dashboard events
     $('#add_widget').on('click', function () {
 		let widgets_list = $(this).prop('dataset').intrac;
 
@@ -33472,19 +32294,16 @@ $(async function() {
         save_grid_default('reset'); 
     });
 
-    //disable auto-fill for all text inputs
     $('input[type=text]').each(function () {
        $(this).attr('autocomplete', 'one-time-code');
     });
 
-    //last visited location
 	if (localStorage.getItem('admin_location_id')) {
 		$('#location_id').val(localStorage.getItem('admin_location_id'));
 	}
 
-    await set_client_options(); //default grid is also set here
+    await set_client_options(); 
 
-    //customers datatable - silent mode
     if (!$('.instructor-page').length) {
     	refresh_customers('initial');
     }

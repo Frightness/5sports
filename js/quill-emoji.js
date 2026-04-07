@@ -8,100 +8,70 @@
 	else
 		root["QuillEmoji"] = factory(root["Quill"]);
 })(self, (__WEBPACK_EXTERNAL_MODULE__436__) => {
-return /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+return  (() => { 
+ 	"use strict";
+ 	var __webpack_modules__ = ({
 
-/***/ 436:
-/***/ ((module) => {
+ 436:
+ ((module) => {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE__436__;
 
-/***/ })
+ })
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/************************************************************************/
+ 	});
+ 	var __webpack_module_cache__ = {};
+ 	function __webpack_require__(moduleId) {
+ 		var cachedModule = __webpack_module_cache__[moduleId];
+ 		if (cachedModule !== undefined) {
+ 			return cachedModule.exports;
+ 		}
+ 		var module = __webpack_module_cache__[moduleId] = {
+ 			exports: {}
+ 		};
+ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+ 		return module.exports;
+ 	}
+ 	(() => {
+ 		__webpack_require__.n = (module) => {
+ 			var getter = module && module.__esModule ?
+ 				() => (module['default']) :
+ 				() => (module);
+ 			__webpack_require__.d(getter, { a: getter });
+ 			return getter;
+ 		};
+ 	})();
+ 	(() => {
+ 		__webpack_require__.d = (exports, definition) => {
+ 			for(var key in definition) {
+ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+ 				}
+ 			}
+ 		};
+ 	})();
+ 	(() => {
+ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+ 	})();
+ 	(() => {
+ 		__webpack_require__.r = (exports) => {
+ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+ 			}
+ 			Object.defineProperty(exports, '__esModule', { value: true });
+ 		};
+ 	})();
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
-// EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ quill_emoji)
+  "default": () => ( quill_emoji)
 });
 
-// EXTERNAL MODULE: external {"commonjs":"quill","commonjs2":"quill","amd":"quill","root":"Quill"}
 var external_commonjs_quill_commonjs2_quill_amd_quill_root_Quill_ = __webpack_require__(436);
-var external_commonjs_quill_commonjs2_quill_amd_quill_root_Quill_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_quill_commonjs2_quill_amd_quill_root_Quill_);
-;// CONCATENATED MODULE: ./src/emoji-list.js
+var external_commonjs_quill_commonjs2_quill_amd_quill_root_Quill_default = __webpack_require__.n(external_commonjs_quill_commonjs2_quill_amd_quill_root_Quill_);
+;
 let emojiList = [{
   "name": "100",
   "unicode": "1f4af",
@@ -138,14 +108,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "3"
 },
-/* ///@todo not found on image{
-  "name": "rolling_on_the_floor_laughing",
-  "unicode": "1f923",
-  "shortname": ":rofl:",
-  "code_decimal": "&#129315;",
-  "category": "p",
-  "emoji_order": "4"
-},*/
 {
   "name": "smiley",
   "unicode": "1f603",
@@ -385,14 +347,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "39"
 },
-/*{ //@todo not found on image
-  "name": "drooling_face",
-  "unicode": "1f924",
-  "shortname": ":drooling_face:",
-  "code_decimal": "&#129316;",
-  "category": "p",
-  "emoji_order": "40"
-},*/
 {
   "name": "unamused",
   "unicode": "1f612",
@@ -576,30 +530,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "67"
 },
-/*{ //@todo not found on image
-  "name": "face_with_cowboy_hat",
-  "unicode": "1f920",
-  "shortname": ":cowboy:",
-  "code_decimal": "&#129312;",
-  "category": "p",
-  "emoji_order": "68"
-},*/
-/*{ //@todo not found on image
-  "name": "clown_face",
-  "unicode": "1f921",
-  "shortname": ":clown:",
-  "code_decimal": "&#129313;",
-  "category": "p",
-  "emoji_order": "69"
-},*/
-/*{ //@todo not founf on image
-  "name": "lying_face",
-  "unicode": "1f925",
-  "shortname": ":lying_face:",
-  "code_decimal": "&#129317;",
-  "category": "p",
-  "emoji_order": "70"
-},*/
 {
   "name": "mask",
   "unicode": "1f637",
@@ -622,22 +552,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "73"
 },
-/*{ //@todo not found on image
-  "name": "nauseated_face",
-  "unicode": "1f922",
-  "shortname": ":nauseated_face:",
-  "code_decimal": "&#129314;",
-  "category": "p",
-  "emoji_order": "74"
-},*/
-/*{ //@todo not found on image
-  "name": "sneezing_face",
-  "unicode": "1f927",
-  "shortname": ":sneezing_face:",
-  "code_decimal": "&#129319;",
-  "category": "p",
-  "emoji_order": "75"
-},*/
 {
   "name": "smiling_imp",
   "unicode": "1f608",
@@ -905,14 +819,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "447"
 },
-/*{ //@todo not found on image
-  "name": "mrs_claus",
-  "unicode": "1f936",
-  "shortname": ":mrs_claus:",
-  "code_decimal": "&#129334;",
-  "category": "p",
-  "emoji_order": "453"
-},*/
 {
   "name": "princess",
   "unicode": "1f478",
@@ -921,14 +827,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "459"
 },
-/*{ //@todo not found on image
-  "name": "prince",
-  "unicode": "1f934",
-  "shortname": ":prince:",
-  "code_decimal": "&#129332;",
-  "category": "p",
-  "emoji_order": "465"
-},*/
 {
   "name": "bride_with_veil",
   "unicode": "1f470",
@@ -937,22 +835,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "471"
 },
-/*{ //@todo not found on image
-  "name": "man_in_tuxedo",
-  "unicode": "1f935",
-  "shortname": ":man_in_tuxedo:",
-  "code_decimal": "&#129333;",
-  "category": "p",
-  "emoji_order": "477"
-},*/
-/*{ //@todo not found on image
-  "name": "pregnant_woman",
-  "unicode": "1f930",
-  "shortname": ":pregnant_woman:",
-  "code_decimal": "&#129328;",
-  "category": "p",
-  "emoji_order": "483"
-},*/
 {
   "name": "man_with_gua_pi_mao",
   "unicode": "1f472",
@@ -1010,22 +892,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "603"
 },
-/*{ //@todo not found on image
-  "name": "face_palm",
-  "unicode": "1f926",
-  "shortname": ":face_palm:",
-  "code_decimal": "&#129318;",
-  "category": "p",
-  "emoji_order": "621"
-},*/
-/*{ //@todo not found on image
-  "name": "shrug",
-  "unicode": "1f937",
-  "shortname": ":shrug:",
-  "code_decimal": "&#129335;",
-  "category": "p",
-  "emoji_order": "639"
-},*/
 {
   "name": "massage",
   "unicode": "1f486",
@@ -1062,14 +928,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "729"
 },
-/*{ //@todo not found on image
-  "name": "man_dancing",
-  "unicode": "1f57a",
-  "shortname": ":man_dancing:",
-  "code_decimal": "&#128378;",
-  "category": "p",
-  "emoji_order": "735"
-},*/
 {
   "name": "dancers",
   "unicode": "1f46f",
@@ -1106,14 +964,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "767"
 },
-/*{ //@todo not found on image
-  "name": "fencer",
-  "unicode": "1f93a",
-  "shortname": ":fencer:",
-  "code_decimal": "&#129338;",
-  "category": "a",
-  "emoji_order": "768"
-},*/
 {
   "name": "horse_racing",
   "unicode": "1f3c7",
@@ -1206,46 +1056,6 @@ let emojiList = [{
   "category": "t",
   "emoji_order": "927"
 },
-/*{ //@todo not found on image
-  "name": "cartwheel",
-  "unicode": "1f938",
-  "shortname": ":cartwheel:",
-  "code_decimal": "&#129336;",
-  "category": "a",
-  "emoji_order": "928"
-},*/
-/*{ //@todo not found on image
-  "name": "wrestlers",
-  "unicode": "1f93c",
-  "shortname": ":wrestlers:",
-  "code_decimal": "&#129340;",
-  "category": "a",
-  "emoji_order": "946"
-},*/
-/*{ //@todo not found on image
-  "name": "water_polo",
-  "unicode": "1f93d",
-  "shortname": ":water_polo:",
-  "code_decimal": "&#129341;",
-  "category": "a",
-  "emoji_order": "964"
-},*/
-/*{ //@todo not found on image
-  "name": "handball",
-  "unicode": "1f93e",
-  "shortname": ":handball:",
-  "code_decimal": "&#129342;",
-  "category": "a",
-  "emoji_order": "982"
-},*/
-/*{ //@todo not found on image
-  "name": "juggling",
-  "unicode": "1f939",
-  "shortname": ":juggling:",
-  "code_decimal": "&#129337;",
-  "category": "a",
-  "emoji_order": "1000"
-},*/
 {
   "name": "couple",
   "unicode": "1f46b",
@@ -1296,14 +1106,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "1080"
 },
-/*{ //@todo not found on image
-  "name": "selfie",
-  "unicode": "1f933",
-  "shortname": ":selfie:",
-  "code_decimal": "&#129331;",
-  "category": "p",
-  "emoji_order": "1086"
-},*/
 {
   "name": "point_left",
   "unicode": "1f448",
@@ -1354,22 +1156,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "1128"
 },
-/*{ //@todo not found on image
-  "name": "fingers_crossed",
-  "unicode": "1f91e",
-  "shortname": ":fingers_crossed:",
-  "code_decimal": "&#129310;",
-  "category": "p",
-  "emoji_order": "1134"
-},*/
-/*{ //@todo not found on image
-  "name": "vulcan",
-  "unicode": "1f596",
-  "shortname": ":vulcan:",
-  "code_decimal": "&#128406;",
-  "category": "p",
-  "emoji_order": "1140"
-},*/
 {
   "name": "the_horns",
   "unicode": "1f918",
@@ -1378,14 +1164,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "1146"
 },
-/*{ //@todo not found on image
-  "name": "call_me",
-  "unicode": "1f919",
-  "shortname": ":call_me:",
-  "code_decimal": "&#129305;",
-  "category": "p",
-  "emoji_order": "1152"
-},*/
 {
   "name": "raised_hand_with_fingers_splayed",
   "unicode": "1f590",
@@ -1394,14 +1172,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "1158"
 },
-/*{ //@todo not found on image
-  "name": "raised_hand",
-  "unicode": "270b",
-  "shortname": ":raised_hand:",
-  "code_decimal": "&#9995;",
-  "category": "p",
-  "emoji_order": "1164"
-},*/
 {
   "name": "ok_hand",
   "unicode": "1f44c",
@@ -1438,30 +1208,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "1194"
 },
-/*{ //@todo not found on image
-  "name": "left_facing_fist",
-  "unicode": "1f91b",
-  "shortname": ":left_facing_fist:",
-  "code_decimal": "&#129307;",
-  "category": "p",
-  "emoji_order": "1200"
-},*/
-/*{ //@todo not found on image
-  "name": "right_facing_fist",
-  "unicode": "1f91c",
-  "shortname": ":right_facing_fist:",
-  "code_decimal": "&#129308;",
-  "category": "p",
-  "emoji_order": "1206"
-},*/
-/*{ //@todo not found on image
-  "name": "raised_back_of_hand",
-  "unicode": "1f91a",
-  "shortname": ":raised_back_of_hand:",
-  "code_decimal": "&#129306;",
-  "category": "p",
-  "emoji_order": "1212"
-},*/
 {
   "name": "wave",
   "unicode": "1f44b",
@@ -1505,14 +1251,6 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "1248"
 },
-/*{ //@todo not found on image
-  "name": "handshake",
-  "unicode": "1f91d",
-  "shortname": ":handshake:",
-  "code_decimal": "&#129309;",
-  "category": "p",
-  "emoji_order": "1254"
-},*/
 {
   "name": "nail_care",
   "unicode": "1f485",
@@ -1654,14 +1392,6 @@ let emojiList = [{
   "category": "s",
   "emoji_order": "1295"
 },
-/*{ //@todo not found on image
-  "name": "black_heart",
-  "unicode": "1f5a4",
-  "shortname": ":black_heart:",
-  "code_decimal": "&#128420;",
-  "category": "s",
-  "emoji_order": "1296"
-},*/
 {
   "name": "gift_heart",
   "unicode": "1f49d",
@@ -1992,14 +1722,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1343"
 },
-/*{ //@todo not found on image
-  "name": "gorilla",
-  "unicode": "1f98d",
-  "shortname": ":gorilla:",
-  "code_decimal": "&#129421;",
-  "category": "n",
-  "emoji_order": "1344"
-},*/
 {
   "name": "dog",
   "unicode": "1f436",
@@ -2029,14 +1751,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1348"
 },
-/*{ //@todo not found on image
-  "name": "fox",
-  "unicode": "1f98a",
-  "shortname": ":fox:",
-  "code_decimal": "&#129418;",
-  "category": "n",
-  "emoji_order": "1349"
-},*/
 {
   "name": "cat",
   "unicode": "1f431",
@@ -2094,14 +1808,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1357"
 },
-/*{ //@todo not found on image
-  "name": "deer",
-  "unicode": "1f98c",
-  "shortname": ":deer:",
-  "code_decimal": "&#129420;",
-  "category": "n",
-  "emoji_order": "1358"
-},*/
 {
   "name": "unicorn_face",
   "unicode": "1f984",
@@ -2208,14 +1914,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1373"
 },
-/*{ //@todo not found on image
-  "name": "rhino",
-  "unicode": "1f98f",
-  "shortname": ":rhino:",
-  "code_decimal": "&#129423;",
-  "category": "n",
-  "emoji_order": "1374"
-},*/
 {
   "name": "mouse",
   "unicode": "1f42d",
@@ -2266,14 +1964,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1381"
 },
-/*{ //@todo not found on image
-  "name": "bat",
-  "unicode": "1f987",
-  "shortname": ":bat:",
-  "code_decimal": "&#129415;",
-  "category": "n",
-  "emoji_order": "1382"
-},*/
 {
   "name": "bear",
   "unicode": "1f43b",
@@ -2366,30 +2056,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1395"
 },
-/*{ //@todo not found on image
-  "name": "eagle",
-  "unicode": "1f985",
-  "shortname": ":eagle:",
-  "code_decimal": "&#129413;",
-  "category": "n",
-  "emoji_order": "1396"
-},*/
-/*{ //@todo not found on image
-  "name": "duck",
-  "unicode": "1f986",
-  "shortname": ":duck:",
-  "code_decimal": "&#129414;",
-  "category": "n",
-  "emoji_order": "1397"
-},*/
-/*{ //@todo not found on image
-  "name": "owl",
-  "unicode": "1f989",
-  "shortname": ":owl:",
-  "code_decimal": "&#129417;",
-  "category": "n",
-  "emoji_order": "1398"
-},*/
 {
   "name": "frog",
   "unicode": "1f438",
@@ -2412,14 +2078,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1401"
 },
-/*{ //@todo not found on image
-  "name": "lizard",
-  "unicode": "1f98e",
-  "shortname": ":lizard:",
-  "code_decimal": "&#129422;",
-  "category": "n",
-  "emoji_order": "1402"
-},*/
 {
   "name": "snake",
   "unicode": "1f40d",
@@ -2484,14 +2142,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1411"
 },
-/*{ //@todo not found on image
-  "name": "shark",
-  "unicode": "1f988",
-  "shortname": ":shark:",
-  "code_decimal": "&#129416;",
-  "category": "n",
-  "emoji_order": "1412"
-},*/
 {
   "name": "octopus",
   "unicode": "1f419",
@@ -2514,30 +2164,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1415"
 },
-/*{ //@todo not found on image
-  "name": "shrimp",
-  "unicode": "1f990",
-  "shortname": ":shrimp:",
-  "code_decimal": "&#129424;",
-  "category": "n",
-  "emoji_order": "1416"
-},*/
-/*{ //@todo not found on image
-  "name": "squid",
-  "unicode": "1f991",
-  "shortname": ":squid:",
-  "code_decimal": "&#129425;",
-  "category": "n",
-  "emoji_order": "1417"
-},*/
-/*{ //@todo not found on image
-  "name": "butterfly",
-  "unicode": "1f98b",
-  "shortname": ":butterfly:",
-  "code_decimal": "&#129419;",
-  "category": "n",
-  "emoji_order": "1418"
-},*/
 {
   "name": "snail",
   "unicode": "1f40c",
@@ -2630,14 +2256,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1431"
 },
-/*{ //@todo not found on image
-  "name": "wilted_rose",
-  "unicode": "1f940",
-  "shortname": ":wilted_rose:",
-  "code_decimal": "&#129344;",
-  "category": "n",
-  "emoji_order": "1432"
-},*/
 {
   "name": "hibiscus",
   "unicode": "1f33a",
@@ -2842,14 +2460,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1461"
 },
-/*{ //@todo not found on image
-  "name": "kiwi",
-  "unicode": "1f95d",
-  "shortname": ":kiwi:",
-  "code_decimal": "&#129373;",
-  "category": "d",
-  "emoji_order": "1462"
-},*/
 {
   "name": "tomato",
   "unicode": "1f345",
@@ -2858,14 +2468,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1463"
 },
-/*{ //@todo not found on image
-  "name": "avocado",
-  "unicode": "1f951",
-  "shortname": ":avocado:",
-  "code_decimal": "&#129361;",
-  "category": "d",
-  "emoji_order": "1464"
-},*/
 {
   "name": "eggplant",
   "unicode": "1f346",
@@ -2874,22 +2476,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1465"
 },
-/*{ //@todo not found on image
-  "name": "potato",
-  "unicode": "1f954",
-  "shortname": ":potato:",
-  "code_decimal": "&#129364;",
-  "category": "d",
-  "emoji_order": "1466"
-},*/
-/*{ //@todo not found on image
-  "name": "carrot",
-  "unicode": "1f955",
-  "shortname": ":carrot:",
-  "code_decimal": "&#129365;",
-  "category": "d",
-  "emoji_order": "1467"
-},*/
 {
   "name": "corn",
   "unicode": "1f33d",
@@ -2905,14 +2491,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1469"
 },
-/*{ //@todo not found on image
-  "name": "cucumber",
-  "unicode": "1f952",
-  "shortname": ":cucumber:",
-  "code_decimal": "&#129362;",
-  "category": "d",
-  "emoji_order": "1470"
-},*/
 {
   "name": "mushroom",
   "unicode": "1f344",
@@ -2921,14 +2499,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1471"
 },
-/*{ //@todo not found on image
-  "name": "peanuts",
-  "unicode": "1f95c",
-  "shortname": ":peanuts:",
-  "code_decimal": "&#129372;",
-  "category": "d",
-  "emoji_order": "1472"
-},*/
 {
   "name": "chestnut",
   "unicode": "1f330",
@@ -2944,30 +2514,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1474"
 },
-/*{ //@todo not found on image
-  "name": "croissant",
-  "unicode": "1f950",
-  "shortname": ":croissant:",
-  "code_decimal": "&#129360;",
-  "category": "d",
-  "emoji_order": "1475"
-},*/
-/*{ //@todo not found on image
-  "name": "french_bread",
-  "unicode": "1f956",
-  "shortname": ":french_bread:",
-  "code_decimal": "&#129366;",
-  "category": "d",
-  "emoji_order": "1476"
-},*/
-/*{ //@todo not found on image
-  "name": "pancakes",
-  "unicode": "1f95e",
-  "shortname": ":pancakes:",
-  "code_decimal": "&#129374;",
-  "category": "d",
-  "emoji_order": "1477"
-},*/
 {
   "name": "cheese_wedge",
   "unicode": "1f9c0",
@@ -2990,14 +2536,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1480"
 },
-/*{ //@todo not found on image
-  "name": "bacon",
-  "unicode": "1f953",
-  "shortname": ":bacon:",
-  "code_decimal": "&#129363;",
-  "category": "d",
-  "emoji_order": "1481"
-},*/
 {
   "name": "hamburger",
   "unicode": "1f354",
@@ -3041,14 +2579,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1487"
 },
-/*{ //@todo not found on image
-  "name": "stuffed_flatbread",
-  "unicode": "1f959",
-  "shortname": ":stuffed_flatbread:",
-  "code_decimal": "&#129369;",
-  "category": "d",
-  "emoji_order": "1488"
-},*/
 {
   "name": "egg",
   "unicode": "1f95a",
@@ -3057,22 +2587,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1489"
 },
-/*{ //@todo not found on image
-  "name": "cooking",
-  "unicode": "1f373",
-  "shortname": ":cooking:",
-  "code_decimal": "&#127859;",
-  "category": "d",
-  "emoji_order": "1490"
-},*/
-/*{ //@todo not found on image
-  "name": "shallow_pan_of_f",
-  "unicode": "1f958",
-  "shortname": ":shallow_pan_of_f:",
-  "code_decimal": "&#129368;",
-  "category": "d",
-  "emoji_order": "1491"
-},*/
 {
   "name": "stew",
   "unicode": "1f372",
@@ -3081,14 +2595,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1492"
 },
-/*{ //@todo not found on image
-  "name": "salad",
-  "unicode": "1f957",
-  "shortname": ":salad:",
-  "code_decimal": "&#129367;",
-  "category": "d",
-  "emoji_order": "1493"
-},*/
 {
   "name": "popcorn",
   "unicode": "1f37f",
@@ -3279,14 +2785,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1520"
 },
-/*{ //@todo not found on image
-  "name": "milk",
-  "unicode": "1f95b",
-  "shortname": ":milk:",
-  "code_decimal": "&#129371;",
-  "category": "d",
-  "emoji_order": "1521"
-},*/
 {
   "name": "coffee",
   "unicode": "2615",
@@ -3351,22 +2849,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1530"
 },
-/*{ //@todo not found on image
-  "name": "champagne_glass",
-  "unicode": "1f942",
-  "shortname": ":champagne_glass:",
-  "code_decimal": "&#129346;",
-  "category": "d",
-  "emoji_order": "1531"
-},*/
-/*{ //@todo not found on image
-  "name": "tumbler_glass",
-  "unicode": "1f943",
-  "shortname": ":tumbler_glass:",
-  "code_decimal": "&#129347;",
-  "category": "d",
-  "emoji_order": "1532"
-},*/
 {
   "name": "knife_fork_plate",
   "unicode": "1f37d",
@@ -3382,22 +2864,6 @@ let emojiList = [{
   "category": "d",
   "emoji_order": "1534"
 },
-/*{ //@todo not found on image
-  "name": "spoon",
-  "unicode": "1f944",
-  "shortname": ":spoon:",
-  "code_decimal": "&#129348;",
-  "category": "d",
-  "emoji_order": "1535"
-},*/
-/*{ //@todo not found on image
-  "name": "knife",
-  "unicode": "1f52a",
-  "shortname": ":knife:",
-  "code_decimal": "&#128298;",
-  "category": "o",
-  "emoji_order": "1536"
-},*/
 {
   "name": "amphora",
   "unicode": "1f3fa",
@@ -3756,14 +3222,6 @@ let emojiList = [{
   "category": "t",
   "emoji_order": "1587"
 },
-/*{ //@todo not found on image
-  "name": "city_dusk",
-  "unicode": "1f306",
-  "shortname": ":city_dusk:",
-  "code_decimal": "&#127750;",
-  "category": "t",
-  "emoji_order": "1588"
-},*/
 {
   "name": "city_sunset",
   "unicode": "1f307",
@@ -4059,22 +3517,6 @@ let emojiList = [{
   "category": "t",
   "emoji_order": "1630"
 },
-/*{ //@todo not found on image
-  "name": "scooter",
-  "unicode": "1f6f4",
-  "shortname": ":scooter:",
-  "code_decimal": "&#128756;",
-  "category": "t",
-  "emoji_order": "1631"
-},*/
-/*{ //@todo not found on image
-  "name": "motor_scooter",
-  "unicode": "1f6f5",
-  "shortname": ":motor_scooter:",
-  "code_decimal": "&#128757;",
-  "category": "t",
-  "emoji_order": "1632"
-},*/
 {
   "name": "busstop",
   "unicode": "1f68f",
@@ -4153,14 +3595,6 @@ let emojiList = [{
   "category": "t",
   "emoji_order": "1643"
 },
-/*{ //@todo not found on image
-  "name": "canoe",
-  "unicode": "1f6f6",
-  "shortname": ":canoe:",
-  "code_decimal": "&#128758;",
-  "category": "t",
-  "emoji_order": "1644"
-},*/
 {
   "name": "speedboat",
   "unicode": "1f6a4",
@@ -4575,14 +4009,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1713"
 },
-/*{ //@todo not found on image
-  "name": "waxing_gibbous_moon",
-  "unicode": "1f314",
-  "shortname": ":waxing_gibbous_moon:",
-  "code_decimal": "&#127764;",
-  "category": "n",
-  "emoji_order": "1714"
-},*/
 {
   "name": "full_moon",
   "unicode": "1f315",
@@ -4710,30 +4136,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1732"
 },
-/*{ //@todo not found on image
-  "name": "white_sun_small_cloud",
-  "unicode": "1f324",
-  "shortname": ":white_sun_small_cloud:",
-  "code_decimal": "&#127780;",
-  "category": "n",
-  "emoji_order": "1733"
-},*/
-/*{ //@todo not found on image
-  "name": "white_sun_cloud",
-  "unicode": "1f325",
-  "shortname": ":white_sun_cloud:",
-  "code_decimal": "&#127781;",
-  "category": "n",
-  "emoji_order": "1734"
-},*/
-/*{ //@todo not found on image
-  "name": "white_sun_rain_cloud",
-  "unicode": "1f326",
-  "shortname": ":white_sun_rain_cloud:",
-  "code_decimal": "&#127782;",
-  "category": "n",
-  "emoji_order": "1735"
-},*/
 {
   "name": "rain_cloud",
   "unicode": "1f327",
@@ -4749,22 +4151,6 @@ let emojiList = [{
   "category": "n",
   "emoji_order": "1737"
 },
-/*{ //@todo not found on image
-  "name": "cloud_lightning",
-  "unicode": "1f329",
-  "shortname": ":cloud_lightning:",
-  "code_decimal": "&#127785;",
-  "category": "n",
-  "emoji_order": "1738"
-},*/
-/*{ //@todo not found on image
-  "name": "cloud_tornado",
-  "unicode": "1f32a",
-  "shortname": ":cloud_tornado:",
-  "code_decimal": "&#127786;",
-  "category": "n",
-  "emoji_order": "1739"
-},*/
 {
   "name": "fog",
   "unicode": "1f32b",
@@ -5032,30 +4418,6 @@ let emojiList = [{
   "category": "a",
   "emoji_order": "1777"
 },
-/*{ //@todo not found on image
-  "name": "first_place",
-  "unicode": "1f947",
-  "shortname": ":first_place:",
-  "code_decimal": "&#129351;",
-  "category": "a",
-  "emoji_order": "1778"
-},*/
-/*{ //@todo not found on image
-  "name": "second_place",
-  "unicode": "1f948",
-  "shortname": ":second_place:",
-  "code_decimal": "&#129352;",
-  "category": "a",
-  "emoji_order": "1779"
-},*/
-/*{ //@todo not found on image
-  "name": "third_place",
-  "unicode": "1f949",
-  "shortname": ":third_place:",
-  "code_decimal": "&#129353;",
-  "category": "a",
-  "emoji_order": "1780"
-},*/
 {
   "name": "soccer",
   "unicode": "26bd",
@@ -5155,30 +4517,6 @@ let emojiList = [{
   "category": "a",
   "emoji_order": "1794"
 },
-/*{ //@todo not found on image
-  "name": "boxing_glove",
-  "unicode": "1f94a",
-  "shortname": ":boxing_glove:",
-  "code_decimal": "&#129354;",
-  "category": "a",
-  "emoji_order": "1795"
-},*/
-/*{ //@todo not found on image
-  "name": "martial_arts_uniform",
-  "unicode": "1f94b",
-  "shortname": ":martial_arts_uniform:",
-  "code_decimal": "&#129355;",
-  "category": "a",
-  "emoji_order": "1796"
-},*/
-/*{ @todo not found on image
-  "name": "goal",
-  "unicode": "1f945",
-  "shortname": ":goal:",
-  "code_decimal": "&#129349;",
-  "category": "a",
-  "emoji_order": "1797"
-},*/
 {
   "name": "dart",
   "unicode": "1f3af",
@@ -5453,14 +4791,6 @@ let emojiList = [{
   "category": "a",
   "emoji_order": "1836"
 },
-/*{ //@todo not found on image
-  "name": "drum",
-  "unicode": "1f941",
-  "shortname": ":drum:",
-  "code_decimal": "&#129345;",
-  "category": "a",
-  "emoji_order": "1837"
-},*/
 {
   "name": "iphone",
   "unicode": "1f4f1",
@@ -5903,14 +5233,6 @@ let emojiList = [{
   "category": "s",
   "emoji_order": "1900"
 },
-/* { //@todo not found on image
-  "name": "envelope",
-  "unicode": "2709",
-  "shortname": ":envelope:",
-  "code_decimal": "&#9993;",
-  "category": "o",
-  "emoji_order": "1901"
-},*/
 {
   "name": "e-mail",
   "unicode": "1f4e7",
@@ -6423,14 +5745,6 @@ let emojiList = [{
   "category": "o",
   "emoji_order": "1974"
 },
-/*{ //@todo not found on image
-  "name": "shopping_cart",
-  "unicode": "1f6d2",
-  "shortname": ":shopping_cart:",
-  "code_decimal": "&#128722;",
-  "category": "o",
-  "emoji_order": "1975"
-},*/
 {
   "name": "atm",
   "unicode": "1f3e7",
@@ -7055,14 +6369,6 @@ let emojiList = [{
   "category": "s",
   "emoji_order": "2064"
 },
-/*{ //@todo not found on image
-  "name": "eject",
-  "unicode": "23cf",
-  "shortname": ":eject:",
-  "code_decimal": "&#9167;",
-  "category": "s",
-  "emoji_order": "2065"
-},*/
 {
   "name": "cinema",
   "unicode": "1f3a6",
@@ -9675,15 +8981,15 @@ let emojiList = [{
   "category": "p",
   "emoji_order": "1"
 }];
-/* harmony default export */ const emoji_list = (emojiList);
-;// CONCATENATED MODULE: ./src/emoji-map.js
+ const emoji_list = (emojiList);
+;
 
 const emojiMap = {};
 emoji_list.forEach(emojiListObject => {
   emojiMap[emojiListObject.name] = emojiListObject;
 });
-/* harmony default export */ const emoji_map = (emojiMap);
-;// CONCATENATED MODULE: ./src/format-emoji-blot.js
+ const emoji_map = (emojiMap);
+;
 
 
 const Embed = external_commonjs_quill_commonjs2_quill_amd_quill_root_Quill_default()["import"]("blots/embed");
@@ -9708,7 +9014,6 @@ class EmojiBlot extends Embed {
     let emojiSpan = document.createElement('span');
     emojiSpan.classList.add(this.emojiClass);
     emojiSpan.classList.add(this.emojiPrefix + value.name);
-    // unicode can be '1f1f5-1f1ea',see emoji-list.js.
     emojiSpan.innerText = String.fromCodePoint(...EmojiBlot.parseUnicode(value.unicode));
     node.appendChild(emojiSpan);
   }
@@ -9721,16 +9026,8 @@ EmojiBlot.className = 'ql-emojiblot';
 EmojiBlot.tagName = 'span';
 EmojiBlot.emojiClass = 'ap';
 EmojiBlot.emojiPrefix = 'ap-';
-/* harmony default export */ const format_emoji_blot = (EmojiBlot);
-;// CONCATENATED MODULE: ./node_modules/fuse.js/dist/fuse.esm.js
-/**
- * Fuse.js v6.6.2 - Lightweight fuzzy-search (http://fusejs.io)
- *
- * Copyright (c) 2022 Kiro Risk (http://kiro.me)
- * All Rights Reserved. Apache Software License 2.0
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- */
+ const format_emoji_blot = (EmojiBlot);
+;
 
 function isArray(value) {
   return !Array.isArray
@@ -9738,10 +9035,8 @@ function isArray(value) {
     : Array.isArray(value)
 }
 
-// Adapted from: https://github.com/lodash/lodash/blob/master/.internal/baseToString.js
 const INFINITY = 1 / 0;
 function baseToString(value) {
-  // Exit early for strings to avoid a performance hit in some environments.
   if (typeof value == 'string') {
     return value
   }
@@ -9761,7 +9056,6 @@ function isNumber(value) {
   return typeof value === 'number'
 }
 
-// Adapted from: https://github.com/lodash/lodash/blob/master/isBoolean.js
 function isBoolean(value) {
   return (
     value === true ||
@@ -9774,7 +9068,6 @@ function isObject(value) {
   return typeof value === 'object'
 }
 
-// Checks if `value` is object-like.
 function isObjectLike(value) {
   return isObject(value) && value !== null
 }
@@ -9787,8 +9080,6 @@ function isBlank(value) {
   return !value.trim().length
 }
 
-// Gets the `toStringTag` of `value`.
-// Adapted from: https://github.com/lodash/lodash/blob/master/.internal/getTag.js
 function getTag(value) {
   return value == null
     ? value === undefined
@@ -9832,7 +9123,6 @@ class KeyStore {
       totalWeight += obj.weight;
     });
 
-    // Normalize weights so that their sum is equal to 1
     this._keys.forEach((key) => {
       key.weight /= totalWeight;
     });
@@ -9900,7 +9190,6 @@ function get(obj, path) {
       return
     }
     if (!path[index]) {
-      // If there's no path left, we've arrived at the object we care about.
       list.push(obj);
     } else {
       let key = path[index];
@@ -9911,8 +9200,6 @@ function get(obj, path) {
         return
       }
 
-      // If we're at the last value in the path, and if it's a string/number/bool,
-      // add it to the list
       if (
         index === path.length - 1 &&
         (isString(value) || isNumber(value) || isBoolean(value))
@@ -9920,79 +9207,46 @@ function get(obj, path) {
         list.push(fuse_esm_toString(value));
       } else if (isArray(value)) {
         arr = true;
-        // Search each item in the array.
         for (let i = 0, len = value.length; i < len; i += 1) {
           deepGet(value[i], path, index + 1);
         }
       } else if (path.length) {
-        // An object. Recurse further.
         deepGet(value, path, index + 1);
       }
     }
   };
 
-  // Backwards compatibility (since path used to be a string)
   deepGet(obj, isString(path) ? path.split('.') : path, 0);
 
   return arr ? list : list[0]
 }
 
 const MatchOptions = {
-  // Whether the matches should be included in the result set. When `true`, each record in the result
-  // set will include the indices of the matched characters.
-  // These can consequently be used for highlighting purposes.
   includeMatches: false,
-  // When `true`, the matching function will continue to the end of a search pattern even if
-  // a perfect match has already been located in the string.
   findAllMatches: false,
-  // Minimum number of characters that must be matched before a result is considered a match
   minMatchCharLength: 1
 };
 
 const BasicOptions = {
-  // When `true`, the algorithm continues searching to the end of the input even if a perfect
-  // match is found before the end of the same input.
   isCaseSensitive: false,
-  // When true, the matching function will continue to the end of a search pattern even if
   includeScore: false,
-  // List of properties that will be searched. This also supports nested properties.
   keys: [],
-  // Whether to sort the result list, by score
   shouldSort: true,
-  // Default sort function: sort by ascending score, ascending index
   sortFn: (a, b) =>
     a.score === b.score ? (a.idx < b.idx ? -1 : 1) : a.score < b.score ? -1 : 1
 };
 
 const FuzzyOptions = {
-  // Approximately where in the text is the pattern expected to be found?
   location: 0,
-  // At what point does the match algorithm give up. A threshold of '0.0' requires a perfect match
-  // (of both letters and location), a threshold of '1.0' would match anything.
   threshold: 0.6,
-  // Determines how close the match must be to the fuzzy location (specified above).
-  // An exact letter match which is 'distance' characters away from the fuzzy location
-  // would score as a complete mismatch. A distance of '0' requires the match be at
-  // the exact location specified, a threshold of '1000' would require a perfect match
-  // to be within 800 characters of the fuzzy location to be found using a 0.8 threshold.
   distance: 100
 };
 
 const AdvancedOptions = {
-  // When `true`, it enables the use of unix-like search commands
   useExtendedSearch: false,
-  // The get function to use when fetching an object's properties.
-  // The default will search nested paths *ie foo.bar.baz*
   getFn: get,
-  // When `true`, search will ignore `location` and `distance`, so it won't matter
-  // where in the string the pattern appears.
-  // More info: https://fusejs.io/concepts/scoring-theory.html#fuzziness-score
   ignoreLocation: false,
-  // When `true`, the calculation for the relevance score (used for sorting) will
-  // ignore the field-length norm.
-  // More info: https://fusejs.io/concepts/scoring-theory.html#field-length-norm
   ignoreFieldNorm: false,
-  // The weight to determine how much field length norm effects scoring.
   fieldNormWeight: 1
 };
 
@@ -10005,8 +9259,6 @@ var Config = {
 
 const SPACE = /[^ ]+/g;
 
-// Field-length norm: the shorter the field, the higher the weight.
-// Set to 3 decimals to reduce index size.
 function norm(weight = 1, mantissa = 3) {
   const cache = new Map();
   const m = Math.pow(10, mantissa);
@@ -10019,10 +9271,8 @@ function norm(weight = 1, mantissa = 3) {
         return cache.get(numTokens)
       }
 
-      // Default function is 1/sqrt(x), weight makes that variable
       const norm = 1 / Math.pow(numTokens, 0.5 * weight);
 
-      // In place of `toFixed(mantissa)`, for faster computation
       const n = parseFloat(Math.round(norm * m) / m);
 
       cache.set(numTokens, n);
@@ -10066,13 +9316,11 @@ class FuseIndex {
 
     this.isCreated = true;
 
-    // List is Array<String>
     if (isString(this.docs[0])) {
       this.docs.forEach((doc, docIndex) => {
         this._addString(doc, docIndex);
       });
     } else {
-      // List is Array<Object>
       this.docs.forEach((doc, docIndex) => {
         this._addObject(doc, docIndex);
       });
@@ -10080,7 +9328,6 @@ class FuseIndex {
 
     this.norm.clear();
   }
-  // Adds a doc to the end of the index
   add(doc) {
     const idx = this.size();
 
@@ -10090,11 +9337,9 @@ class FuseIndex {
       this._addObject(doc, idx);
     }
   }
-  // Removes the doc at the specified index of the index
   removeAt(idx) {
     this.records.splice(idx, 1);
 
-    // Change ref index of every subsquent doc
     for (let i = idx, len = this.size(); i < len; i += 1) {
       this.records[i].i -= 1;
     }
@@ -10121,7 +9366,6 @@ class FuseIndex {
   _addObject(doc, docIndex) {
     let record = { i: docIndex, $: {} };
 
-    // Iterate over every key (i.e, path), and fetch the value at that key
     this.keys.forEach((key, keyIndex) => {
       let value = key.getFn ? key.getFn(doc) : this.getFn(doc, key.path);
 
@@ -10220,7 +9464,6 @@ function computeScore$1(
   const proximity = Math.abs(expectedLocation - currentLocation);
 
   if (!distance) {
-    // Dodge divide by zero error.
     return proximity ? 1.0 : accuracy
   }
 
@@ -10249,7 +9492,6 @@ function convertMaskToIndices(
     }
   }
 
-  // (i-1 - start) + 1 => i - start
   if (matchmask[i - 1] && i - start >= minMatchCharLength) {
     indices.push([start, i - 1]);
   }
@@ -10257,7 +9499,6 @@ function convertMaskToIndices(
   return indices
 }
 
-// Machine word size
 const MAX_BITS = 32;
 
 function search(
@@ -10279,24 +9520,16 @@ function search(
   }
 
   const patternLen = pattern.length;
-  // Set starting location at beginning text and initialize the alphabet.
   const textLen = text.length;
-  // Handle the case when location > text.length
   const expectedLocation = Math.max(0, Math.min(location, textLen));
-  // Highest score beyond which we give up.
   let currentThreshold = threshold;
-  // Is there a nearby exact match? (speedup)
   let bestLocation = expectedLocation;
 
-  // Performance: only computer matches when the minMatchCharLength > 1
-  // OR if `includeMatches` is true.
   const computeMatches = minMatchCharLength > 1 || includeMatches;
-  // A mask of the matches, used for building the indices
   const matchMask = computeMatches ? Array(textLen) : [];
 
   let index;
 
-  // Get all exact matches, here for speed up
   while ((index = text.indexOf(pattern, bestLocation)) > -1) {
     let score = computeScore$1(pattern, {
       currentLocation: index,
@@ -10317,7 +9550,6 @@ function search(
     }
   }
 
-  // Reset the best location
   bestLocation = -1;
 
   let lastBitArr = [];
@@ -10327,9 +9559,6 @@ function search(
   const mask = 1 << (patternLen - 1);
 
   for (let i = 0; i < patternLen; i += 1) {
-    // Scan for the best match; each iteration allows for one more error.
-    // Run a binary search to determine how far from the match location we can stray
-    // at this error level.
     let binMin = 0;
     let binMid = binMax;
 
@@ -10351,7 +9580,6 @@ function search(
       binMid = Math.floor((binMax - binMin) / 2 + binMin);
     }
 
-    // Use the result from this iteration as the maximum for the next.
     binMax = binMid;
 
     let start = Math.max(1, expectedLocation - binMid + 1);
@@ -10359,7 +9587,6 @@ function search(
       ? textLen
       : Math.min(expectedLocation + binMid, textLen) + patternLen;
 
-    // Initialize the bit array
     let bitArr = Array(finish + 2);
 
     bitArr[finish + 1] = (1 << i) - 1;
@@ -10369,14 +9596,11 @@ function search(
       let charMatch = patternAlphabet[text.charAt(currentLocation)];
 
       if (computeMatches) {
-        // Speed up: quick bool to int conversion (i.e, `charMatch ? 1 : 0`)
         matchMask[currentLocation] = +!!charMatch;
       }
 
-      // First pass: exact match
       bitArr[j] = ((bitArr[j + 1] << 1) | 1) & charMatch;
 
-      // Subsequent passes: fuzzy match
       if (i) {
         bitArr[j] |=
           ((lastBitArr[j + 1] | lastBitArr[j]) << 1) | 1 | lastBitArr[j + 1];
@@ -10391,25 +9615,19 @@ function search(
           ignoreLocation
         });
 
-        // This match will almost certainly be better than any existing match.
-        // But check anyway.
         if (finalScore <= currentThreshold) {
-          // Indeed it is
           currentThreshold = finalScore;
           bestLocation = currentLocation;
 
-          // Already passed `loc`, downhill from here on in.
           if (bestLocation <= expectedLocation) {
             break
           }
 
-          // When passing `bestLocation`, don't exceed our current distance from `expectedLocation`.
           start = Math.max(1, 2 * expectedLocation - bestLocation);
         }
       }
     }
 
-    // No hope for a (better) match at greater error levels.
     const score = computeScore$1(pattern, {
       errors: i + 1,
       currentLocation: expectedLocation,
@@ -10427,7 +9645,6 @@ function search(
 
   const result = {
     isMatch: bestLocation >= 0,
-    // Count exact matches (those with a score of 0) to be "almost" exact
     score: Math.max(0.001, finalScore)
   };
 
@@ -10523,7 +9740,6 @@ class BitapSearch {
       text = text.toLowerCase();
     }
 
-    // Exact match
     if (this.pattern === text) {
       let result = {
         isMatch: true,
@@ -10537,7 +9753,6 @@ class BitapSearch {
       return result
     }
 
-    // Otherwise, use Bitap algorithm
     const {
       location,
       distance,
@@ -10596,7 +9811,7 @@ class BaseMatch {
   static isSingleMatch(pattern) {
     return getMatch(pattern, this.singleRegex)
   }
-  search(/*text*/) {}
+  search() {}
 }
 
 function getMatch(pattern, exp) {
@@ -10604,7 +9819,6 @@ function getMatch(pattern, exp) {
   return matches ? matches[1] : null
 }
 
-// Token: 'file
 
 class ExactMatch extends BaseMatch {
   constructor(pattern) {
@@ -10630,7 +9844,6 @@ class ExactMatch extends BaseMatch {
   }
 }
 
-// Token: !fire
 
 class InverseExactMatch extends BaseMatch {
   constructor(pattern) {
@@ -10657,7 +9870,6 @@ class InverseExactMatch extends BaseMatch {
   }
 }
 
-// Token: ^file
 
 class PrefixExactMatch extends BaseMatch {
   constructor(pattern) {
@@ -10683,7 +9895,6 @@ class PrefixExactMatch extends BaseMatch {
   }
 }
 
-// Token: !^fire
 
 class InversePrefixExactMatch extends BaseMatch {
   constructor(pattern) {
@@ -10709,7 +9920,6 @@ class InversePrefixExactMatch extends BaseMatch {
   }
 }
 
-// Token: .file$
 
 class SuffixExactMatch extends BaseMatch {
   constructor(pattern) {
@@ -10735,7 +9945,6 @@ class SuffixExactMatch extends BaseMatch {
   }
 }
 
-// Token: !.file$
 
 class InverseSuffixExactMatch extends BaseMatch {
   constructor(pattern) {
@@ -10800,7 +10009,6 @@ class FuzzyMatch extends BaseMatch {
   }
 }
 
-// Token: 'file
 
 class IncludeMatch extends BaseMatch {
   constructor(pattern) {
@@ -10822,7 +10030,6 @@ class IncludeMatch extends BaseMatch {
     const indices = [];
     const patternLen = this.pattern.length;
 
-    // Get all exact matches
     while ((index = text.indexOf(this.pattern, location)) > -1) {
       location = index + patternLen;
       indices.push([index, location - 1]);
@@ -10838,7 +10045,6 @@ class IncludeMatch extends BaseMatch {
   }
 }
 
-// ❗Order is important. DO NOT CHANGE.
 const searchers = [
   ExactMatch,
   IncludeMatch,
@@ -10852,13 +10058,9 @@ const searchers = [
 
 const searchersLen = searchers.length;
 
-// Regex to split by spaces, but keep anything in quotes together
 const SPACE_RE = / +(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)/;
 const OR_TOKEN = '|';
 
-// Return a 2D array representation of the query, for simpler parsing.
-// Example:
-// "^core go$ | rb$ | py$ xy$" => [["^core", "go$"], ["rb$"], ["py$", "xy$"]]
 function parseQuery(pattern, options = {}) {
   return pattern.split(OR_TOKEN).map((item) => {
     let query = item
@@ -10870,7 +10072,6 @@ function parseQuery(pattern, options = {}) {
     for (let i = 0, len = query.length; i < len; i += 1) {
       const queryItem = query[i];
 
-      // 1. Handle multiple query match (i.e, once that are quoted, like `"hello world"`)
       let found = false;
       let idx = -1;
       while (!found && ++idx < searchersLen) {
@@ -10886,7 +10087,6 @@ function parseQuery(pattern, options = {}) {
         continue
       }
 
-      // 2. Handle single query matches (i.e, once that are *not* quoted)
       idx = -1;
       while (++idx < searchersLen) {
         const searcher = searchers[idx];
@@ -10902,38 +10102,8 @@ function parseQuery(pattern, options = {}) {
   })
 }
 
-// These extended matchers can return an array of matches, as opposed
-// to a singl match
 const MultiMatchSet = new Set([FuzzyMatch.type, IncludeMatch.type]);
 
-/**
- * Command-like searching
- * ======================
- *
- * Given multiple search terms delimited by spaces.e.g. `^jscript .python$ ruby !java`,
- * search in a given text.
- *
- * Search syntax:
- *
- * | Token       | Match type                 | Description                            |
- * | ----------- | -------------------------- | -------------------------------------- |
- * | `jscript`   | fuzzy-match                | Items that fuzzy match `jscript`       |
- * | `=scheme`   | exact-match                | Items that are `scheme`                |
- * | `'python`   | include-match              | Items that include `python`            |
- * | `!ruby`     | inverse-exact-match        | Items that do not include `ruby`       |
- * | `^java`     | prefix-exact-match         | Items that start with `java`           |
- * | `!^earlang` | inverse-prefix-exact-match | Items that do not start with `earlang` |
- * | `.js$`      | suffix-exact-match         | Items that end with `.js`              |
- * | `!.go$`     | inverse-suffix-exact-match | Items that do not end with `.go`       |
- *
- * A single pipe character acts as an OR operator. For example, the following
- * query matches entries that start with `core` and end with either`go`, `rb`,
- * or`py`.
- *
- * ```
- * ^core go$ | rb$ | py$
- * ```
- */
 class ExtendedSearch {
   constructor(
     pattern,
@@ -10986,15 +10156,12 @@ class ExtendedSearch {
     let allIndices = [];
     let totalScore = 0;
 
-    // ORs
     for (let i = 0, qLen = query.length; i < qLen; i += 1) {
       const searchers = query[i];
 
-      // Reset indices
       allIndices.length = 0;
       numMatches = 0;
 
-      // ANDs
       for (let j = 0, pLen = searchers.length; j < pLen; j += 1) {
         const searcher = searchers[j];
         const { isMatch, indices, score } = searcher.search(text);
@@ -11018,7 +10185,6 @@ class ExtendedSearch {
         }
       }
 
-      // OR condition, so if TRUE, return
       if (numMatches) {
         let result = {
           isMatch: true,
@@ -11033,7 +10199,6 @@ class ExtendedSearch {
       }
     }
 
-    // Nothing was matched
     return {
       isMatch: false,
       score: 1
@@ -11082,8 +10247,6 @@ const convertToExplicit = (query) => ({
   }))
 });
 
-// When `auto` is `true`, the parse function will infer and initialize and add
-// the appropriate `Searcher` instance
 function parse(query, options, { auto = true } = {}) {
   const next = (query) => {
     let keys = Object.keys(query);
@@ -11140,7 +10303,6 @@ function parse(query, options, { auto = true } = {}) {
   return next(query)
 }
 
-// Practical scoring function
 function computeScore(
   results,
   { ignoreFieldNorm = Config.ignoreFieldNorm }
@@ -11266,7 +10428,7 @@ class Fuse {
     this._myIndex.add(doc);
   }
 
-  remove(predicate = (/* doc, idx */) => false) {
+  remove(predicate = () => false) {
     const results = [];
 
     for (let i = 0, len = this._docs.length; i < len; i += 1) {
@@ -11328,7 +10490,6 @@ class Fuse {
     const { records } = this._myIndex;
     const results = [];
 
-    // Iterate over every string in the index
     records.forEach(({ v: text, i: idx, n: norm }) => {
       if (!isDefined(text)) {
         return
@@ -11397,7 +10558,6 @@ class Fuse {
         let expResults = evaluate(expression, item, idx);
 
         if (expResults.length) {
-          // Dedupe when adding
           if (!resultMap[idx]) {
             resultMap[idx] = { idx, item, matches: [] };
             results.push(resultMap[idx]);
@@ -11417,7 +10577,6 @@ class Fuse {
     const { keys, records } = this._myIndex;
     const results = [];
 
-    // List is Array<Object>
     records.forEach(({ $: item, i: idx }) => {
       if (!isDefined(item)) {
         return
@@ -11425,7 +10584,6 @@ class Fuse {
 
       let matches = [];
 
-      // Iterate over every key (i.e, path), and fetch the value at that key
       keys.forEach((key, keyIndex) => {
         matches.push(
           ...this._findMatches({
@@ -11502,7 +10660,7 @@ Fuse.config = Config;
 
 
 
-;// CONCATENATED MODULE: ./src/keys.js
+;
 const Keys = {
   TAB: 'Tab',
   ENTER: 'Enter',
@@ -11512,8 +10670,8 @@ const Keys = {
   LEFT: 'ArrowLeft',
   RIGHT: 'ArrowRight'
 };
-/* harmony default export */ const keys = (Keys);
-;// CONCATENATED MODULE: ./src/module-emoji.js
+ const keys = (Keys);
+;
 
 
 
@@ -11571,7 +10729,6 @@ class ShortNameEmoji extends Module {
     }
     this.container.style.top = atSignBounds.top + atSignBounds.height + "px";
     this.quill.on('text-change', this.onTextChange);
-    //this.quill.once('selection-change', this.onSelectionChange);
 
     this.open = true;
     this.onOpen && this.onOpen();
@@ -11587,10 +10744,8 @@ class ShortNameEmoji extends Module {
   update() {
     const sel = this.quill.getSelection().index;
     if (this.atIndex >= sel) {
-      // Deleted the at character
       return this.close(null);
     }
-    //Using: fuse.js
     this.query = this.quill.getText(this.atIndex + 1, sel - this.atIndex - 1);
     try {
       if (event && this.isWhiteSpace(this.query)) {
@@ -11610,7 +10765,6 @@ class ShortNameEmoji extends Module {
       return;
     }
     if (emojis.length > 15) {
-      //return only 15
       emojis = emojis.slice(0, 15);
     }
     this.renderCompletions(emojis);
@@ -11678,14 +10832,12 @@ class ShortNameEmoji extends Module {
       }, emoji.shortname)));
       this.container.appendChild(li);
       buttons[i] = li.firstChild;
-      // Events will be GC-ed with button on each re-render:
       buttons[i].addEventListener('keydown', handler(i, emoji));
       buttons[i].addEventListener("mousedown", () => this.close(emoji));
       buttons[i].addEventListener("focus", () => this.focusedButton = i);
       buttons[i].addEventListener("unfocus", () => this.focusedButton = null);
     });
     this.container.style.display = "block";
-    //emoji palette on top
     if (this.quill.container.classList.contains('top-emoji')) {
       let x = this.container.querySelectorAll("li");
       let i;
@@ -11742,8 +10894,8 @@ function makeElement(tag, attrs) {
   });
   return elem;
 }
-/* harmony default export */ const module_emoji = (ShortNameEmoji);
-;// CONCATENATED MODULE: ./src/module-toolbar-emoji.js
+ const module_emoji = (ShortNameEmoji);
+;
 
 
 
@@ -11807,7 +10959,6 @@ function fn_showEmojiPalette(quill) {
   tabToolbar.id = "tab-toolbar";
   ele_emoji_area.appendChild(tabToolbar);
 
-  //panel
   let panel = document.createElement('div');
   panel.id = "tab-panel";
   ele_emoji_area.appendChild(panel);
@@ -11855,7 +11006,6 @@ function fn_showEmojiPalette(quill) {
     document.getElementById('emoji-close-div').style.display = "block";
   }
   emojiType.map(function (emojiType) {
-    //add tab bar
     let tabElement = document.createElement('li');
     tabElement.classList.add('emoji-tab');
     tabElement.classList.add('filter-' + emojiType.name);
@@ -11940,8 +11090,8 @@ function module_toolbar_emoji_makeElement(tag, attrs) {
   });
   return elem;
 }
-/* harmony default export */ const module_toolbar_emoji = (ToolbarEmoji);
-;// CONCATENATED MODULE: ./src/module-textarea-emoji.js
+ const module_toolbar_emoji = (ToolbarEmoji);
+;
 
 
 
@@ -12098,9 +11248,6 @@ function module_textarea_emoji_fn_emojiElementsToPanel(type, panel, quill) {
     let customButton = document.querySelector('.bem-' + emoji.name);
     if (customButton) {
       customButton.addEventListener('click', function () {
-        // quill.insertText(range.index, customButton.innerHTML);
-        // quill.setSelection(range.index + customButton.innerHTML.length, 0);
-        // range.index = range.index + customButton.innerHTML.length;
         quill.insertEmbed(range.index, 'emoji', emoji, (external_commonjs_quill_commonjs2_quill_amd_quill_root_Quill_default()).sources.USER);
         setTimeout(() => quill.setSelection(range.index + 1), 0);
         module_textarea_emoji_fn_close();
@@ -12108,8 +11255,8 @@ function module_textarea_emoji_fn_emojiElementsToPanel(type, panel, quill) {
     }
   });
 }
-/* harmony default export */ const module_textarea_emoji = (TextAreaEmoji);
-;// CONCATENATED MODULE: ./src/quill-emoji.js
+ const module_textarea_emoji = (TextAreaEmoji);
+;
 
 
 
@@ -12122,7 +11269,7 @@ external_commonjs_quill_commonjs2_quill_amd_quill_root_Quill_default().register(
   'modules/emoji-toolbar': module_toolbar_emoji,
   'modules/emoji-textarea': module_textarea_emoji
 }, true);
-/* harmony default export */ const quill_emoji = ({
+ const quill_emoji = ({
   EmojiBlot: format_emoji_blot,
   ShortNameEmoji: module_emoji,
   ToolbarEmoji: module_toolbar_emoji,
@@ -12130,7 +11277,7 @@ external_commonjs_quill_commonjs2_quill_amd_quill_root_Quill_default().register(
 });
 })();
 
-/******/ 	return __webpack_exports__;
-/******/ })()
+ 	return __webpack_exports__;
+ })()
 ;
 });

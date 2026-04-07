@@ -38,8 +38,8 @@
 .scroll-container-flex {
   overflow-y: auto;
   display: flex;
-  flex-grow: 1; /*to occupy 100% of available/balance space */
-  max-height: calc(75vh); /* for scrolling-y to work*/
+  flex-grow: 1; 
+  max-height: calc(75vh); 
 }
 
 .hover\:shadow-sm:hover {
@@ -76,7 +76,7 @@
   background-image: url('../images/icons/b_tick.svg');
 }
 
-.admin-page .unpaid-box.tr_box .right_icon, .admin-page .right_icon.unpaid { /*will always be along with green-box*/
+.admin-page .unpaid-box.tr_box .right_icon, .admin-page .right_icon.unpaid { 
   width: 16px;
   height: 16px;
   background-image: url('../images/icons/b_alert.svg');
@@ -119,22 +119,22 @@
   border-color: var(--gray);
 }
 
-.termbooking-box .section-box-inner { /*will always be along with green-box*/
+.termbooking-box .section-box-inner { 
   background-color: var(--coral-100); 
   border-color: var(--coral);
 }
 
-.permbooking-box .section-box-inner { /*will always be along with green-box*/
+.permbooking-box .section-box-inner { 
   background-color: var(--blue-200); 
   border-color: var(--blue);
 }
 
-.reserved-box .section-box-inner { /*will always be along with green-box*/
+.reserved-box .section-box-inner { 
   background-color: var(--gray-200); 
   border-color: var(--gray);
 }
 
-.green-box[data-intrac_schedule_comment*="closed"] .section-box-inner { /*will always be along with green-box*/
+.green-box[data-intrac_schedule_comment*="closed"] .section-box-inner { 
   background-color: var(--gray-200); 
   border-color: var(--gray);
 }
@@ -149,7 +149,7 @@
   border-color: var(--gray);
 }
 
-.section-box.blocked:not(.green-box) .section-box-inner { /*priority for green-box*/
+.section-box.blocked:not(.green-box) .section-box-inner { 
   background-color: var(--gray-light); 
   border-color: var(--gray);
 }
@@ -205,21 +205,18 @@
 }
 
 .g_box:not(.l_box) {
-  /*shift to left to cover the gap and table lines, add 1px for border clip*/
   margin-left: -11px;
 }
 
 .g_box:not(.l_box) .section-box-inner.shadow-sm {
-  clip-path: inset(0 0 0 1px); /* hide 1px from left to remove left part of shadow-sm */
+  clip-path: inset(0 0 0 1px); 
 }
 
 .g_box:not(.b_box) {
-  /*shift to bottom to cover the gap and table lines*/
   height: calc(var(--section_box_height) + 20px) !important;
   margin-bottom: -20px;
 }
 
-/*split rounded-md into separate parts*/
 .l_box.t_box .section-box-inner {
   border-top-left-radius: 0.375rem;
 }
@@ -277,7 +274,6 @@ tr:last-child:not(:only-child) .grid_actions_menu {
   gap: 0rem;
 }
 
-/*class & roster grid*/
 .admin-page #classes .is_weekly, .admin-page #rosters .is_weekly {
   --box_height: 90px;
   --section_box_height: 80px;  
@@ -342,9 +338,7 @@ tr:last-child:not(:only-child) .grid_actions_menu {
   border-color: var(--coral);
 }
 
-/*class & roster grid - end*/
 
-/*Errors, Warnings*/
 .notification-box {
   background-color: var(--error-100);
 }
@@ -368,13 +362,11 @@ tr:last-child:not(:only-child) .grid_actions_menu {
 .notification-box.green .error_color {
   color: var(--green);
 }
-/*Errors, Warnings - end*/
 
 .table-wrapper:has(.unavail) {
   background-color: inherit;
 }
 
-/*Booking modals*/
 .date-box {
   display: flex;
   flex-direction: column;
@@ -486,9 +478,7 @@ tr:last-child:not(:only-child) .grid_actions_menu {
   pointer-events: auto;
 }
 
-/*Booking modals - end*/
 
-/*common elements*/
 #side_errors {
   position: fixed;
   top: 1rem;
@@ -498,7 +488,6 @@ tr:last-child:not(:only-child) .grid_actions_menu {
   gap: 0.5rem;
 }
 
-/* purple pretty radio button */
 .pretty-radio {
   display: flex;
   align-items: center;
@@ -512,14 +501,12 @@ tr:last-child:not(:only-child) .grid_actions_menu {
   display: none;
 }
 
-/* hide the native input but make it non-blocking */
 .pretty-radio input[type="radio"] {
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
 
-/* the custom circle */
 .radio-custom {
   width: 1rem;
   height: 1rem;
@@ -536,7 +523,6 @@ tr:last-child:not(:only-child) .grid_actions_menu {
   border: 1px solid var(--brand);
 }
 
-/* inner dot */
 .radio-custom::after {
   content: "";
   width: 6px;
@@ -551,7 +537,6 @@ tr:last-child:not(:only-child) .grid_actions_menu {
   background: var(--brand);
 }
 
-/* show dot when checked */
 .pretty-radio input[type="radio"]:checked + .radio-custom::after {
     transform: scale(1);
 }
@@ -560,7 +545,6 @@ tr:last-child:not(:only-child) .grid_actions_menu {
   display: none !important;
 }
 
-/*common elements - end*/
 
 
 @media (min-width: 640px) {
@@ -578,7 +562,6 @@ tr:last-child:not(:only-child) .grid_actions_menu {
 
 @media (min-width: 1024px) {  
 
-  /*mini grid*/
   .mini_grid .courts-many {
     width: auto;
     min-width: 225px;
@@ -655,7 +638,6 @@ tr:last-child:not(:only-child) .grid_actions_menu {
   }
 
   .mini_grid .g_box:not(.b_box) {
-    /*shift to bottom to cover the gap and table lines*/
     height: calc(var(--section_box_height) + 5px) !important;
     margin-bottom: -5px;
   }
@@ -702,5 +684,4 @@ tr:last-child:not(:only-child) .grid_actions_menu {
   .mini_grid .mini-items-top {
     align-items: inherit;
   }
-  /*mini grid - end*/
 }

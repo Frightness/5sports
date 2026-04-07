@@ -24,12 +24,10 @@ function build_grid(data, data_schedule, admin=false) {
 	let hours = {};
 	let hours_ro = {};
 
-	//resets
 	$('.booking_details_div').remove();
 
 	try {
 
-		//first loop to set start and finish times and interval across all locations, and set location options
 		for (let a = 0; a < data.length; a++) {
 			let d = data[a];
 
@@ -40,13 +38,13 @@ function build_grid(data, data_schedule, admin=false) {
 			if (!finish || times_diff(finish, d.hours.hours_finish) < 0) {
 				finish = d.hours.hours_finish;
 			}
-			
-			if (!incr || incr > d.intervals) {
+
+						if (!incr || incr > d.intervals) {
 				incr = d.intervals;
 			}
 
-			hours[d.location_id] = d.hours.data; //to use later in peak calcs etc
-			hours_ro[d.location_id] = d.hours_ro.data; //to use later for read_only slots
+			hours[d.location_id] = d.hours.data; 
+			hours_ro[d.location_id] = d.hours_ro.data; 
 
 			max_booking_date = d.max_booking_date;
 			allowed_booking_days = d.allowed_booking_days;
@@ -54,7 +52,7 @@ function build_grid(data, data_schedule, admin=false) {
 			lesson_peak = d.lesson_peak;
 
 			set_location_options(d);
-		} //first loop completed
+		} 
 
 		if (is_mini) {
 			incr = 15;
@@ -64,7 +62,7 @@ function build_grid(data, data_schedule, admin=false) {
 			set_calendar_dates(max_booking_date, allowed_booking_days, avail_days);
 		}
 
-		let cur_time_rounded = dayjs().minute(Math.floor(dayjs().minute() / incr) * incr).second(0); //rounded down to nearest increment to allow current slot
+		let cur_time_rounded = dayjs().minute(Math.floor(dayjs().minute() / incr) * incr).second(0); 
 
 		let y_slots = times_diff(finish, start)/incr;
 
@@ -77,24 +75,21 @@ function build_grid(data, data_schedule, admin=false) {
 		html_str += '<div class="scroll-container scroll-container-flex noscrollbar grid_view">\
 						<table class="table-fixed w-full sm:min-w-full border-collapse" data-intrac_interval="'+incr+'">';
 
-		//table loop is based on times/y_slots
 		for (let i = -1; i < y_slots; i++) {
 
 			let slot_start = dayjs(start,'HH:mm:ss').add(i*incr,'minute');
 			let slot_end = dayjs(start,'HH:mm:ss').add((i+1)*incr,'minute');
-			let past_box = (!admin && times_diff(dayjs(main_date+' '+slot_start.format('HH:mm:ss')), cur_time_rounded) < 0) ? ' past-box' : ''; //time already passed, hide for customers;
+			let past_box = (!admin && times_diff(dayjs(main_date+' '+slot_start.format('HH:mm:ss')), cur_time_rounded) < 0) ? ' past-box' : ''; 
 			let mini_nonhr = (is_mini && slot_start.format('mm') != '00' && slot_start.format('mm') != '30' ? ' mini_nonhr' : '');
 
-			if (i == -1) { //first row - header
+			if (i == -1) { 
 				html_str += '<thead class="sticky top-0 z-50"><tr>\
 								<th class="time-column-many"><div class="time-shadow-wrapper-title">Time</div></th>';
-			} else { //normal tr
+			} else { 
 				html_str += '<tr style="height: var(--box_height)">\
 								<td class="time-column-many"><div class="time-shadow-wrapper'+past_box+mini_nonhr+'">'+slot_start.format('h:mm a').toUpperCase()+'</div></td>';
 			}
 
-			//spaces
-			//second loop to set slots across all locations
 			for (let a = 0; a < data.length; a++) {
 				let d = data[a];
 
@@ -106,7 +101,7 @@ function build_grid(data, data_schedule, admin=false) {
 
 					let space_row = '';
 
-					if (i == -1) { //header
+					if (i == -1) { 
 						if (mode == 'lesson') {
 							space_row += '<th class="courts-many">\
 												<div class="flex justify-between">\
@@ -127,16 +122,16 @@ function build_grid(data, data_schedule, admin=false) {
 					} else {
 						space_row += '<td class="cell-many">';
 
-			        	let empty_box = (!admin && isPeakSlot(d.location_id, slot_start) && (dayjs(slot_start,'HH:mm:ss').minute() !== 0) && !isPeakSlotAbandoned(dayjs(slot_start).format('HH:mm:ss'), space.space_id)) ? ' empty-box' : ''; //peak checks
+			        	let empty_box = (!admin && isPeakSlot(d.location_id, slot_start) && (dayjs(slot_start,'HH:mm:ss').minute() !== 0) && !isPeakSlotAbandoned(dayjs(slot_start).format('HH:mm:ss'), space.space_id)) ? ' empty-box' : ''; 
 			        	let na_box = ((times_diff(slot_start, d.hours.hours_start) < 0) || 
 			        				  (times_diff(slot_start, d.hours.hours_finish) >= 0) || 
-			        				  (!admin && times_diff(dayjs(main_date+' '+slot_start.format('HH:mm:ss')), cur_time_rounded) < 0)) ? ' gray-box' : ''; //n/a outside of open hours or time already passed;
-			        	let past_box = (!admin && times_diff(dayjs(main_date+' '+slot_start.format('HH:mm:ss')), cur_time_rounded) < 0) ? ' past-box' : ''; //time already passed, hide for customers;
+			        				  (!admin && times_diff(dayjs(main_date+' '+slot_start.format('HH:mm:ss')), cur_time_rounded) < 0)) ? ' gray-box' : ''; 
+			        	let past_box = (!admin && times_diff(dayjs(main_date+' '+slot_start.format('HH:mm:ss')), cur_time_rounded) < 0) ? ' past-box' : ''; 
 			        	let mini_nonhr = (is_mini && slot_start.format('mm') != '00' && slot_start.format('mm') != '30' ? ' mini_nonhr' : '');
 
 			        	let stid = space.space_id+'_'+slot_start.format('HH-mm');
 
-	        			let ro_box = ((space.display == 2) || (isReadOnlySlot(d.location_id, slot_start, slot_end))) ? ' ro-box' : ''; //read-only at space level or hours level;
+	        			let ro_box = ((space.display == 2) || (isReadOnlySlot(d.location_id, slot_start, slot_end))) ? ' ro-box' : ''; 
 
 	        			let open = (empty_box+na_box+past_box+ro_box).length ? false : true;
 
@@ -156,20 +151,19 @@ function build_grid(data, data_schedule, admin=false) {
 
 			        html_str += space_row;
 				}		
-			} //second loop completed
+			} 
 
-			if (i == -1) { //header
-				html_str += '</tr></thead><tbody>'; //header end, body start
+			if (i == -1) { 
+				html_str += '</tr></thead><tbody>'; 
 			} else {
-				html_str += '</tr>'; //tr end
+				html_str += '</tr>'; 
 			}
-		} //end of table loop
+		} 
 
-		html_str += '</tbody></table></div>'; //main table end*/
+		html_str += '</tbody></table></div>'; 
 
-		let $tmp = $(html_str); //create detached node
+		let $tmp = $(html_str); 
 
-		//create colgroup - required for widths to behave correctly
 		let $colgroup = $('<colgroup></colgroup>');
 
 		$tmp.find('table:first thead tr th').each(function(index, th) {
@@ -186,7 +180,6 @@ function build_grid(data, data_schedule, admin=false) {
 		});
 
 		$tmp.find('table:first').prepend($colgroup);
-		//create colgroup - completed
 
 		data_schedule = data_schedule.sort((a, b) => a.schedule_id - b.schedule_id);
 
@@ -398,7 +391,7 @@ function build_grid(data, data_schedule, admin=false) {
 		}
 
 		var SG_EVT = 55;
-		var SG_EVT_DUR = 280;
+		var SG_EVT_DUR = mode === 'space' ? 20 : 280;
 		var sgReduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		function runSpaceCardStaggerThenPost() {
@@ -407,6 +400,11 @@ function build_grid(data, data_schedule, admin=false) {
 					return $(this).find('.section-box-inner:not(.noshow)').length > 0;
 				});
 				if ($evts.length) {
+					if (mode === 'space' && SG_EVT_DUR === 0) {
+						$evts.css({ opacity: '', transform: '', transition: '' });
+						runSpaceGridPostIntro();
+						return;
+					}
 					$evts.css({ opacity: '0', transform: 'scale(0.96)' });
 					var evtMax = 0;
 					$evts.each(function () {
@@ -475,7 +473,7 @@ function build_grid(data, data_schedule, admin=false) {
 					requestAnimationFrame(function () {
 						run_table_diag_intro_animation($tblSpace, function () {
 							applySpaceScheduleWork(runSpaceCardStaggerThenPost);
-						});
+						}, { diagStep: 30, fadeMs: 0, timeColumnFadeMs: 1000 });
 					});
 				} else {
 					applySpaceScheduleWork(runSpaceCardStaggerThenPost);
@@ -485,7 +483,6 @@ function build_grid(data, data_schedule, admin=false) {
 			}
 		}
 
-		//helper functions
 		function isPeakSlot(location_id, slot_start) {
 			let resp = false;
 			if (mode == 'lesson') {
@@ -495,8 +492,7 @@ function build_grid(data, data_schedule, admin=false) {
 			} else {
 				for (let i = 0; i < hours[location_id].length; i++) {
 					let h = hours[location_id][i];
-					//check for peak flag whether slot start falls into peak hours
-					if (h.peak && times_isbetween(slot_start, h.hours_start, h.hours_finish, '[)')) { //use [) to include start in check
+					if (h.peak && times_isbetween(slot_start, h.hours_start, h.hours_finish, '[)')) { 
 						resp = true;
 						break;
 					}
@@ -504,18 +500,18 @@ function build_grid(data, data_schedule, admin=false) {
 			}
 			return resp;
 		}
-	
-		function isPeakSlotAbandoned(slot_start, space_id) {
+
+			function isPeakSlotAbandoned(slot_start, space_id) {
 			let resp = false;
 			if (mode == 'lesson') {
 				resp = false;
 			} else {
-				if (start == slot_start) { //first slot of day
+				if (start == slot_start) { 
 					resp = true;
 				} else {
 					let c_hr = dayjs(main_date+' '+slot_start, 'YYYY-MM-DD HH:mm:ss');
-					c_hr = (c_hr.minute() === 0) ? c_hr.subtract(1, 'hour') : c_hr.startOf('hour'); //closest prev hour e.g. 4->3, 3.45->3 etc
-					for (let n = 0; n < data_schedule.length; n++) { //closest hour slot has some booking
+					c_hr = (c_hr.minute() === 0) ? c_hr.subtract(1, 'hour') : c_hr.startOf('hour'); 
+					for (let n = 0; n < data_schedule.length; n++) { 
 						let s = data_schedule[n];
 						if ((s.space_id == space_id) && (timeslots_overlap(c_hr, c_hr.add(incr,'minute'), s.schedule_start, s.schedule_finish))) {
 							resp = true;
@@ -531,7 +527,6 @@ function build_grid(data, data_schedule, admin=false) {
 			let resp = false;
 			for (let i = 0; i < hours_ro[location_id].length; i++) {
 				let h = hours_ro[location_id][i];
-				//check whether slot overlaps with read-only hours
 				if (dayjs(slot_end,'HH:mm:ss').isAfter(dayjs(h.hours_start,'HH:mm:ss')) && 
 					dayjs(slot_start,'HH:mm:ss').isBefore(dayjs(h.hours_finish,'HH:mm:ss'))) {
 					resp = true;
@@ -551,8 +546,8 @@ function virtual_location_filter_grid() {
 	let target = $('#lessons').is(":visible") ? '#lessons' : '#spaces';
 
 	let vloc_id = $('.virtual_locations a.active').prop('dataset').intrac;
-		
-	$(target+' .courts-many.noshow_imp').removeClass('noshow_imp');
+
+			$(target+' .courts-many.noshow_imp').removeClass('noshow_imp');
 	$(target+' .cell-many.noshow_imp').removeClass('noshow_imp');
 
 	if (vloc_id > 0) {
@@ -579,7 +574,7 @@ function convertTabletoSpaceButtons($table) {
 
         let schedule_time = $bx.closest('tr').find('td:first').text();
 
-        let clickable = !isNonInteractive($(this)); //e.g. green-box,gray-box,empty-box,ro-box,blocked etc
+        let clickable = !isNonInteractive($(this)); 
         let no_cur_btn = !$div.find('.grid_item_btn[data-intrac="'+schedule_time+'"]').length;
 
         if (clickable && no_cur_btn) {
@@ -621,11 +616,11 @@ function convertTabletoLessonButtons($table) {
         if (!user_ids.includes(user_id)) {
         	user_ids.push(user_id);
         	let $usr = $table.find('th .user_id[data-intrac="'+user_id+'"]').closest('th');
-        	
-        	$div.find('.btns_users_list').append('<li class="instructor-plate grid_filter" data-intrac="'+user_id+'"><img class="w-[32px] h-[32px] rounded-full" src="'+$usr.find('img').prop('src')+'" alt=""><div class="flex flex-col gap-[2px]"><h6 class="text-[.7rem]">'+$usr.find('.user_id').text()+'</h6><span class="text-[.6rem] color-brand">Instructor</span></div></li>');
+
+        	        	$div.find('.btns_users_list').append('<li class="instructor-plate grid_filter" data-intrac="'+user_id+'"><img class="w-[32px] h-[32px] rounded-full" src="'+$usr.find('img').prop('src')+'" alt=""><div class="flex flex-col gap-[2px]"><h6 class="text-[.7rem]">'+$usr.find('.user_id').text()+'</h6><span class="text-[.6rem] color-brand">Instructor</span></div></li>');
         }
 
-        let clickable = !isNonInteractive($(this)); //e.g. green-box,gray-box,empty-box,ro-box,blocked etc
+        let clickable = !isNonInteractive($(this)); 
 
         if (clickable) {
 	        let section = getMorAftEve(schedule_time);
@@ -640,17 +635,17 @@ function convertTabletoLessonButtons($table) {
 }
 
 function getMorAftEve(timeStr) {
-    const hour = dayjs(timeStr, 'h:mm A').hour(); // 0–23
+    const hour = dayjs(timeStr, 'h:mm A').hour(); 
 
     switch (true) {
         case hour < 12:
-            return 'mor'; //12:00 AM – 11:59 AM
+            return 'mor'; 
 
         case hour < 17:
-            return 'aft'; //12:00 PM – 4:59 PM
+            return 'aft'; 
 
         default:
-            return 'eve'; //5:00 PM – 11:59 PM
+            return 'eve'; 
     }
 }
 
@@ -680,7 +675,6 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 
 	try {
 
-		//if there are more than 1 locations, then grid_view of 1st location is used as default
 		let is_compressed = data[0].grid_view.includes('compressed') ? true : false;
 		let is_weekly = data[0].grid_view.includes('weekly') ? true : false;
 		let is_detailed = data[0].grid_view.includes('detailed') ? true : false;
@@ -717,11 +711,9 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 			requestAnimationFrame(updateAllGviewPills);
 		}
 
-		//first loop to set users and times arrays across all locations
 		for (let a = 0; a < data_schedule.length; a++) {
 			let d = data_schedule[a];
 
-			//extract main user_id/username
 			let obj = {
 				user_id: d.user_ids.split(',')[0],
 				username: d.usernames.split(',')[0],
@@ -730,9 +722,8 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 			};
 
 			users.push(obj); 
-			d.slot_user = obj; //store inside data_schedule for later
+			d.slot_user = obj; 
 
-			//extract class_name
 			let obj_c = {
 				class_id: d.class_id,
 				class_name: d.class_name || 'None',
@@ -742,19 +733,17 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 			};
 
 			class_names.push(obj_c); 
-			d.slot_class = obj_c; //store inside data_schedule for later
+			d.slot_class = obj_c; 
 
 			times.push(convert_date_time(d.schedule_start, 'HH:mm:ss'));
 
 			dates.push(convert_date_time(d.schedule_start, 'YYYY-MM-DD'));
 
-		} //first loop completed
+		} 
 
-		//remove duplicate values and sort ascending (times only)
 		users = [...new Map(users.map(user => [user.user_id, user])).values()];
 		times = [...new Set(times)].sort((a, b) => dayjs(a,'HH:mm:ss').unix() - dayjs(b,'HH:mm:ss').unix());
 
-		//set dates. if there are more than 1 locations, then dates of 1st location are used as default
 		if (is_weekly) {
 		    let sow = dayjs(data[0].sow);
 		    let eow = dayjs(data[0].eow);
@@ -763,11 +752,10 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 		    	if (!['Sat', 'Sun'].includes(sow.format('ddd'))) {
 		    		dates.push(sow.format('YYYY-MM-DD'));
 		    	}
-		        sow = sow.add(1, 'day'); // Move to the next day
+		        sow = sow.add(1, 'day'); 
 		    }
 		}
 
-		//remove duplicate values and sort ascending
 		dates = [...new Set(dates)].sort((a, b) => dayjs(a).unix() - dayjs(b).unix());
 
 		let y_slots = times;
@@ -775,61 +763,55 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 		html_str += '<div class="scroll-container noscrollbar'+(is_weekly ? ' is_weekly' : '')+(is_detailed ? ' is_detailed':' scroll-container-flex')+'">\
 						<table class="'+(admin ? 'table-fixed w-full sm:min-w-full ':'')+'border-collapse">';
 
-		//second loop to determine y_slots across all locations - applicable only for is_compressed
 		if (is_compressed) {
 			for (let a = 0; a < data.length; a++) {
 				let d = data[a];
 
-				//same as x_slots logic in next step
-				let x_slots = users.filter(item => item.location_id == d.location_id); //default
+				let x_slots = users.filter(item => item.location_id == d.location_id); 
 				if (is_weekly) {
 					x_slots = dates;
 				} else if (is_detailed) {
-					x_slots = class_names.filter(item => item.location_id == d.location_id); //default
+					x_slots = class_names.filter(item => item.location_id == d.location_id); 
 				}
 
-				//for compressed mode - determine the max y boxes
 				let max_y_boxes = 0;
 				for (let n = 0; n < x_slots.length; n++) {
-					let len_ = data_schedule.filter(item => item.slot_user.user_id == x_slots[n].user_id).length; //default
+					let len_ = data_schedule.filter(item => item.slot_user.user_id == x_slots[n].user_id).length; 
 					if (is_weekly) {
 						len_ = data_schedule.filter(item => convert_date_time(item.schedule_start, 'YYYY-MM-DD') == x_slots[n]).length;
 					} else if (is_detailed) {
 						len_ = 1;
 					}
-					
-					if (len_ > max_y_boxes) {
+
+										if (len_ > max_y_boxes) {
 						max_y_boxes = len_;
 					}
 				}
 
-				y_slots = Array.from({ length: max_y_boxes }, (_, i) => i + 1); //create an array [1,2,3...max_y_boxes]
+				y_slots = Array.from({ length: max_y_boxes }, (_, i) => i + 1); 
 			}
 		}
 
-		//table loop is based on times/y_slots
 		for (let i = -1; i < y_slots.length; i++) {
 
 			let slot_start = y_slots[i];
 
-			if (i == -1) { //first row - header
+			if (i == -1) { 
 				html_str += '<thead class="sticky top-0 z-50"><tr>\
 								<th class="time-column-many'+(is_compressed ? ' noshow':'')+'"><div class="time-shadow-wrapper-title">Time</div></th>';
-			} else { //normal tr
+			} else { 
 				html_str += '<tr style="height: var(--box_height)">\
 								<td class="time-column-many'+(is_compressed ? ' noshow':'')+'"><div class="time-shadow-wrapper">'+dayjs(slot_start, 'HH:mm:ss').format('h:mm a').toUpperCase()+'</div></td>';
 			}
 
-			//users or dates or class_names
-			//third loop to set slots across all locations
 			for (let a = 0; a < data.length; a++) {
 				let d = data[a];
 
-				let x_slots = users.filter(item => item.location_id == d.location_id); //default
+				let x_slots = users.filter(item => item.location_id == d.location_id); 
 				if (is_weekly) {
 					x_slots = dates;
 				} else if (is_detailed) {
-					x_slots = class_names.filter(item => item.location_id == d.location_id); //default
+					x_slots = class_names.filter(item => item.location_id == d.location_id); 
 				}
 
 				for (let n = 0; n < x_slots.length; n++) {
@@ -837,7 +819,7 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 
 					let class_block = '';
 
-					if (i == -1) { //header
+					if (i == -1) { 
 
 						let swap_link = $('#is_admin').val() && !roster ? '<a href="#" class="btn-link text-[10px] sched_swap_today" data-intrac_swap_date="'+(is_weekly ? x_item : $('#main_date').val())+'" data-intrac_swap_user_id="'+x_item.user_id+'" >Swap</a>' : '';
 
@@ -862,18 +844,18 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 							class_block += '<th class="p-4 whitespace-nowrap font-normal border border-dashed border-input-background border-t-0 bg-white w-[152px] md:w-[194px]">'+convert_date(x_item, 'dddd')+'</th>';
 						}
 					} else {
-						
-						if (admin) {
+
+												if (admin) {
 							class_block += '<td class="cell-many align-top">';
 						} else {
 							class_block += '<td class="p-1 border border-dashed border-input-background">';
 						}
 
-			        	let stid = x_item.user_id+'_'+d.location_id+'_'+(!is_compressed ? dayjs(slot_start, 'HH:mm:ss').format('HH-mm') : slot_start); //eg 123_5_1 or 123_5_11-30. Must use location_id for uniqueness;
+			        	let stid = x_item.user_id+'_'+d.location_id+'_'+(!is_compressed ? dayjs(slot_start, 'HH:mm:ss').format('HH-mm') : slot_start); 
 			        	if (is_weekly) {
-			        		stid = x_item+'_'+d.location_id+'_'+(!is_compressed ? dayjs(slot_start, 'HH:mm:ss').format('HH-mm') : slot_start); //eg YYYY-MM-DD_5_1 or YYYY-MM-DD_5_11-30. Must use location_id for uniqueness
+			        		stid = x_item+'_'+d.location_id+'_'+(!is_compressed ? dayjs(slot_start, 'HH:mm:ss').format('HH-mm') : slot_start); 
 			        	} else if (is_detailed) {
-			        		stid = x_item.class_id+'_'+d.location_id+'_'+x_item.schedule_id; //eg 123_5_456. Must use location_id for consistency with others
+			        		stid = x_item.class_id+'_'+d.location_id+'_'+x_item.schedule_id; 
 			        	}
 
 			        	if (admin) {
@@ -905,10 +887,10 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 						                            </div>\
 												</div>\
 											</div>';
-											
-			        	} else { //customer
-			        		
-			        		let btn_enrol = '<a href="#" class="btn_class btn_enrol noshow">'+toTitleCase(class_enrolment_titles.verb || 'enrol')+'</a>';
+
+														        	} else { 
+
+			        					        		let btn_enrol = '<a href="#" class="btn_class btn_enrol noshow">'+toTitleCase(class_enrolment_titles.verb || 'enrol')+'</a>';
 			        		let btn_waitlist = $('#wait').val().includes('c') ? '<a href="#" class="btn_class btn_wait_class'+($('#customer_id').val() > 0 ? '' : ' post_auth_items')+' noshow">Watch list</a>' : '';
 
 			        		cl_div_block = '<div class="rounded-[10px] empty-box" id="_stid_" data-intrac_location_id="_location_id_">\
@@ -938,8 +920,7 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 
 			        html_str += class_block;
 				}
-				
-				//level_filter
+
 				let levels = data_schedule.map(({ level_id, level_name }) => ({ level_id, level_name })).filter((item, index, self) => index === self.findIndex(i => i.level_id === item.level_id && i.level_name === item.level_name));
 				let levels_str = '<li><a class="dropdown-item" href="#" data-intrac_level_id="" data-intrac_level_name="All levels">All levels</a></li>';
 				for (let j = 0; j < levels.length; j++) {
@@ -950,11 +931,10 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 
 				$('#level_filters').each(function() {
 					if (!$('#level_filters').find('.dropdown-toggle span').text().trim()) {
-						$('#level_filters').find('.dropdown-toggle span').text('All levels'); //default
+						$('#level_filters').find('.dropdown-toggle span').text('All levels'); 
 					}
 				});
 
-				//space_filter
 				if (d.show_space_filter) {
 					let spaces_str = '';
 					for (let j = 0; j < d.spaces.length; j++) {
@@ -963,33 +943,32 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 					$('.space_filter').html(spaces_str);
 					$('#space_filters').removeClass('noshow');
 
-					let s_id = $('#class_space_id').val(); //deeplink
-					$('#class_space_id').val(''); //clear
+					let s_id = $('#class_space_id').val(); 
+					$('#class_space_id').val(''); 
 
 					$('#space_filters').each(function() {
 						if (!$(this).find('.dropdown-toggle span').text().trim()) {
-							if (s_id) { //deeplink
+							if (s_id) { 
 								$(this).find('.dropdown-toggle span').text(d.spaces.filter(item => item.space_id == s_id).length ? d.spaces.filter(item => item.space_id == s_id)[0].space_name : '');
 							} else {
-								$(this).find('.dropdown-toggle span').text(d.spaces[0].space_name); //default
+								$(this).find('.dropdown-toggle span').text(d.spaces[0].space_name); 
 							}
 						}					
 					});
 				}
-			} //third loop completed
-			
-			if (i == -1) { //header
-				html_str += '</tr></thead><tbody>'; //header end, body start
+			} 
+
+						if (i == -1) { 
+				html_str += '</tr></thead><tbody>'; 
 			} else {
-				html_str += '</tr>'; //tr end
+				html_str += '</tr>'; 
 			}
-		} //end of table loop
+		} 
 
-		html_str += '</tbody></table></div>'; //main table end*/
+		html_str += '</tbody></table></div>'; 
 
-		let $tmp = $(html_str); //create detached node
+		let $tmp = $(html_str); 
 
-		//create colgroup - required for widths to behave correctly
 		let $colgroup = $('<colgroup></colgroup>');
 
 		$tmp.find('table:first thead tr th').each(function(index, th) {
@@ -1002,7 +981,6 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 		});
 
 		$tmp.find('table:first').prepend($colgroup);
-		//create colgroup - completed
 
 		function getYBox(id1, id2) {
 		    let maxN = 0;
@@ -1026,8 +1004,7 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 		for (let n = 0; n < data_schedule.length; n++) {
 			let schedule = data_schedule[n];
 
-			//number of slots - always 1
-			let stid = schedule.slot_user.user_id+'_'+schedule.slot_user.location_id+'_'+(!is_compressed ? convert_date_time(schedule.schedule_start, 'HH-mm') : getYBox(schedule.slot_user.user_id, schedule.location_id)); //default
+			let stid = schedule.slot_user.user_id+'_'+schedule.slot_user.location_id+'_'+(!is_compressed ? convert_date_time(schedule.schedule_start, 'HH-mm') : getYBox(schedule.slot_user.user_id, schedule.location_id)); 
 			if (is_weekly) {
 				stid= convert_date_time(schedule.schedule_start, 'YYYY-MM-DD')+'_'+schedule.slot_user.location_id+'_'+(!is_compressed ? convert_date_time(schedule.schedule_start, 'HH-mm') : getYBox(convert_date_time(schedule.schedule_start, 'YYYY-MM-DD'), schedule.location_id));
 			} else if (is_detailed) {
@@ -1036,7 +1013,6 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 
 			let $tmp_stid = $tmp.find('#'+stid);
 
-			//check for overlapping items i.e. two items with same x and y
 			if ($tmp_stid.hasClass('select')) {
 
 				let cur_len = $tmp_stid.closest('.section_shell').find('.section-box').length;
@@ -1047,7 +1023,7 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 					$tmp_stid.closest('.section_shell').find('.info-box').text(cur_len+' More')
 				}
 
-				let stid_new = stid+'_'+(cur_len+1); //override stid e.g. stid_1, stid_2 etc
+				let stid_new = stid+'_'+(cur_len+1); 
 
 				let new_item = $(cl_div_block.replace('_stid_', stid_new).replace('_location_id_', schedule.location_id)).addClass('margin_top_sm');
 
@@ -1073,7 +1049,6 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 				$tmp.find('#'+stid+' .main_text').html((admin && schedule.has_comment_ ? '?' : '')+schedule.class_name);
 			}
 
-			//construct p_str
 			let p_str = '';
 
 			let username = schedule.usernames ? schedule.usernames.split(',')[0] : '';
@@ -1085,18 +1060,18 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 
 			if (admin) {
 				if (is_detailed && schedule.class_id) {
-					
-					$tmp.find('#'+stid+' .main_text').html(convert_date_time(schedule.schedule_start,'h:mma')+' to '+convert_date_time(schedule.schedule_finish,'h:mma'));
+
+										$tmp.find('#'+stid+' .main_text').html(convert_date_time(schedule.schedule_start,'h:mma')+' to '+convert_date_time(schedule.schedule_finish,'h:mma'));
 
 					let reg_str = '';
-	                
-	                if (schedule.register_data && (schedule.level_type != 4)) {
+
+	                	                if (schedule.register_data && (schedule.level_type != 4)) {
 	                	if (schedule.register_data.length) {
 		                	reg_str += '<ul class="users-list-schedule-card">';
 		                    for (let y = 0; y < schedule.register_data.length; y++) {
 		                        let d = schedule.register_data[y];
-		                        
-		                        let age = (getAge(d.dob)) ? ' ('+getAge(d.dob)+')' : '';
+
+		                        		                        let age = (getAge(d.dob)) ? ' ('+getAge(d.dob)+')' : '';
 		                        if (d.details && d.details.schoolyear) {
 		                            age = ' ('+d.details.schoolyear+')';
 		                        }
@@ -1151,9 +1126,9 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 	                	$tmp.find('#'+stid+' .btm_text_l').html(schedule.schedule_comment);
 	                }
 
-				} else { //default
-					
-					p_str += (username && is_weekly ? username+'<br>' : '');
+				} else { 
+
+										p_str += (username && is_weekly ? username+'<br>' : '');
 					if (space_name) {
 						if (is_detailed) {
 							p_str += space_name+'<br>';
@@ -1165,8 +1140,8 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 
 					if (schedule.customer_id) {
 						$tmp.find('#'+stid+' .main_text').html('Booking - '+(schedule.has_comment_ ? '?' : '')+schedule.first_name+' '+schedule.last_name)
-						
-						if ($('.instructor-page').length) {
+
+												if ($('.instructor-page').length) {
 							if (isvalidDate(schedule.bday||'')) {
 								let dt = dayjs().format('YYYY')+'-'+dayjs(schedule.bday).format('MM-DD');
 								let diff = dates_diff(dt,dayjs().format('YYYY-MM-DD'));
@@ -1205,7 +1180,7 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 						p_str = p_str.replace(/<br>/g, '<br><br>');
 					}
 
-					p_str += '</span>'; //closing p_str_other
+					p_str += '</span>'; 
 				}
 
 			} else {
@@ -1218,8 +1193,8 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 				}
 
 				$tmp.find('#'+stid+' .schedule_time span').text(convert_date_time(schedule.schedule_start,'h:mma')+' to '+convert_date_time(schedule.schedule_finish,'h:mma'));
-				
-				if (schedule.level_type != 6) {
+
+								if (schedule.level_type != 6) {
 					$tmp.find('#'+stid+' .schedule_day').text(schedule.day_orig || convert_date_time(schedule.schedule_start,'ddd'));	
 				}
 
@@ -1246,7 +1221,6 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 					$tmp.find('#'+stid+' .class_img').html(schedule.image_data);
 				}
 
-				//vacancy
 				let vac_str = '';
 				if (schedule.vacancy == 'full') {
 					vac_str = '<span class="event-status bg-error-100 text-error-200"><span class="size-1.5 bg-error-200 rounded-[20px]"></span> '+(toTitleCase($('#class_title').val())+' Full')+'</span>';
@@ -1269,15 +1243,14 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 
 			$tmp.find('#'+stid+' .sub_text').html(p_str);
 			if ($tmp_stid.length) {
-				$tmp_stid.prop('dataset').intrac_level_type = schedule.level_type; //used for color coding in admin site only
-				$tmp_stid.prop('dataset').intrac_level_id = schedule.level_id; //used for level filters in customer site only
-				$tmp_stid.prop('dataset').intrac_term_id = schedule.term_id; //used for term deeplink filter in customer site only
+				$tmp_stid.prop('dataset').intrac_level_type = schedule.level_type; 
+				$tmp_stid.prop('dataset').intrac_level_id = schedule.level_id; 
+				$tmp_stid.prop('dataset').intrac_term_id = schedule.term_id; 
 				if (!admin && schedule.level_type == 6) {
-					$tmp_stid.prop('dataset').intrac_schedule_orig = schedule.schedule_date_orig ? schedule.schedule_date_orig+' '+dayjs(schedule.schedule_start).format('HH:mm:ss') : schedule.schedule_start; //used for sorting level_type 6 classes in buttons model grid only
+					$tmp_stid.prop('dataset').intrac_schedule_orig = schedule.schedule_date_orig ? schedule.schedule_date_orig+' '+dayjs(schedule.schedule_start).format('HH:mm:ss') : schedule.schedule_start; 
 				}				
 			}
 
-			//enrol button for customers
 			if (((schedule.status != 2) && (schedule.status != 3) && (schedule.status != 4)) ||
 				(schedule.vacancy == 'full') ||
 				(schedule.vacancy == 'not open') ||
@@ -1285,7 +1258,6 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 				$tmp.find('#'+stid+' .btn_enrol').remove();
 			}
 
-			//wait button for customers
 			if (schedule.vacancy == 'full') {
 				$tmp.find('#'+stid+' .btn_wait_class').removeClass('noshow');
 			} else {
@@ -1295,7 +1267,7 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 			if (schedule.functions) {
 				$tmp.find('#'+stid+' .btn_edit_roster').removeClass('noshow');
 
-				if ($tmp.find('#'+stid+' .btn_edit_roster').length) { //not removed already
+				if ($tmp.find('#'+stid+' .btn_edit_roster').length) { 
 					$tmp.find('#'+stid+' .btn_edit_roster').each(function () {
 						$(this).prop('dataset').intrac = (schedule.schedule_id || 0);
 					});
@@ -1303,7 +1275,7 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 			} else if (schedule.class_id) {
 				$tmp.find('#'+stid+' .btn_class').removeClass('noshow');
 
-				if ($tmp.find('#'+stid+' .btn_class').length) { //not removed already
+				if ($tmp.find('#'+stid+' .btn_class').length) { 
 					let ids = schedule.class_id+'~'+(schedule.program_id || 0)+'~'+(schedule.schedule_id || 0);
 					$tmp.find('#'+stid+' .btn_class').each(function () {
 						$(this).prop('dataset').intrac = ids;
@@ -1312,8 +1284,7 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 				}
 
 				if ($('.instructor-page').length && schedule.fixtures?.length) {
-					
-					//could be multiple fixtures for the same schedule in different spaces
+
 					let btn_html = '';
 					for (let y = 0; y < schedule.fixtures.length; y++) {
 						let f = schedule.fixtures[y];
@@ -1326,8 +1297,8 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 					}
 
 					$tmp.find('#'+stid+' .btn_view_game_div').html(btn_html);
-					
-				} else {
+
+									} else {
 					$tmp.find('#'+stid+' .btn_view_game_div').remove();
 				}
 			} else if (schedule.customer_id && (schedule.program_id == 0)) {
@@ -1340,14 +1311,13 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 		}
 		}
 
-		$(target).empty().append($tmp); //attach the detached node
+		$(target).empty().append($tmp); 
 
 		const EVT_STAGGER = 83;
 		const EVT_DUR = 420;
 		const reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		function runClassGridAfterScheduleIntro() {
-		//remove links if there are no valid customer profiles to enrol
 		if (!$('.admin-page').length && ($('#customer_id').val() > 0)) {
 			if (!$(mc2+' .cregister_cust_list [name="cregister_customer_id"]').length) {
 				$('.btn_enrol').remove();
@@ -1355,10 +1325,9 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 			}
 		}
 
-		//trigger click if enrol_ids exists from deeplink
 		if (!$('.admin-page').length && $('#enrol_ids').val()) {
 			let ids = $('#enrol_ids').val();
-			$('#enrol_ids').val(''); //clear it
+			$('#enrol_ids').val(''); 
 			ids = ids.split('~');
 			if (ids.length == 1) {
 				ids.push(0);
@@ -1367,9 +1336,9 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 				ids.push(0);
 			}
 			if ($('.btn_enrol[data-intrac="'+ids.join('~')+'"]:first').length) {
-				$('.btn_enrol[data-intrac="'+ids.join('~')+'"]:first').click();	//go to exact class/program/schedule
+				$('.btn_enrol[data-intrac="'+ids.join('~')+'"]:first').click();	
 			} else {
-				$('.btn_enrol[data-intrac^="'+ids[0]+'~"]:first').click(); //go to class at least as a fallback
+				$('.btn_enrol[data-intrac^="'+ids[0]+'~"]:first').click(); 
 			}
 		}
 
@@ -1385,7 +1354,6 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 			}
 		}
 
-		//remove all buttons with no menu items
 		$(target+' table .grid_actions_menu').each(function() {
 			if ($(this).find('.dropdown-menu-item:not(.noshow)').length) {
 				$(this).closest('.toggle_div').find('.three-dots-btn').removeClass('noshow');
@@ -1508,7 +1476,7 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 			}
 			if ($tblClass.length && $tblClass.find('tbody td').length) {
 				requestAnimationFrame(function () {
-					run_table_diag_intro_animation($tblClass, runClassPhase2AfterIntro);
+					run_table_diag_intro_animation($tblClass, runClassPhase2AfterIntro, { skipCellUnwrap: true });
 				});
 			} else {
 				runClassPhase2AfterIntro();
@@ -1536,7 +1504,6 @@ function convertTabletoUl($table) {
 
     const $ul = $('<ul class="flex flex-wrap w-full bg-white p-3 sm:p-6 rounded-[20px] gap-5 justify-between"></ul>');
 
-    // Loop through each column
     for (let i = 1; i < totalCols; i++) {
         const $th = $theadCells.eq(i).clone(true, true);
         const $td = $tbodyCells.eq(i).clone(true, true);
@@ -1558,7 +1525,6 @@ function convertTabletoUl($table) {
 }
 
 function convertTabletoUlInstructor($table) {
-	//collect tds by working through one column at a time to preserve date order
 	const $rows = $table.find('tbody tr');
 
 	const colCount = $rows.first().children('td').length;
@@ -1589,7 +1555,7 @@ function convertTabletoUlInstructor($table) {
 
         let details = $td.find('.p_str_other').text().trim() ? $td.find('.p_str_other').html() : '';
         if (details) {
-        	details = details.replace(/^<br\s*\/?>/, ""); //remove the first <br>
+        	details = details.replace(/^<br\s*\/?>/, ""); 
         }
 
         const $li = $('<li class="bg-white w-full md:basis-[332px] rounded-[20px] p-4 leading-[100%] flex flex-col gap-4">\
@@ -1610,7 +1576,6 @@ function convertTabletoUlInstructor($table) {
 
 function convertTabletoClassButtons($table) {
 
-	//collect tds by working through one column at a time to preserve date order
 	const $rows = $table.find('tbody tr');
 
 	const colCount = $rows.first().children('td').length;
@@ -1627,7 +1592,7 @@ function convertTabletoClassButtons($table) {
 	}	
 
     let status_arr = [];
-    let schedules_arr = []; //add them at the end
+    let schedules_arr = []; 
 
     const $ul = $('<ul class="flex flex-col lg:flex-row gap-3 flex-wrap"></ul>');
 
@@ -1673,9 +1638,8 @@ function convertTabletoClassButtons($table) {
 					</li>');
 
         if ($td.find('.select').prop('dataset').intrac_schedule_orig) {
-            schedules_arr.push($li); //keep separately
+            schedules_arr.push($li); 
         } else if ($td.find('.schedule_day').text() == 'All_clone') {
-        	//skip
         } else {
         	$ul.append($li);
         }
@@ -1683,13 +1647,12 @@ function convertTabletoClassButtons($table) {
         status_arr.push(status_str);
     });
 
-    //add schedules from schedules_arr
     if (schedules_arr.length) {
         schedules_arr.sort(function(a, b) {
             const aDate = a.data('intrac_schedule_orig');
             const bDate = b.data('intrac_schedule_orig');
 
-            return aDate.localeCompare(bDate); //YYYY-MM-DD HH:mm:ss sort works with localeCompare
+            return aDate.localeCompare(bDate); 
         });
 
         schedules_arr.forEach(function($li) {
@@ -1697,7 +1660,7 @@ function convertTabletoClassButtons($table) {
         });
     }
 
-    status_arr = [...new Set(status_arr)]; //remove duplicates
+    status_arr = [...new Set(status_arr)]; 
     let filter_str = '';
 	if (status_arr.length > 1) {
 		filter_str += '<ul class="flex flex-wrap gap-2 items-center text-xs md:text-sm text-center mb-3 noscrollbar">\
@@ -1714,10 +1677,8 @@ function convertTabletoClassButtons($table) {
 }
 
 function set_location_options(d) {
-    //schedule comment
     $('#schedule_comment').text(d.schedule_comment);
 
-    //multiple spaces in shadow
     if (d.shadow_multi && d.shadow_multi > 1) {
     	$('#space_modal .shadow_spaces_num_div').removeClass('noshow');
     	let opts_str = '';
@@ -1729,7 +1690,6 @@ function set_location_options(d) {
     	$('#space_modal .shadow_spaces_num_div').addClass('noshow');
     }
 
-	//booking details
     if (d.booking_details) {
         let div_str = '';
         for (let i = 0; i < d.booking_details.length; i++) {
@@ -1774,7 +1734,6 @@ function set_location_options(d) {
         $('#space_modal .location_name_div').before(div_str);
     }
 
-    //booking add-ons
     $('.booking_addons_div').remove();
     if (d.booking_addons) {
         let div_str = '';
@@ -1809,19 +1768,17 @@ function set_booking_details_inp() {
 		});
 
 		$('#space_modal .booking_details_inp').each(function() {
-			//location filter
 			let bd_location_id = $(this).prop('dataset').intrac_location_id;
-			if (location_ids.includes(bd_location_id)) { //any bd_location_id is in location_ids
+			if (location_ids.includes(bd_location_id)) { 
 				$(this).closest('.booking_details_div').show();
 			} else {
 				$(this).closest('.booking_details_div').hide();
 			}
 
-			//space filter
 			if ($(this).prop('dataset').intrac_space_ids) {
 				let bd_space_ids = $(this).prop('dataset').intrac_space_ids.split('-');
 
-				if (space_ids.some(item => bd_space_ids.includes(item))) { //any items in space_ids are in bd_space_ids
+				if (space_ids.some(item => bd_space_ids.includes(item))) { 
 					$(this).closest('.booking_details_div').show();
 				} else {
 					$(this).closest('.booking_details_div').hide();
@@ -1831,7 +1788,6 @@ function set_booking_details_inp() {
 	}
 }
 
-//common functions
 function reset_space_booking() {
 	$('#space_modal').scrollTop(0);
 	$('#space_modal .booking_date').val(convert_date($('#main_date').val(), 'dddd, MMM D'));
@@ -1847,19 +1803,18 @@ function init_space_booking() {
 	reset_space_booking();
 
 	let el = $('.section-box.active:first');
-	if (!el.length) { //check as this could be called by other functions as well
+	if (!el.length) { 
 		return false;
 	}
 	if (($('#customer_id').length) && ($('#customer_id').val() == 0)) {
 		$('#postauth_action').text('space_booking~'+$(el).prop('id'));
 	}
-	$(el).removeClass('active'); //clear active flag
+	$(el).removeClass('active'); 
 
 	let location_ids = [];
 
 	let space_id = $(el).prop('id').split('_')[0];
 
-	//spaces list
 	let space_ids = [];
 	$('#spaces .space_id:not(.read_only)').each(function() {
 
@@ -1876,12 +1831,11 @@ function init_space_booking() {
 		space_ids.push({id: id, loc_id: loc_id});
 	});
 
-	//fullfield option
 	for (let i = 0; i < location_ids.length; i++) {
 		let loc_id = location_ids[i];
 		let rates = JSON.parse(decryptData($('#hours').text()))[loc_id];
 		let rates_ff = rates.filter(item => item.fullfield === 1);
-		if (rates_ff.length && rates_ff.length == rates.length/2) { //one fullfield entry per each entry
+		if (rates_ff.length && rates_ff.length == rates.length/2) { 
 			$('#space_modal .spaces_list li a[data-intrac_location_id="'+loc_id+'"]:last').closest('li').after('<li><a href="#" class="toggle-btn space_sel fullfield" data-intrac="'+space_ids.filter(item => item.loc_id == loc_id).map(item => item.id).join(',')+'" data-intrac_location_id="'+loc_id+'">Full field</a></li>');
 		}
 	}
@@ -1892,23 +1846,18 @@ function init_space_booking() {
 		$('#space_modal .spaces_list_div').hide();
 	}
 
-	//set visibility of any booking details inputs
 	set_booking_details_inp();
 
-	//start times list
 	get_slot_starttimes();
 
 	$('#space_modal .starttimes_list').val(dayjs($(el).prop('id').split('_')[1],'HH-mm').format('h:mm a'));
 
-	//open modal
 	open_side_modal('space');
 
-	//set alter booking data
 	if ($('#space_modal .schedule_id').val()) {
 		set_alter_booking('space');
 	}
 
-	//end times list
 	get_slot_endtimes();
 }
 
@@ -1945,14 +1894,14 @@ async function init_lesson_booking() {
 	reset_lesson_booking();
 
 	let el = $('.section-box.active:first');
-	if (!el.length) { //check as this could be called by other functions as well
+	if (!el.length) { 
 		return false;
 	}
 
 	if (($('#customer_id').length) && ($('#customer_id').val() == 0)) {
 		$('#postauth_action').text('lesson_booking~'+$(el).prop('id'));
 	}
-	$(el).removeClass('active'); //clear active flag
+	$(el).removeClass('active'); 
 
 	if (!$('.admin-page').length) {
 	    if (check_lessons_cart()) {
@@ -1964,26 +1913,20 @@ async function init_lesson_booking() {
 
 	let user_id = $(el).prop('id').split('_')[0];
 
-	//users list
 	set_booking_users(user_id);
 
-	//start times list
 	get_slot_starttimes('lesson');
 
 	$('#lesson_modal .starttimes_list').val(dayjs($(el).prop('id').split('_')[1],'HH-mm').format('h:mm a'));
 
-	//open modal
 	open_side_modal('lesson');
 
-	//set alter booking data
 	if ($('#lesson_modal .schedule_id').val()) {
 		set_alter_booking('lesson');
 	}
 
-	//end times list
 	await get_slot_endtimes('lesson');
 
-	//passes list
 	get_lesson_passtypes();
 }
 
@@ -1993,18 +1936,14 @@ async function set_alter_booking(mode='space') {
 	if ($(modal+' .schedule_data').text()) {
 		let sd = JSON.parse($(modal+' .schedule_data').text());
 
-		//customer
 		$(modal+' .customers_list').val(sd.customer_id);
 
-		//date
 		$(modal+' .booking_date').prop('disabled', false);
 		$(modal+' .calendar_booking')[0]._flatpickr.setDate(convert_date_time(sd.schedule_start, 'YYYY-MM-DD'),false);
 
-		//spaces
 		let space_ids = sd.space_ids.split(',');
 
-		if ((sd.schedule_comment == 'Full field') && (space_ids.length > 1)) { //fullfield
-			//use space_ids directly and loc_id
+		if ((sd.schedule_comment == 'Full field') && (space_ids.length > 1)) { 
 			$(modal+' .space_sel').closest('li').removeClass('checked');
 			$(modal+' .space_sel.fullfield[data-intrac_location_id="'+sd.location_id+'"]').closest('li').addClass('checked');
 		} else {
@@ -2013,32 +1952,27 @@ async function set_alter_booking(mode='space') {
 					if (mode == 'space') {
 						$(modal+' .space_sel[data-intrac="'+space_ids[i]+'"]').closest('li').addClass('checked');	
 					} else {
-						//spaces in lessons
 						$(modal+' .bspace_list').val(space_ids[i]).change();
 					}
 				}
 			}
 		}
 
-		//users
 		let user_ids = sd.user_ids.split(',');
 
-		for (let i = 0; i < user_ids.length; i++) { //should always be one user here
+		for (let i = 0; i < user_ids.length; i++) { 
 			if (user_ids[i] > 0) {
 				if (mode == 'lesson') {
 					$(modal+' .user_sel[data-intrac="'+user_ids[i]+'"]').closest('li').addClass('checked');
 				} else {
-					//users in spaces
 					$(modal+' .buser_list').val(user_ids[i]).change();
 				}				
 			}
 		}
 
-		//passes - handled in get_lesson_passtypes
 
-		//booking details
 		if (mode == 'space') {
-			set_booking_details_inp(); //depends on spaces selected
+			set_booking_details_inp(); 
 			let bds = sd.schedule_comment.split('<br>');
 			for (let i = 0; i < bds.length; i++) {
 				if (bds[i].includes(':')) {
@@ -2053,11 +1987,9 @@ async function set_alter_booking(mode='space') {
 				}
 			}
 
-			//current comment created by non admin bds. Same conditions as get_booking_details
-			//$('<div>').text is used to escape sd.schedule_comment so that the string is not broken
-            if (!$('#space_modal .booking_details_inp').length) { //this covers both booking_details_inp_rate & booking_details_inp[data-intrac_capacity]
+            if (!$('#space_modal .booking_details_inp').length) { 
 	            if ((sd.schedule_comment || sd.allow_update_comment) &&
-	            	(sd.schedule_comment != 'Full field')) { //booking details
+	            	(sd.schedule_comment != 'Full field')) { 
 		                let cur_comm_div = '<li class="date-box cur_schedule_comment">\
 		                    <span class="booking-details-list-label"><img src="images/icons/bullet-list-text.svg" alt="">Comment</span>\
 		                    <textarea class="custom-input">'+($('<div>').text(sd.schedule_comment).html())+'</textarea>\
@@ -2073,15 +2005,12 @@ async function set_alter_booking(mode='space') {
 			$('#lesson_modal .capacity').val(sd.capacity);
 		}
 
-		//booking addons
 		$('.booking_addons_div').hide();
 
 		$(modal+' .customer_email').prop('checked', false);
 
 		$(modal+' .repeat_booking_div').addClass('noshow');
 
-		//start time - set as part of btn_alterBooking
-		//finish time
 		$(modal+' .endtimes_list').prop('dataset').cur_finish_time = convert_date_time(sd.schedule_finish, 'h:mm a');
 
 		$(modal+' .change_cust').addClass('noshow');
@@ -2090,7 +2019,7 @@ async function set_alter_booking(mode='space') {
 
 function get_slot_starttimes(mode='space') {
 
-	let space_ids = []; //user_ids in lesson mode
+	let space_ids = []; 
 
 	let modal = (mode == 'lesson') ? '#lesson_modal' : '#space_modal';
 	let list = (mode == 'lesson') ? '.users_list' : '.spaces_list';
@@ -2108,24 +2037,23 @@ function get_slot_starttimes(mode='space') {
 		}
 	});
 
-	let schedule_id = $(modal+' .schedule_id').val(); //alter
+	let schedule_id = $(modal+' .schedule_id').val(); 
 
 	if (space_ids.length) {
 
 		let html_str = '';
-		//check if a slot if free - vertical + horizontal loop
-		$('[id^='+space_ids[0]+'_]:not(.grid_item_btn)').each(function() { //vertical loop; space_ids[0] covers all space_ids vertically
-			
-			let t = $(this).prop('id').split('_')[1];
+		$('[id^='+space_ids[0]+'_]:not(.grid_item_btn)').each(function() { 
+
+						let t = $(this).prop('id').split('_')[1];
 			let valid_slot = true;
 
-			$('[id$=_'+t+']').each(function() { //horizontal loop
+			$('[id$=_'+t+']').each(function() { 
 				let id = $(this).prop('id').split('_')[0];
 				if (space_ids.includes(id)) {
-					if (!schedule_id || schedule_id != $(this).find('.schedule_id').text()) { //alter
+					if (!schedule_id || schedule_id != $(this).find('.schedule_id').text()) { 
 						if ($(this).hasClass('empty-box') || $(this).hasClass('ro-box') || $(this).hasClass('gray-box') || $(this).hasClass('green-box') || $(this).hasClass('blocked')) {
 							valid_slot = false;
-							return false; //break each loop
+							return false; 
 						}
 					} 
 				}
@@ -2135,11 +2063,11 @@ function get_slot_starttimes(mode='space') {
 				html_str += '<option value="'+dayjs(t,'HH-mm').format('h:mm a')+'">'+dayjs(t,'HH-mm').format('h:mm a')+'</option>';
 			}
 		});
-		
-		$(modal+' .starttimes_list').html(html_str);
+
+				$(modal+' .starttimes_list').html(html_str);
 
 		if ((cur_start_time) && ($(modal+' .starttimes_list option[value="'+cur_start_time+'"]').length)) {
-			$(modal+' .starttimes_list').val(cur_start_time); //match with cur_start_time
+			$(modal+' .starttimes_list').val(cur_start_time); 
 		}
 	}
 }
@@ -2151,8 +2079,7 @@ function get_slot_endtimes(mode='space') {
 		let modal = (mode == 'lesson') ? '#lesson_modal' : '#space_modal';
 		let list = (mode == 'lesson') ? '.users_list' : '.spaces_list';
 
-		let cur_finish_time = $(modal+' .endtimes_list').val(); //store
-		//check cur_finish_time from alter booking
+		let cur_finish_time = $(modal+' .endtimes_list').val(); 
 		if ($(modal+' .endtimes_list').prop('dataset').cur_finish_time) {
 			cur_finish_time = $(modal+' .endtimes_list').prop('dataset').cur_finish_time;
 			$(modal+' .endtimes_list').removeAttr('data-cur_finish_time');
@@ -2166,7 +2093,7 @@ function get_slot_endtimes(mode='space') {
 
 	    let errors = [];
 
-		let space_ids = []; //user_ids in lesson mode
+		let space_ids = []; 
 		let location_ids = []; 
 
 		let start = $(modal+' .starttimes_list').val();
@@ -2187,24 +2114,23 @@ function get_slot_endtimes(mode='space') {
 			}
 		});
 
-		let schedule_id = $(modal+' .schedule_id').val(); //alter
+		let schedule_id = $(modal+' .schedule_id').val(); 
 
-		//check for overlaps with existing bookings
 		for (let i = 0; i < space_ids.length; i++) {
 			let id = space_ids[i];
-			
-			let el = '#'+id+'_'+dayjs(start,'h:mm a').format('HH-mm');
-			if (!schedule_id || schedule_id != $(el).find('.schedule_id').text()) { //alter
+
+						let el = '#'+id+'_'+dayjs(start,'h:mm a').format('HH-mm');
+			if (!schedule_id || schedule_id != $(el).find('.schedule_id').text()) { 
 				if ($(el).hasClass('empty-box') || $(el).hasClass('ro-box') || $(el).hasClass('gray-box') || $(el).hasClass('green-box') || $(el).hasClass('blocked')) {
 					if (!errors.length) {
-						errors.push('Invalid start time. Please select another start time for your booking'); //F-end: 
+						errors.push('Invalid start time. Please select another start time for your booking'); 
 					}
 				}
 			}		
 		}
 
 		let location_id = $('#location_id').val();
-		if ($('.admin-page').length && location_ids.length) { //virtual locations in admin
+		if ($('.admin-page').length && location_ids.length) { 
 			location_id = location_ids[0];
 		}
 
@@ -2232,10 +2158,9 @@ function get_slot_endtimes(mode='space') {
 		}
 
 		if (schedule_id) {
-			data.schedule_id = schedule_id; //alter
+			data.schedule_id = schedule_id; 
 		}
 
-	    //validations
 
 	    if ((mode == 'space') && (!data.space_ids.length)) {
 	    	errors.push('Please select one or more '+$('#space_title').val()+'s from '+$(modal+' .spaces_list_div .space-title').text()+' section');
@@ -2269,7 +2194,6 @@ function get_slot_endtimes(mode='space') {
 
 		            let res = response.success;
 
-		            //data
 		            let res_data = res.data;
 
 		            if (res_data.length) {
@@ -2279,38 +2203,34 @@ function get_slot_endtimes(mode='space') {
 						}
 						$(modal+' .endtimes_list').html(html_str);
 
-						//default end time and trigger logic
 						if (mode == 'space') {
 							if ((cur_finish_time) && ($(modal+' .endtimes_list option[value="'+cur_finish_time+'"]').length)) {
-								$(modal+' .endtimes_list').val(cur_finish_time); //match with cur_finish_time
+								$(modal+' .endtimes_list').val(cur_finish_time); 
 							} else {
 								if ($('.admin-page').length) {
-									//check if 1hr option is available
 									let onehr_finish_time = dayjs(data.date+' '+data.start).add(1, 'hour').format('h:mm a');
 									let slot_finish_time = dayjs(data.date+' '+data.start).add($('#spaces table').prop('dataset').intrac_interval, 'minute').format('h:mm a');
 									if ($(modal+' .endtimes_list option[value="'+onehr_finish_time+'"]').length) {
-										$(modal+' .endtimes_list').val(onehr_finish_time); //match with onehr_finish_time
+										$(modal+' .endtimes_list').val(onehr_finish_time); 
 									} else if ($(modal+' .endtimes_list option[value="'+slot_finish_time+'"]').length) {
-										$(modal+' .endtimes_list').val(slot_finish_time); //match with slot_finish_time		
+										$(modal+' .endtimes_list').val(slot_finish_time); 
 									} else {
-										//select the first option - default
 									}
 
 								} else {
-									//select the first option - default
 								}
 							}
-							$(modal+' .endtimes_list').change(); //trigger change
+							$(modal+' .endtimes_list').change(); 
 						} else if (mode == 'lesson') {
-							$(modal+' .passes_list').change(); //trigger change
+							$(modal+' .passes_list').change(); 
 						}
-						
-		            } else {
-		            	set_side_error('Invalid booking time. Please select another start time for your booking'); //F-end: 
+
+								            } else {
+		            	set_side_error('Invalid booking time. Please select another start time for your booking'); 
 		            }
 
 		        } else if (response.redirect != undefined) {
-		            mini_login_wizard(response.redirect); //session timeout case
+		            mini_login_wizard(response.redirect); 
 		        } else {    
 		            set_side_error(response.error.join("<br>"));
 		            $('#loader-wrapper').hide();
@@ -2347,16 +2267,14 @@ async function get_lesson_passtypes() {
 		data.from == 'customer'
 	}
 
-	//alter
 	let sd = '';
 	if ($('#lesson_modal .schedule_data').text()) {
 		sd = JSON.parse($('#lesson_modal .schedule_data').text());
 	}
 
-    //validations
 
 	if (!data.user_id) {
-		errors.push('Please select an instructor'); //F-end: 
+		errors.push('Please select an instructor'); 
 	}
 
 	if (errors.length == 0) {
@@ -2375,21 +2293,18 @@ async function get_lesson_passtypes() {
 
 	            let res = response.success;
 
-	            //data
 	            let data = res.data;
 
 				let html_str = '';
 
-	            //add current passes as options first
 	            let cust_passes = $('#cust_passes').text() ? JSON.parse(decryptData($('#cust_passes').text())) : [];
 
-	            //order passes by expiry date asc 
 	            cust_passes.sort((a, b) => dayjs(a.expires).isAfter(dayjs(b.expires)) ? 1 : -1);
 
 				for (let i = 0; i < cust_passes.length; i++) {
 					let l = cust_passes[i];
-					if ((l.level_type == 7) && (l.user_id == 0 || l.user_id == user_id || l.pass_id == sd.pass_id) && //alter - sd condition
-						(l.customer_id == customer_id) && (l.remaining>0 || l.pass_id == sd.pass_id) && //alter - sd condition
+					if ((l.level_type == 7) && (l.user_id == 0 || l.user_id == user_id || l.pass_id == sd.pass_id) && 
+						(l.customer_id == customer_id) && (l.remaining>0 || l.pass_id == sd.pass_id) && 
 						(dates_diff(l.expires,dayjs().format('YYYY-MM-DD')) >= 0) && (l.hold=='0000-00-00')) {
 						html_str += '<option value="'+l.passtype_id+'" data-intrac_pass_id="'+l.pass_id+'" data-intrac_rate="0" data-intrac_duration="'+l.gst+'">'+l.passtype_name+' ('+l.remaining+' lessons remaining. Expiry: '+convert_date(l.expires)+')</option>';
 					}
@@ -2402,7 +2317,7 @@ async function get_lesson_passtypes() {
 
 				$('#lesson_modal .passes_list').html(html_str);
 				if (html_str) {
-					if (sd.pass_id) { //alter
+					if (sd.pass_id) { 
 						let ptyp_id = $('#lesson_modal .passes_list option[data-intrac_pass_id="'+sd.pass_id+'"]').val();
 						if (ptyp_id > 0) {
 							$('#lesson_modal .passes_list').val(ptyp_id);	
@@ -2412,11 +2327,11 @@ async function get_lesson_passtypes() {
 					}
 					$('#lesson_modal .passes_list').change()
 				} else {
-					set_side_error('No '+($('#pass_title').val() == 'pass' ? 'passes' : $('#pass_title').val()+'s')+' available. Please select another instructor for your lesson'); //F-end: 
+					set_side_error('No '+($('#pass_title').val() == 'pass' ? 'passes' : $('#pass_title').val()+'s')+' available. Please select another instructor for your lesson'); 
 				}
 
 	        } else if (response.redirect != undefined) {
-	            mini_login_wizard(response.redirect); //session timeout case
+	            mini_login_wizard(response.redirect); 
 	        } else {    
 	            set_side_error(response.error.join("<br>"));
 	            $('#loader-wrapper').hide();
@@ -2432,7 +2347,6 @@ async function get_lesson_passtypes() {
 }
 
 function get_booking_details_data() {
-	//booking inputs
 	let booking_details = [];
 	$('#space_modal .booking_details_inp_rate:visible').each(function() {
 		let rate_n = $(this).val();
@@ -2491,21 +2405,18 @@ function calcSpecialRates(baseRate, bookingItem, promos=true) {
 
     let recalc_register = false;
 
-    /*logic starts here*/
     let variation = null;
 
     let srDescription = '';
     let promoApplied = false;
 
-    //customer specific rate for space bookings
     let cust_rate_applied = false;
     if (cust_rate && cust_rate_type && (bookingItem.mode == 'space')) {
-        //overwrite baseRate
         if (cust_rate_type == 'discount') {
             baseRate = baseRate*(1-(cust_rate/100));
         } else if (cust_rate_type == 'premium') {
             baseRate = baseRate*(1+(cust_rate/100));
-        } else { //'rate'
+        } else { 
             if (isvalidTime(bookingItem.start) && isvalidTime(bookingItem.finish)) {
                 baseRate = cust_rate*(times_diff(bookingItem.finish,bookingItem.start)/60);
             }
@@ -2525,7 +2436,6 @@ function calcSpecialRates(baseRate, bookingItem, promos=true) {
 
                 let passed = false;
 
-                //conditions
                 if (!sr.conditions || !sr.conditions.length) {
                     passed = true;
                 } else {
@@ -2626,8 +2536,8 @@ function calcSpecialRates(baseRate, bookingItem, promos=true) {
 
                         if (key == 'times') {
                             if (isvalidTime(bookingItem.start) && isvalidTime(bookingItem.finish)) {
-                                let t_between = times_isbetween(bookingItem.start, c.start, c.finish) && times_isbetween(bookingItem.finish, c.start, c.finish); //full match
-                                let t_overlap = times_isbetween(bookingItem.start, c.start, c.finish,'[)') || times_isbetween(bookingItem.finish, c.start, c.finish, '(]'); //partial match
+                                let t_between = times_isbetween(bookingItem.start, c.start, c.finish) && times_isbetween(bookingItem.finish, c.start, c.finish); 
+                                let t_overlap = times_isbetween(bookingItem.start, c.start, c.finish,'[)') || times_isbetween(bookingItem.finish, c.start, c.finish, '(]'); 
                                 if ((!c.exclude && (t_between || (c.partial_match && t_overlap))) || 
                                     (c.exclude && !(t_between || (c.partial_match && t_overlap)))) {
                                     if ((c.dst == undefined) || (c.dst && isDSTAus(bookingItem.date)) || (!c.dst && !isDSTAus(bookingItem.date))) {
@@ -2688,12 +2598,11 @@ function calcSpecialRates(baseRate, bookingItem, promos=true) {
                         }
 
                         if (!passed) {
-                            break; //break the loop
+                            break; 
                         }
                     }
                 }
 
-                //overwrites
                 if (bookingItem.combo_name && !sr.include_combo) {
                     passed = false;
                 }
@@ -2765,10 +2674,9 @@ function calcSpecialRates(baseRate, bookingItem, promos=true) {
                 	}
                 }
 
-                //do this at end because of if (passed) within
                 if (sr.max) {
-                    
-                    let obj_ = null
+
+                                        let obj_ = null
                     let key_ = sr.promo_code || sr.description;
 
                     if (!sr.max_per) {
@@ -2780,8 +2688,8 @@ function calcSpecialRates(baseRate, bookingItem, promos=true) {
                     } else if (sr.max_per == 'customer_day') {
                         obj_ = special_rates_usage.customer_day;
                     }
-                    
-                    let usage = obj_[key_];
+
+                                        let usage = obj_[key_];
 
                     if (sr.max_per && sr.max_per.includes('day') && isJSON(JSON.stringify(usage))) {
                         if (bookingItem.date) {
@@ -2791,25 +2699,23 @@ function calcSpecialRates(baseRate, bookingItem, promos=true) {
                         }
                     }
 
-                    if ((usage === undefined) || (usage+1 > sr.max) || (bookingItem.item_unselected)) { //item_unselected applicable for f/end only
+                    if ((usage === undefined) || (usage+1 > sr.max) || (bookingItem.item_unselected)) { 
                         passed = false;
                     }  
 
                     if (passed) {
                         special_rates_usage.client[key_]++;
                         special_rates_usage.customer[key_]++;
-                        
-                        if (bookingItem.date) {
+
+                                                if (bookingItem.date) {
                             special_rates_usage.client_day[key_][bookingItem.date]++;
                             special_rates_usage.customer_day[key_][bookingItem.date]++;
                         }
                     }
                 }
 
-                //rates
                 if (passed) {
                     if (sr.type == 'rate') {
-                        //handle per hr rate
                         if ((sr.per == 'hr') && isvalidTime(bookingItem.start) && isvalidTime(bookingItem.finish)) {
                             sr.amount = sr.amount*(times_diff(bookingItem.finish,bookingItem.start)/60);
                         }
@@ -2818,28 +2724,28 @@ function calcSpecialRates(baseRate, bookingItem, promos=true) {
                                 for (let j = 0; j < bookingItem.booking_details.length; j++) {
                                     let bi = bookingItem.booking_details[j];
                                     if (bi.rate_id == sr.rate_id) {
-                                        baseRate += bi.rate_n*sr.amount; //add to baseRate
+                                        baseRate += bi.rate_n*sr.amount; 
                                     }                               
                                 }
                             }
                         } else {
                             if (sr.rate_addon) {
-                                baseRate += sr.amount; //add to baseRate
+                                baseRate += sr.amount; 
                             } else {
-                                baseRate = sr.amount; //overwrite baseRate
+                                baseRate = sr.amount; 
                             }
                         }
                         if (sr.description) {
                             srDescription = srDescription ? srDescription+', '+sr.description : sr.description;    
                         }
-                    } else { //discount
+                    } else { 
                         variation_i = sr.percentage ? baseRate*(sr.amount/100) : sr.amount;
 
                         if ((sr.per == 'hr') && isvalidTime(bookingItem.start) && isvalidTime(bookingItem.finish) && !sr.percentage) {
                             variation_i = variation_i*(times_diff(bookingItem.finish,bookingItem.start)/60);
                         }
 
-                        if ((variation_i < variation) || (variation === null)) { //better discount or first discount
+                        if ((variation_i < variation) || (variation === null)) { 
                             variation = variation_i;
                             srDescription = sr.description || '';
                             promoApplied = (sr.promo_code && (promo_code == sr.promo_code)) ? true : false;
@@ -2848,17 +2754,16 @@ function calcSpecialRates(baseRate, bookingItem, promos=true) {
                 }
             }
 
-        } //end of filter
-    } //end of for loop
+        } 
+    } 
 
-    if (variation === null) { //no special rates or no discounts
+    if (variation === null) { 
         variation = 0;
     } else {
     	if ((bookingItem.mode == 'class') && (bookingItem.register_mode == 'schedule')) {
     		variation = numberformat(bookingItem.n_schedules*variation);
     	}
     }
-    /*logic ends here*/
 
     $('#special_rates_usage').text(encryptData(JSON.stringify({
         back_end: JSON.parse(decryptData($('#special_rates_usage').text())).back_end,
@@ -2897,25 +2802,22 @@ function calculate_slotrates() {
 
 		let baseRate = calcSlotRates(start, finish, type, location_id);
 
-		//reserved customer for closing courts
         if ($('.admin-page').length && ($('#space_modal .customers_list').val() == 2)) {
             baseRate = 0;
         }		
 
-		let rate_data = {items: []}; //store rate_data for checkout page re-calcs
+		let rate_data = {items: []}; 
 
-		//booking inputs
 		let booking_details = get_booking_details_data();
 
-		reset_special_rates_usage(); //reset special_rates_usage front_end to back_end
+		reset_special_rates_usage(); 
 
-		//promo code related items here are for admins only. Customers' are in recalc_cart_rates
         $('.admin-page .offcanvse .promo_comment').html('').addClass('noshow');
         let discountApplied = 0;
         let srDescription = '';
         let promoApplied = false;		
-		
-		for (let y = 0; y < n_spaces; y++) {
+
+				for (let y = 0; y < n_spaces; y++) {
 
 			let bookingItem = {
 				mode: 'space',
@@ -2924,7 +2826,7 @@ function calculate_slotrates() {
 				date: $('#main_date').val(),
 				start: start,
 				finish: finish,
-				space_id: $('#space_modal .spaces_list li.checked').eq(y).length ? $('#space_modal .spaces_list li.checked').eq(y).find('a').prop('dataset').intrac : "0", //fullfield, shadow spaces etc use 0
+				space_id: $('#space_modal .spaces_list li.checked').eq(y).length ? $('#space_modal .spaces_list li.checked').eq(y).find('a').prop('dataset').intrac : "0", 
 				n_spaces: n_spaces,
 				combo_name: $('#location_id').prop('dataset').intrac_combo || ''
 			}
@@ -2945,20 +2847,19 @@ function calculate_slotrates() {
 
             discountApplied += csr.discountApplied;
             srDescription = csr.srDescription;
-            
-            if (csr.promoApplied) {
+
+                        if (csr.promoApplied) {
                 promoApplied = true;
             }
 
 			rate_data.items.push({
 				baseRate: baseRate,
-				adjustedRate: csr.adjustedRate, //used in admin page only
+				adjustedRate: csr.adjustedRate, 
 				bookingItem: bookingItem
 			});
 		}
 
 		if ($('.admin-page').length) {
-			//addons
 			let purchs = [];
 			$('#space_modal .booking_addons').each(function() {
 				if ($(this).is(":checked")) {
@@ -2976,8 +2877,8 @@ function calculate_slotrates() {
 
 		            discountApplied += csr.discountApplied;
 		            srDescription = csr.srDescription;
-		            
-		            if (csr.promoApplied) {
+
+		            		            if (csr.promoApplied) {
 		                promoApplied = true;
 		            }
 
@@ -2986,7 +2887,6 @@ function calculate_slotrates() {
 			});
 			$('#space_modal .purchases_list').text(purchs.join('<br>'));
 
-			//adjust promo comment
 			adjust_promo_comment(discountApplied, srDescription, promoApplied);
 
 			if ($('#space_modal .schedule_data').text()) {
@@ -3036,33 +2936,30 @@ function calcSlotRates(startTime, endTime, type='normal', location_id) {
 }
 
 function calculate_lessonrates() {
-	
-	let el = '#lesson_modal .passes_list option:selected';
+
+		let el = '#lesson_modal .passes_list option:selected';
 
 	if ($(el).length) {
 
-		//duration
 		let duration = $(el).prop('dataset').intrac_duration;
 
 		let start = parse_time($('#lesson_modal .starttimes_list').val());
 		let finish = dayjs(start, 'HH:mm:ss').add(duration, 'minute').format('h:mm a');
 
-		$('#lesson_modal .endtimes_list option').prop('disabled', false); //remove any disabled flags
+		$('#lesson_modal .endtimes_list option').prop('disabled', false); 
 
 		$('#lesson_modal .endtimes_list').val(finish);
 
-		$('#lesson_modal .endtimes_list option:not(:selected)').prop('disabled', true); //add disabled flags for all other endtimes as finish is driven by duration
+		$('#lesson_modal .endtimes_list option:not(:selected)').prop('disabled', true); 
 
-		//rate
 		let total_aud = 0;
 
 		let baseRate = numberformat(parseFloat($(el).prop('dataset').intrac_rate));
 
-		let rate_data = {}; //store rate_data for checkout page re-calcs
+		let rate_data = {}; 
 
-		reset_special_rates_usage(); //reset special_rates_usage front_end to back_end
+		reset_special_rates_usage(); 
 
-		//promo code related items here are for admins only. Customers' are in recalc_cart_rates
         $('.admin-page .offcanvse .promo_comment').html('').addClass('noshow');
         let discountApplied = 0;
         let srDescription = '';
@@ -3085,14 +2982,14 @@ function calculate_lessonrates() {
 
         discountApplied += csr.discountApplied;
         srDescription = csr.srDescription;
-        
-        if (csr.promoApplied) {
+
+                if (csr.promoApplied) {
             promoApplied = true;
         }
 
 		rate_data.item = {
 			baseRate: baseRate,
-			adjustedRate: csr.adjustedRate, //used in admin page only
+			adjustedRate: csr.adjustedRate, 
 			bookingItem: bookingItem
 		};
 
@@ -3109,8 +3006,8 @@ function calculate_lessonrates() {
 }
 
 function check_promo_code() {
-    
-	$('#loader-wrapper').show();
+
+    	$('#loader-wrapper').show();
 
     let errors = [];
 
@@ -3122,7 +3019,6 @@ function check_promo_code() {
 		data.from == 'customer'
 	}
 
-    //validations
     if (isEmpty(promo)) {
         errors.push('Please enter a promo code and click add');
     }
@@ -3143,7 +3039,6 @@ function check_promo_code() {
                 $('.promo_check').hide();
                 $('.promo_remove').show();
 
-                //add rate to special_rates
                 let special_rates = JSON.parse(decryptData($('#special_rates').text())).rates;
                 special_rates.push(response.success);
                 $('#special_rates').text(encryptData(JSON.stringify({rates: special_rates})));
@@ -3161,7 +3056,7 @@ function check_promo_code() {
                 }
 
             } else if (response.redirect != undefined) {
-                mini_login_wizard(response.redirect); //session timeout case
+                mini_login_wizard(response.redirect); 
             } else {
                 set_side_error(response.error.join("<br>"));
                 $('#loader-wrapper').hide();
@@ -3185,7 +3080,7 @@ function clear_promo_code(refresh=false) {
     clear_promo_special_rates();
     if (refresh) {
     	if (!$('.admin-page').length) {
-    		init_payment(); //re-initialise payment screen	
+    		init_payment(); 
     	} else {
         	if ($('#lesson_modal').hasClass('show-box')) {
         		calculate_lessonrates();
@@ -3232,8 +3127,6 @@ function calcRegisterCost() {
 
     let customer_id = ($(el+' input:radio[name="cregister_customer_id"]:checked').length) ? $(el+' input:radio[name="cregister_customer_id"]:checked').val() : '';
 
-    //adjust some inputs before cost calculation
-    //complete percentage message if applicable
     if (class_data.bal_perc != undefined) {
         $(el+' .cregister_term_perc_msg').text(class_data.term_name+' is '+numberformat(100*(1-parseFloat(class_data.bal_perc)),0)+'% complete');
         $(el+' .cregister_term_perc_msg_tr').show();
@@ -3242,15 +3135,12 @@ function calcRegisterCost() {
         $(el+' .cregister_term_perc_msg').text('');
     }
 
-    //filter schedules_list
-    //resets
     $(el+' .cregister_schedule_past_showall').addClass('noshow');
     $(el+' .cregister_schedule_future_showall').addClass('noshow');
     $(el+' .flex_imp').removeClass('flex_imp');
-    
-    if ($(el+' .cregister_program_id').val()) {
-        
-        //resets
+
+        if ($(el+' .cregister_program_id').val()) {
+
         $(el+' .cregister_schedule_div').hide();
 
         $(el+' .cregister_schedule_id').each(function() {
@@ -3264,7 +3154,6 @@ function calcRegisterCost() {
                 	$(el_).addClass('flex_imp');
                 }
 
-                //adjust show past future buttons
                 if ($(el+' .cregister_schedule_past_showall').hasClass('noshow') && $(el_).hasClass('cregister_schedule_past') && $(el_).hasClass('noshow')) {
                     $(el+' .cregister_schedule_past_showall').removeClass('noshow');
                 }
@@ -3277,7 +3166,6 @@ function calcRegisterCost() {
     } else {
         $(el+' .cregister_schedule_div').show();
 
-        //adjust show past future buttons
         if ($(el+' .cregister_schedule_past.noshow').length) {
             $(el+' .cregister_schedule_past_showall').removeClass('noshow');
         }
@@ -3286,13 +3174,11 @@ function calcRegisterCost() {
         }
     }
 
-    //uncheck any hidden schedules to avoid accidental bookings
     $(el+' .cregister_schedule_id:checked').each(function() {
     	if (!$(this).is(":visible")) {
     		$(this).prop('checked', false);
     	}
     });
-    //filter schedules_list - end
 
 	if ((class_data.level_type == 6) && ($(el+' .cregister_schedule_future_showall').is(":visible")) && (!$(el+' .cregister_schedule_id:visible').length)) {
 		$(el+' .cregister_schedule_future_showall').click();
@@ -3302,7 +3188,6 @@ function calcRegisterCost() {
         $(el+' .cregister_schedule_id:visible:first').prop('checked', true);
     }
 
-    //filter fixtures_list
     if ($(el+' .cregister_team_id').val()) {
         $(el+' .cregister_fixture_id option[value!=""]').hide();
         $(el+' .cregister_fixture_id option[value!=""]').each(function() {
@@ -3313,7 +3198,6 @@ function calcRegisterCost() {
         });
     }
 
-    //exclude today lesson amount checkbox. Do this after filter schedules_list is done
     if ((prog_data.excl_today_cost) && (!$(el+' .cregister_schedule_id:visible:checked').length) && (!class_data.class_cost_flat)) {
         $(el+' .cregister_excl_today_cost_tr').show();
         $(el+' .cregister_excl_today_cost_val').text(numberformatccy(class_data.cost));        
@@ -3323,7 +3207,6 @@ function calcRegisterCost() {
         $(el+' .cregister_excl_today_cost').prop('checked', false);
     }
 
-    //quantity field
     if (((class_data.level_type == 0) || (class_data.level_type == 6)) && 
         (!$(el+' .cregister_pass_id:visible').val()) && 
         ($(el+' .cregister_quantity').prop('max') > 0)) {
@@ -3332,7 +3215,6 @@ function calcRegisterCost() {
         $(el+' .cregister_quantity_tr').hide();
     }
 
-    //now calculate cost
     let class_amount = parseFloat(class_data.cost);
     let amount = null;
 
@@ -3349,7 +3231,6 @@ function calcRegisterCost() {
         register_mode = 'class';
     }
 
-    //discard program_id for level_type == 0 if register_mode is program
     if ((class_data.level_type == 0) && (register_mode == 'program')) {
         prog_data = {};
         register_mode = 'class';
@@ -3360,24 +3241,22 @@ function calcRegisterCost() {
 
     let team_payments = parseFloat($(el+' .cregister_team_payments').val());
 
-    /*logic starts here*/
-    if (register_mode == 'fixture') { //fixture level amount
-        
-        if (class_data.special_cost > 0) {
+    if (register_mode == 'fixture') { 
+
+                if (class_data.special_cost > 0) {
             class_amount = parseFloat(class_data.special_cost);
         }        
         amount = class_amount;
 
-        //f/end only
         $(el+' .cregister_pass_id').val('');
-    
-    } else if (register_mode == 'competition') {
 
-        if (class_data.features.includes('t')) { //team_payments
+        } else if (register_mode == 'competition') {
+
+        if (class_data.features.includes('t')) { 
             amount = class_amount/team_data.players;
-            if (team_payments >= class_amount) { //already paid fully
+            if (team_payments >= class_amount) { 
                 amount = 0;
-            } else if (class_amount-team_payments < amount) { //partial payment needed
+            } else if (class_amount-team_payments < amount) { 
                 amount = class_amount-team_payments;
             }
         } else {
@@ -3388,42 +3267,39 @@ function calcRegisterCost() {
             amount = 0;
         }
 
-    } else if (register_mode == 'schedule') { //schedule level amount - first priority
-        
-        if (class_data.special_cost > 0) {
+    } else if (register_mode == 'schedule') { 
+
+                if (class_data.special_cost > 0) {
             class_amount = parseFloat(class_data.special_cost);
         }        
-        amount = $(el+' .cregister_schedule_id:checked').length*class_amount; //no of schedules selected
+        amount = $(el+' .cregister_schedule_id:checked').length*class_amount; 
 
-        //f/end only
         if (class_data.level_type == 1) {
             $(el+' .cregister_pass_id').val('');
         }
-    
-    } else if (register_mode == 'program') { //program level amount - second priority
-    
-        let schedules_remaining = parseInt(prog_data.schedules_remaining || '0');
 
-        amount = (class_data.level_type == 0) ? class_amount : class_amount*schedules_remaining; //default
+        } else if (register_mode == 'program') { 
 
-        //excl_today_cost
+            let schedules_remaining = parseInt(prog_data.schedules_remaining || '0');
+
+        amount = (class_data.level_type == 0) ? class_amount : class_amount*schedules_remaining; 
+
         if ($(el+' .cregister_excl_today_cost:visible').length) {
             if ($(el+' .cregister_excl_today_cost').is(":checked")) {
                 amount = amount - class_amount;
             }
         }
 
-    } else { //class level amount
+    } else { 
         if ((class_data.level_type == 0) && (class_data.bal_perc != undefined)) {
             let bal_perc = parseFloat(class_data.bal_perc);
-            amount = class_amount*bal_perc; //default
+            amount = class_amount*bal_perc; 
         }
     }
 
-    //register_addons
     let addons_amount = 0;
-    
-    let addons = []; //f/end only
+
+        let addons = []; 
 
     let purchases_addons = JSON.parse(decryptData($(el+' .cregister_purchases_addons').text()));
     $(el+' .register_addons:visible').each(function() {
@@ -3490,23 +3366,21 @@ function calcRegisterCost() {
     });
 
     if (amount !== null) {
-        //flat_cost
         if ((class_data.class_cost_flat) && ((register_mode == 'class') || (register_mode == 'program'))) {    
             amount = class_amount;
         }
 
-        //special rates module - start, before applying quantity
         $(el+' .cregister_receipt_invoice_comment').text('');
         let baseRate = amount;
 
-        let rate_data = {}; //store rate_data for checkout page re-calcs
+        let rate_data = {}; 
 
         let discountApplied = 0;
         let srDescription = '';
         let promo_comment = '';
         let promoApplied = false;
 
-        reset_special_rates_usage(); //reset special_rates_usage front_end to back_end
+        reset_special_rates_usage(); 
 
         let bookingItem = {
             mode: 'class',
@@ -3542,10 +3416,8 @@ function calcRegisterCost() {
             promo_comment = srDescription
         }
 
-        $(el+' .cregister_receipt_invoice_comment').text(promo_comment); //f/end only
-        //special rates module - end
+        $(el+' .cregister_receipt_invoice_comment').text(promo_comment); 
 
-        //quantity
         let quantity = $(el+' .cregister_quantity').is(":visible") ? $(el+' .cregister_quantity').val() : 0;
         if ((quantity > 0) && (!class_data.class_qty_cost_flat)) {
             amount = amount*quantity;
@@ -3554,7 +3426,6 @@ function calcRegisterCost() {
         amount = numberformat(numberformat(amount));
         addons_amount = numberformat(numberformat(addons_amount));
 
-        //level is set as pass_only
         if (class_data.pass_only == 1) {
             if (((class_data.level_type == 1) && (register_mode == 'program')) ||
                 ((class_data.level_type == 6) && (register_mode == 'schedule')) ||
@@ -3563,7 +3434,6 @@ function calcRegisterCost() {
             }
         }
 
-        //f/end only
         if ($(el+' .cregister_team_manager').is(":checked")) {
             amount = "N/A";
         }
@@ -3579,22 +3449,20 @@ function calcRegisterCost() {
 
         $(el+' .rate_data').text(encryptData(JSON.stringify(rate_data)));
     } else {
-        //f/end only
         $(el+' .rate_data').text('');
     }
-    /*logic ends here*/
 
     if ($(el+' .cregister_pass_id:visible').val()) {
         let schedules = $(el+' .cregister_schedule_id:checked').length;
         let pass_remaining = $(el+' .cregister_pass_id').find(':selected').prop('dataset').intrac_remaining;
         let passtype_number = $(el+' .cregister_pass_id').find(':selected').prop('dataset').intrac_number;
 
-        if ((pass_remaining < schedules) && (passtype_number != 0)) { //re-check this during comps
+        if ((pass_remaining < schedules) && (passtype_number != 0)) { 
             $(el+' .cregister_cost_calc').text("Not all bookings could be completed as insufficient credits remain in the selected "+$('#pass_title').val());
         } else {
             $(el+' .cregister_cost_calc').text("N/A. Paid using customer's "+$('#pass_title').val());
             $(el+' .cregister_per_player').addClass('noshow');
-            $(el+' .cregister_receipt_invoice_comment').text(''); //discard, pass is used for register
+            $(el+' .cregister_receipt_invoice_comment').text(''); 
         }
     }
 }
@@ -3610,13 +3478,13 @@ function init_cust_classes() {
         reset_class_booking();
 
         if ($(mc2+' .cregister_cust_list [name="cregister_customer_id"]').length) {
-        	$(mc2+' .cregister_cust_list [name="cregister_customer_id"]:checked').change(); //trigger
+        	$(mc2+' .cregister_cust_list [name="cregister_customer_id"]:checked').change(); 
         } else {
         	set_side_error('No '+$('#class_title').val().toLowerCase()+' available for '+(JSON.parse($('#class_enrolment_titles').text()).title || 'enrolment')+($(mc2+' .add_child_btn').length ? '. Please add a child and re-try' : ''), 'amber');
         }
 
 	} else {
-		$(mc2+' .cregister_cust_list [name="cregister_customer_id"]:checked').change(); //trigger
+		$(mc2+' .cregister_cust_list [name="cregister_customer_id"]:checked').change(); 
 	}
 }
 
@@ -3624,13 +3492,12 @@ function get_cust_classes() {
 
     $('#loader-wrapper').show();
 
-    //resets
     $(mc2+' .cregister_class_list').html('');
     $(mc2+' .cregister_program_list').html('');
     $(mc2+' .cregister_schedule_list').html('');
     $(mc2+' .cregister_team_list').html('');
     $(mc2+' .cregister_fixture_list').html('');
-    $('.creg_class_comment').html(''); //customer class info
+    $('.creg_class_comment').html(''); 
     $(mc2+' .cregister_excl_today_cost_tr').hide();
     $(mc2+' .cregister_excl_today_cost_val').text('');
     $(mc2+' .cregister_excl_today_cost').prop('checked', false);
@@ -3658,12 +3525,10 @@ function get_cust_classes() {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             let html_str_ = '';
 
-            //private classes logic
             if ($('.customer-page').length) {
             	let searchParams = new URLSearchParams(window.location.search);
             	let enrol_ids = searchParams.has('enrol') ? searchParams.get('enrol') : '';
@@ -3672,8 +3537,8 @@ function get_cust_classes() {
             		let d = data[i];
             		if (d.features.includes('4')) {
             			if (enrol_ids.split('~')[0] != d.class_id) {
-            				data.splice(i, 1); // Remove the current row
-                            i--; // Adjust index
+            				data.splice(i, 1); 
+                            i--; 
             			}
             		}
             	}
@@ -3709,7 +3574,7 @@ function get_cust_classes() {
                     let full = '';
                     if (d.full) {
                     	full = ' (capacity reached)';
-                    } else if (validator.isInt((d.vacancy||'').toString())) { //to customers only
+                    } else if (validator.isInt((d.vacancy||'').toString())) { 
 						full += ' '+d.vacancy+' spot'+(d.vacancy > 1 ? 's' : '');
 					}                    
                     html_str_ += '<option value="'+d.class_id+'" data-intrac="'+JSON.stringify(data_intrac).replace(/"/g, '&quot;')+'">'+d.class_name+' - '+d.term_name+full+'</option>';
@@ -3726,24 +3591,22 @@ function get_cust_classes() {
 
             $(mc2+' .cregister_class_list').html(html_str_);
 
-            //cregister_deeplinks
             if ($('#cregister_deeplinks').text()) {
                 let ids = $('#cregister_deeplinks').text().split('~');
                 if ($(mc2+' .cregister_class_id option[value="'+ids[0]+'"]').length) {
                     $(mc2+' .cregister_class_id').val(ids[0]);
                 }
-                //clear
                 if ((ids[1] == 0) && (ids[2] == 0) && (ids[3] == 0)) {
                     if ($('.admin-page').length) {
-                    	$('#cregister_deeplinks').text(''); //don't clear for customers at all to cater for switching of customers
+                    	$('#cregister_deeplinks').text(''); 
                     }
                 }
             }
 
-            $(mc2+' .cregister_class_id').change(); //trigger change
+            $(mc2+' .cregister_class_id').change(); 
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -3762,8 +3625,8 @@ function get_cust_class_passs() {
     if ($('#team_join').is(":visible")) {
         el = '#team_join';
     }
-    
-    let customer_id = ($(el+' input:radio[name="cregister_customer_id"]:checked').length) ? $(el+' input:radio[name="cregister_customer_id"]:checked').val() : '';
+
+        let customer_id = ($(el+' input:radio[name="cregister_customer_id"]:checked').length) ? $(el+' input:radio[name="cregister_customer_id"]:checked').val() : '';
     let class_data = JSON.parse($(el+' .cregister_class_id').find(':selected').prop('dataset').intrac);
 
     let register_mode = ($(el+' .cregister_schedule_id:visible:checked').length) ? 'schedule': '';
@@ -3776,7 +3639,7 @@ function get_cust_class_passs() {
         $(el+' .cregister_pass_id option[value!=""]').each(function() {
             let d = $(this).prop('dataset');
             if ((d.intrac_customer_id == customer_id) && 
-                ((d.intrac_level_id == class_data.level_id) || ((register_mode == 'schedule') && (d.intrac_level_id == 0))) &&  //receipt_type is already handled while populating cregister_pass_id
+                ((d.intrac_level_id == class_data.level_id) || ((register_mode == 'schedule') && (d.intrac_level_id == 0))) &&  
                 ((d.intrac_remaining > 0) || (d.intrac_number == 0))) {
                 $(this).show();
             	valid_options = true;
@@ -3788,7 +3651,6 @@ function get_cust_class_passs() {
             }
         });
 
-        //no valid options
         if (!valid_options) {
         	$(el+' .cregister_cpass_list_tr').hide();
         }
@@ -3799,13 +3661,12 @@ function get_cust_class_passs() {
     if (first_valid_option) {
     	$(el+' .cregister_pass_id').val(first_valid_option).change();
     } else if ($(el+' .cregister_pass_id').val()){
-    	$(el+' .cregister_pass_id').val('').change(); //reset current selects and trigger change
+    	$(el+' .cregister_pass_id').val('').change(); 
     } else {
-    	$(el+' .cregister_pass_id').val(''); //reset current selects
+    	$(el+' .cregister_pass_id').val(''); 
     }
 }
 
-//addons
 function get_cust_class_addons() {
 
 	let el = mc2;
@@ -3822,7 +3683,7 @@ function get_cust_class_addons() {
 		let location_check = (!loc_id || ((loc_id > 0) && (loc_id == location_id)));
 		let class_check = (!optional && class_data.features.includes('m')) || (optional && class_data.features.includes('a'));
 
-		if (location_check && class_check) { //class check
+		if (location_check && class_check) { 
 			$(this).closest('.register_addons_row').removeClass('noshow');
 		}
 	});
@@ -3864,7 +3725,6 @@ function get_cust_class_programs() {
 
             let res = response.success;
 
-            //customer class info
             $('.creg_class_comment').html('');
 			if (res.class && (res.class.class_comment != '<p><br></p>')) {
 				$('.creg_class_comment').html('<div>'+res.class.class_comment+'</div>').removeClass('noshow');
@@ -3872,7 +3732,6 @@ function get_cust_class_programs() {
 				$('.creg_class_comment').addClass('noshow');
 			}
 
-            //data
             let data = res.data;
 
             let html_str_ = '';
@@ -3906,13 +3765,13 @@ function get_cust_class_programs() {
                     let full = '';
                     if (d.full) {
                         full = ' (capacity reached)';
-                    } else if (validator.isInt((d.vacancy||'').toString())) { //to customers only
+                    } else if (validator.isInt((d.vacancy||'').toString())) { 
                         full += ' '+d.vacancy+' spot'+(d.vacancy > 1 ? 's' : '');
                     }                                       
                     html_str_ += '<option '+(term_name ? 'class="noshow_last_term"' : '')+' value="'+d.program_id+'" data-intrac="'+JSON.stringify(data_intrac).replace(/"/g, '&quot;')+'">'+prog_str+term_name+full+'</option>';
                 }
-                
-                html_str_ += '<option value="" data-intrac="'+JSON.stringify({class_id: data[0].class_id, term_id: data[0].term_id}).replace(/"/g, '&quot;')+'">All programs</option>';
+
+                                html_str_ += '<option value="" data-intrac="'+JSON.stringify({class_id: data[0].class_id, term_id: data[0].term_id}).replace(/"/g, '&quot;')+'">All programs</option>';
                 html_str_ += '</select>';
             } else {
                 html_str_ += 'There are no programs available in the selected '+$('#class_title').val().toLowerCase();
@@ -3920,12 +3779,10 @@ function get_cust_class_programs() {
 
             $(mc2+' .cregister_program_list').html(html_str_);
 
-            //set default, as some options from last term at the top might be hidden
-            if ($(mc2+' .cregister_program_id option:not(.noshow_last_term)').length > 1) { //using >1 i/o >0 as all programs option will also not have this noshow_last_term class 
+            if ($(mc2+' .cregister_program_id option:not(.noshow_last_term)').length > 1) { 
             	$(mc2+' .cregister_program_id').val($(mc2+' .cregister_program_id option:not(.noshow_last_term):first').val()); 
             }
 
-            //cregister_deeplinks
             if ($('#cregister_deeplinks').text()) {
                 let ids = $('#cregister_deeplinks').text().split('~');
                 if (ids[1] > 0) {
@@ -3935,26 +3792,25 @@ function get_cust_class_programs() {
 	                }                	
                 } else {
                 	if ($('.admin-page').length) {
-                		$(mc2+' .cregister_program_id').val(''); //all programs
+                		$(mc2+' .cregister_program_id').val(''); 
                 	} else {
-                		$(mc2+' .cregister_program_id').val($(mc2+' .cregister_program_id option:first').val()); //first option as this would've come from featured class
+                		$(mc2+' .cregister_program_id').val($(mc2+' .cregister_program_id option:first').val()); 
                 	}
                 }
 
-                //clear
                 if (ids[2] == 0) {
                 	if ($('.admin-page').length) {
-                    	$('#cregister_deeplinks').text(''); //don't clear for customers at all to cater for switching of customers
+                    	$('#cregister_deeplinks').text(''); 
                     }
                 }
             }
 
-            $(mc2+' .cregister_program_id').change(); //trigger change
+            $(mc2+' .cregister_program_id').change(); 
 
             get_cust_class_schedules();
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -3996,7 +3852,6 @@ function get_cust_class_schedules() {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             let html_str_ = '';
@@ -4026,7 +3881,7 @@ function get_cust_class_schedules() {
                     let full = '';
                     if (d.full) {
                         full = ' (capacity reached)';
-                    } else if (validator.isInt((d.vacancy||'').toString())) { //to customers only
+                    } else if (validator.isInt((d.vacancy||'').toString())) { 
                         full += ' '+d.vacancy+' spot'+(d.vacancy > 1 ? 's' : '');
                     }                    
                     html_str_ += '<div class="form-label cregister_schedule_div'+noshow+'"><label class="checkbox-container"><input type="checkbox" class="checkbox-custom cregister_schedule_id" value="'+d.schedule_id+'" data-intrac="'+JSON.stringify(data_intrac).replace(/"/g, '&quot;')+'"> '+sched_str+full+'</label></div>';
@@ -4049,7 +3904,6 @@ function get_cust_class_schedules() {
 
             $(mc2+' .cregister_schedule_list').html(html_str_);
 
-            //resets
             if (!$('.admin-page').length) {
             	$(mc2+' .cregister_schedule_list').closest('li').removeClass('noshow');
             	$(mc2+' .cregister_show_schedules').addClass('noshow');
@@ -4057,7 +3911,6 @@ function get_cust_class_schedules() {
 
             if (data.length) {
 
-                //cregister_deeplinks
                 if ($('#cregister_deeplinks').text()) {
                     let ids = $('#cregister_deeplinks').text().split('~');
                     $(mc2+' .cregister_schedule_id[value="'+ids[2]+'"]').closest('.cregister_schedule_div').removeClass('noshow_last_term').removeClass('cregister_schedule_past').removeClass('cregister_schedule_future');
@@ -4066,19 +3919,17 @@ function get_cust_class_schedules() {
                     if (!$('.admin-page').length) {
                     	$(mc2+' .cregister_schedule_id[value="'+ids[2]+'"]').closest('.cregister_schedule_div').addClass('display_flex');
 
-                    	//customer - class rolledover already with new programs scenario
                     	if ($(mc2+' .cregister_schedule_id[value="'+ids[2]+'"]').length && (ids[1] > 0) && (!$(mc2+' .cregister_program_id option[value="'+ids[1]+'"]').length)) {
-                    		$(mc2+' .cregister_program_id').val(''); //select all programs option
+                    		$(mc2+' .cregister_program_id').val(''); 
                     	}
                     }
                 }
 
-                $(mc2+' .cregister_schedule_id:first').change(); //trigger change
+                $(mc2+' .cregister_schedule_id:first').change(); 
             } else {
                 calcRegisterCost();
             }            
 
-        	//don't display schedules by default for program classes 
         	if (!$('.admin-page').length) {
         		if ((res.class.level_type == 1) && (!$(mc2+' .cregister_schedule_id:checked').length)) {
         			$(mc2+' .cregister_schedule_list').closest('li').addClass('noshow');
@@ -4087,14 +3938,13 @@ function get_cust_class_schedules() {
         	}
 
             if ($('#cregister_deeplinks').text()) {
-                //clear
                 if ($('.admin-page').length) {
-                	$('#cregister_deeplinks').text(''); //don't clear for customers at all to cater for switching of customers
+                	$('#cregister_deeplinks').text(''); 
                 }
             }
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();
@@ -4109,7 +3959,6 @@ function get_cust_class_schedules() {
 function set_customer_form_fields(options) {
     let iamnot = $('.admin-page').length ? 'customer' : 'user';
 
-    //fields - run the loop twice, once for parent fields and second for child fields
     for (let i = 0; i < 2; i++) {
         let _ch = '';
         let mstr = $('.admin-page').length ? '#master_customer_view .cust_edit_tab' : '#customer_modal';
@@ -4148,38 +3997,37 @@ function set_customer_form_fields(options) {
 	        }
 	    }
 
-        //standard fields
         let fields = ['organisation','gender','dob','address','card','medical','consent','indemnity','rate','welcome'];
 
         for (let i = 0; i < fields.length; i++) {
             let field = fields[i];
 
-            if (!options['show_'+field+_ch]) { //show_ flag
+            if (!options['show_'+field+_ch]) { 
                 $(mstr+' .cust_'+field+'_tr').hide();
-            } else if ((options[field+_ch]) && ((options[field+_ch]).visible == iamnot)) { //visibility
+            } else if ((options[field+_ch]) && ((options[field+_ch]).visible == iamnot)) { 
                 $(mstr+' .cust_'+field+'_tr').hide();
             } else {
-                if (options[field+_ch]) { //custom title, either in .display or itself
+                if (options[field+_ch]) { 
                     $(mstr+' .cust_'+field+'_tr .label_txt').text(((options[field+_ch].display)?options[field+_ch].display:options[field+_ch]));
 
                     if (field == 'medical') {
-                    	$(mstr+' .cust_'+field+'_tr'+' textarea').prop('placeholder', ''); //medical field re-purposed, clear placeholder
+                    	$(mstr+' .cust_'+field+'_tr'+' textarea').prop('placeholder', ''); 
                     }
                 }
-                if (options['show_'+field+_ch] == 'mandatory') { //mandatory
+                if (options['show_'+field+_ch] == 'mandatory') { 
                     $(mstr+' .cust_'+field+'_tr').find('.mandatory').removeClass('noshow');
                 }            
-                if ((options[field+_ch]) && (options[field+_ch].cssclass)) { //css class for width, styling
+                if ((options[field+_ch]) && (options[field+_ch].cssclass)) { 
                     $(mstr+' .cust_'+field+'_tr input,'+mstr+' .cust_'+field+'_tr textarea').addClass(options[field+_ch].cssclass);
                 } 
-                if ((options[field+_ch]) && (options[field+_ch].maxlength)) { //maxlength
+                if ((options[field+_ch]) && (options[field+_ch].maxlength)) { 
                     $(mstr+' .cust_'+field+'_tr input[type=text],'+mstr+' .cust_'+field+'_tr textarea').prop('maxlength', options[field+_ch].maxlength);
                 }
-                if ((options[field+_ch]) && (options[field+_ch].text)) { //text for placeholder or beside the checkbox
+                if ((options[field+_ch]) && (options[field+_ch].text)) { 
                     $(mstr+' .cust_'+field+'_tr input[type=text],'+mstr+' .cust_'+field+'_tr textarea').prop('placeholder', options[field+_ch].text);
                     $(mstr+' .cust_'+field+'_tr input[type=checkbox]').after('<span> '+options[field+_ch].text+'</span>');
                 } 
-                if ((options[field+_ch]) && (options[field+_ch].default)) { //default value
+                if ((options[field+_ch]) && (options[field+_ch].default)) { 
                     $(mstr+' .cust_'+field+'_tr input[type=text],'+mstr+' .cust_'+field+'_tr textarea,'+mstr+' .cust_'+field+'_tr select').val(options[field+_ch].default);
                     $(mstr+' .cust_'+field+'_tr input[type=checkbox]').prop('checked', true);
                     $(mstr+' .cust_'+field+'_tr input[type=radio][value='+options[field+_ch].default+']').prop('checked', true);
@@ -4187,14 +4035,13 @@ function set_customer_form_fields(options) {
             }        
         }
 
-        //details - custom fields
         if (options['details'+_ch]) {
             let div_str = '';
             for(const key in options['details'+_ch]) {
 
                 let e = options['details'+_ch][key];
 
-                if (e.visible != iamnot) { //visibility
+                if (e.visible != iamnot) { 
                     let mand_span = (e.mandatory) ? '<span class="mandatory"> *</span>' : '';
 
                     let p_red = $('.admin-page').length ? '' : (e.type == 'checkbox' ? '<p class="red noshow"></p>' : '<p class="mt-2 red noshow"></p>'); 
@@ -4261,12 +4108,11 @@ function set_customer_form_fields(options) {
             $(mstr+' .custom_fields').before(div_str);
         }
 
-        //customer form adjustments
         if (!$('.admin-page').length) {
-        	adjust_customer_form_elements(mstr); //parent and child forms
+        	adjust_customer_form_elements(mstr); 
         }
 
-    } //end of fields for loop 	
+    } 
 }
 
 function get_cust_passtypes() {
@@ -4274,7 +4120,6 @@ function get_cust_passtypes() {
 
     let _mc = $('.admin-page').length ? mc2 : '#passes';
 
-    //resets
     $(_mc+' .cpass_pass_list').html('');
     $(_mc+' .cpass_descriptions').html('');
 
@@ -4296,7 +4141,6 @@ function get_cust_passtypes() {
 
             let res = response.success;
 
-            //data
             let data = res.data;
 
             let html_str_ = '';
@@ -4312,7 +4156,7 @@ function get_cust_passtypes() {
                         }
                     }
                     let validity = (data[i].expiry>0) ? (' valid until '+convert_date(dayjs().add(data[i].expiry, 'day').format('YYYY-MM-DD'))): '';
-                    if (data[i].expires != '2050-01-01') { //expiry overrides 
+                    if (data[i].expires != '2050-01-01') { 
                         validity = ' valid until '+convert_date(data[i].expires);
                     }
                     let family = '';
@@ -4329,16 +4173,16 @@ function get_cust_passtypes() {
 
             $(_mc+' .cpass_pass_list').html(html_str_);
             $(_mc+' .cpass_descriptions').html(html_str_d);
-            
-            if (!$('.admin-page').length) {
+
+                        if (!$('.admin-page').length) {
             	let renew_passtype_id = '';
             	let renew_customer_id = ($(_mc+' input:radio[name="cpass_customer_id"]:checked').length) ? $(_mc+' input:radio[name="cpass_customer_id"]:checked').val() : '';
-            	
-            	if (renew_customer_id) {
+
+            	            	if (renew_customer_id) {
 	            	$('#cpass_cust_exp_list .cpass_row').each(function () {
 	            		if ($(this).find('.renew_customer_id').text() == renew_customer_id) {
 	            			renew_passtype_id = $(this).find('.renew_passtype_id').text();
-	            			return false; //break the loop
+	            			return false; 
 	            		}
 	            	});
             	}
@@ -4347,11 +4191,11 @@ function get_cust_passtypes() {
             		$(_mc+' .cpass_passtype_id').val(renew_passtype_id);
             	}
             }
-            
-            $(_mc+' .cpass_passtype_id').change(); //trigger chhange
+
+                        $(_mc+' .cpass_passtype_id').change(); 
 
         } else if (response.redirect != undefined) {
-            mini_login_wizard(response.redirect); //session timeout case
+            mini_login_wizard(response.redirect); 
         } else {    
             set_side_error(response.error.join("<br>"));
             $('#loader-wrapper').hide();

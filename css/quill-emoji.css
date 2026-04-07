@@ -326,11 +326,6 @@ button.ql-table[value="append-col"]::after {
   align-items: center;
 }
 
-/*
-    Emoji styles & image sheets sourced from: https://github.com/markygriff/Website.git
-    TODO: Update with a more contemporary sprite and css
-
-*/
 .quill_editor .ap {
   display: inline-flex;
   height: 20px;
