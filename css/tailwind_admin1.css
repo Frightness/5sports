@@ -1047,26 +1047,51 @@ input:checked + .toggle-bg {
 #classes.table-wrapper {
   background-color: transparent;
 }
+#rosters.table-wrapper {
+  background-color: transparent;
+}
 #classes table,
 #classes thead,
 #classes tbody,
 #classes tr {
   background-color: transparent;
 }
+#rosters table,
+#rosters thead,
+#rosters tbody,
+#rosters tr {
+  background-color: transparent;
+}
 #classes .courts-many,
 #classes .time-column-many {
+  background-color: transparent;
+}
+#rosters .courts-many,
+#rosters .time-column-many {
   background-color: transparent;
 }
 #classes thead .courts-many,
 #classes thead .time-column-many {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
+#rosters thead .courts-many,
+#rosters thead .time-column-many {
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
 #classes tbody .time-column-many {
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+#rosters tbody .time-column-many {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 #classes .courts-many > div,
 #classes .time-shadow-wrapper,
 #classes .time-shadow-wrapper-title {
+  background-color: transparent;
+}
+#rosters .courts-many > div,
+#rosters .time-shadow-wrapper,
+#rosters .time-shadow-wrapper-title {
   background-color: transparent;
 }
 .cell-many {
