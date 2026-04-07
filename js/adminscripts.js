@@ -12,6 +12,7 @@ const USE_CUSTOMERS_MOCKS = true;
 
 let rosterGridXhr = null;
 let rosterGridRequestId = 0;
+window.intracClassGridIntroPending = false;
 
 function mini_login_wizard(redirect) {
 	$('#loader-wrapper').hide();
@@ -27751,6 +27752,8 @@ function run_table_diag_intro_animation($table, onDone, opts) {
 }
 
 function run_class_grid_intro_animation() {
+	if (!window.intracClassGridIntroPending) return;
+	window.intracClassGridIntroPending = false;
 	run_table_diag_intro_animation($('#classes table:first'));
 }
 
@@ -28417,6 +28420,7 @@ $(async function() {
 	$('.nav_class').on('click', function (e) {
 		$('#main_page_title').text($(this).text()).removeClass('noshow');
 		$('#classes').removeClass('noshow');
+		window.intracClassGridIntroPending = true;
 		deferHeavyWorkAfterNavPaint(function () {
 			get_class_grid();
 		});

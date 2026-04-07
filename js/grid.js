@@ -1469,7 +1469,9 @@ function build_class_grid(data, data_schedule, admin=false, roster=false) {
 			runClassGridAfterScheduleIntro();
 		}
 
-		if (admin && !reduceMotion) {
+		var shouldAnimateClassIntro = admin && !reduceMotion && !!window.intracClassGridIntroPending;
+		if (shouldAnimateClassIntro) {
+			window.intracClassGridIntroPending = false;
 			var $tblClass = $(target).find('table:first');
 			function runClassPhase2AfterIntro() {
 				runPhase2Events();
