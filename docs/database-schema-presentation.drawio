@@ -1,0 +1,134 @@
+<mxfile host="app.diagrams.net" modified="2026-04-08T00:00:00.000Z" agent="5.0" version="22.0.0" type="device">
+  <diagram id="platform-rbac" name="1 - Platform RBAC">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;" value="&lt;b&gt;tenants&lt;/b&gt;&#xa;──────────────&#xa;id uuid PK&#xa;name text&#xa;domain text&#xa;schema_name text&#xa;logo_url text&#xa;primary_color text&#xa;created_at timestamptz&#xa;updated_at timestamptz" vertex="1">
+          <mxGeometry x="420" y="40" width="220" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;" value="&lt;b&gt;tenant_configs&lt;/b&gt;&#xa;──────────────&#xa;id uuid PK&#xa;tenant_id uuid FK → tenants&#xa;config_key text&#xa;config_value text (JSON)&#xa;created_at timestamptz" vertex="1">
+          <mxGeometry x="720" y="60" width="240" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;" value="&lt;b&gt;users&lt;/b&gt;&#xa;──────────────&#xa;id uuid PK&#xa;email text UNIQUE&#xa;password_hash text&#xa;tenant_id uuid FK → tenants&#xa;role_id uuid FK → roles&#xa;is_active boolean&#xa;last_login timestamptz&#xa;created_at timestamptz&#xa;updated_at timestamptz" vertex="1">
+          <mxGeometry x="80" y="320" width="240" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;" value="&lt;b&gt;roles&lt;/b&gt;&#xa;──────────────&#xa;id uuid PK&#xa;name text&#xa;description text&#xa;tenant_id uuid FK NULL = platform&#xa;created_at timestamptz" vertex="1">
+          <mxGeometry x="400" y="340" width="240" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;" value="&lt;b&gt;role_permissions&lt;/b&gt;&#xa;──────────────&#xa;id uuid PK&#xa;role_id uuid FK → roles&#xa;permission_id uuid FK → permissions&#xa;created_at timestamptz" vertex="1">
+          <mxGeometry x="720" y="340" width="260" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="t6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;" value="&lt;b&gt;permissions&lt;/b&gt;&#xa;──────────────&#xa;id uuid PK&#xa;key text&#xa;description text&#xa;category text&#xa;created_at timestamptz" vertex="1">
+          <mxGeometry x="720" y="520" width="240" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" parent="1" style="endArrow=ERmany;startArrow=ERone;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;" edge="1" source="t1" target="t3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" parent="1" style="endArrow=ERmany;startArrow=ERone;html=1;exitX=1;exitY=0.35;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;" edge="1" source="t1" target="t2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" parent="1" style="endArrow=ERmany;startArrow=ERone;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;" edge="1" source="t1" target="t4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="475" y="280" />
+              <mxPoint x="520" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" parent="1" style="endArrow=ERone;startArrow=ERmany;html=1;exitX=1;exitY=0.35;exitDx=0;exitDy=0;entryX=0;entryY=0.35;entryDx=0;entryDy=0;strokeWidth=1;" edge="1" source="t3" target="t4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" parent="1" style="endArrow=ERmany;startArrow=ERone;html=1;exitX=1;exitY=0.65;exitDx=0;exitDy=0;entryX=0;entryY=0.4;entryDx=0;entryDy=0;strokeWidth=1;" edge="1" source="t4" target="t5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" parent="1" style="endArrow=ERone;startArrow=ERmany;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;" edge="1" source="t5" target="t6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;fontColor=#666666;" value="Shared / public schema — super-admin &amp; tenant registry" vertex="1">
+          <mxGeometry x="80" y="10" width="400" height="24" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="global-places" name="2 - Global places">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="g1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;" value="&lt;b&gt;tenants&lt;/b&gt;&#xa;──────────────&#xa;id uuid PK&#xa;schema_name text&#xa;…" vertex="1">
+          <mxGeometry x="400" y="80" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="g2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;" value="&lt;b&gt;platform_places&lt;/b&gt;&#xa;──────────────&#xa;id uuid PK&#xa;name text&#xa;location geography / geom&#xa;tenant_id uuid FK → tenants&#xa;(super-admin managed)" vertex="1">
+          <mxGeometry x="360" y="320" width="280" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="ge1" parent="1" style="endArrow=ERmany;startArrow=ERone;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;" edge="1" source="g1" target="g2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="glbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#666666;" value="Public schema — global entities assigned to tenants" vertex="1">
+          <mxGeometry x="80" y="40" width="380" height="24" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="tenant-schema" name="3 - Per-tenant schema">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;" value="&lt;b&gt;layer_definitions&lt;/b&gt;&#xa;──────────────&#xa;id uuid PK&#xa;name text&#xa;geometry_type text / enum&#xa;attributes_schema jsonb&#xa;(field names, types, required)&#xa;created_at timestamptz" vertex="1">
+          <mxGeometry x="120" y="120" width="280" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="p2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=11;" value="&lt;b&gt;layer_records&lt;/b&gt;&#xa;──────────────&#xa;id uuid PK&#xa;layer_id uuid FK&#xa;geom geometry NULL&#xa;properties jsonb&#xa;(values per attributes_schema)&#xa;created_at timestamptz&#xa;updated_at timestamptz" vertex="1">
+          <mxGeometry x="520" y="120" width="280" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="pe1" parent="1" style="endArrow=ERmany;startArrow=ERone;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=1;" edge="1" source="p1" target="p2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="plbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#666666;" value="Schema: tenant_xxx — generic table + metadata-driven fields (PostGIS + JSONB)" vertex="1">
+          <mxGeometry x="80" y="40" width="520" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="pnote" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;fontSize=10;dashed=1;" value="&lt;b&gt;Optional scale-out&lt;/b&gt;&#xa;• Partition layer_records by layer_id&#xa;• GIN indexes on properties keys used in filters&#xa;• EAV alternative: record_attributes(record_id, key, value_json)" vertex="1">
+          <mxGeometry x="120" y="360" width="680" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="data-flow" name="4 - Metadata flow">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Client: layer L" vertex="1">
+          <mxGeometry x="80" y="200" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Read layer_definitions&#xa;attributes_schema" vertex="1">
+          <mxGeometry x="300" y="180" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="f3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="UI form / validation&#xa;from schema" vertex="1">
+          <mxGeometry x="560" y="190" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="f4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Read / write&#xa;layer_records&#xa;properties + geom" vertex="1">
+          <mxGeometry x="300" y="360" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="fe1" parent="1" style="endArrow=classic;html=1;strokeWidth=1;" edge="1" source="f1" target="f2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe2" parent="1" style="endArrow=classic;html=1;strokeWidth=1;" edge="1" source="f2" target="f3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fe3" parent="1" style="endArrow=classic;html=1;strokeWidth=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="f1" target="f4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="300" />
+              <mxPoint x="390" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flbl" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=10;fontColor=#666666;" value="How metadata drives generic storage (English labels for slides)" vertex="1">
+          <mxGeometry x="80" y="40" width="400" height="24" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
